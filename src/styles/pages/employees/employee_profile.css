@@ -1,0 +1,563 @@
+/* employee_profile.css - modern profile dashboard in app theme */
+
+.content:has(.employeeProfilePage) {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.employeeProfilePage {
+  --st-bg: #09090b;
+  --st-bg-elevated: #0f1014;
+  --st-surface: rgba(255, 255, 255, 0.04);
+  --st-surface-hover: rgba(255, 255, 255, 0.07);
+  --st-border: rgba(255, 255, 255, 0.08);
+  --st-text: rgba(255, 255, 255, 0.94);
+  --st-text-muted: rgba(255, 255, 255, 0.58);
+  --st-accent: #fbbf24;
+  --st-accent-soft: rgba(251, 191, 36, 0.16);
+  --st-accent-glow: rgba(251, 191, 36, 0.24);
+
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  color: var(--st-text);
+  background:
+    radial-gradient(80% 55% at 8% 0%, rgba(251, 191, 36, 0.08), transparent 58%),
+    radial-gradient(70% 60% at 100% 12%, rgba(59, 130, 246, 0.06), transparent 62%),
+    var(--st-bg);
+  animation: employeeProfilePageIn 0.32s ease forwards;
+}
+
+@keyframes employeeProfilePageIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.employeeProfilePage .employeeProfileHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--st-border);
+  background: rgba(11, 12, 16, 0.8);
+  backdrop-filter: blur(10px);
+  flex-shrink: 0;
+}
+
+.employeeProfilePage .employeeProfileBack,
+.employeeProfilePage .employeeProfileHeaderIcon {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.employeeProfilePage .employeeProfileBack {
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: var(--st-text);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.employeeProfilePage .employeeProfileBack:hover {
+  background: var(--st-surface-hover);
+  border-color: rgba(251, 191, 36, 0.35);
+  color: var(--st-accent);
+}
+
+.employeeProfilePage .employeeProfileBack:focus-visible,
+.employeeProfilePage .employeeProfileEditBtn:focus-visible,
+.employeeProfilePage .employeeProfileBtn:focus-visible,
+.employeeProfilePage .employeeProfileActionBtn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+.employeeProfilePage .employeeProfileHeaderIcon {
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  background: linear-gradient(145deg, rgba(251, 191, 36, 0.22), rgba(251, 191, 36, 0.08));
+  color: var(--st-accent);
+}
+
+.employeeProfilePage .employeeProfileHeaderText {
+  min-width: 0;
+  flex: 1;
+}
+
+.employeeProfilePage .employeeProfileTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.employeeProfilePage .employeeProfileSubtitle {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--st-text-muted);
+}
+
+.employeeProfilePage .employeeProfileEditBtn,
+.employeeProfilePage .employeeProfileBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(251, 191, 36, 0.38);
+  background: var(--st-accent-soft);
+  color: var(--st-accent);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+
+.employeeProfilePage .employeeProfileEditBtn:hover,
+.employeeProfilePage .employeeProfileBtn:hover {
+  background: rgba(251, 191, 36, 0.24);
+  border-color: rgba(251, 191, 36, 0.55);
+}
+
+.employeeProfilePage .employeeProfileEditBtn:active,
+.employeeProfilePage .employeeProfileBtn:active {
+  transform: scale(0.98);
+}
+
+.employeeProfilePage .employeeProfileMain {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.employeeProfilePage .employeeProfileContent {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.employeeProfilePage .employeeProfileContent--loading {
+  opacity: 0.98;
+}
+
+/* Skeleton tuning inside employee profile */
+.employeeProfilePage .skeleton {
+  --skeleton-bg: rgba(255, 255, 255, 0.08);
+  --skeleton-shimmer: rgba(255, 255, 255, 0.16);
+}
+
+.employeeProfilePage .employeeProfileHeroCard,
+.employeeProfilePage .employeeProfilePanel {
+  border: 1px solid var(--st-border);
+  border-radius: 16px;
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015));
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
+}
+
+.employeeProfilePage .employeeProfileHeroCard {
+  display: block;
+  padding: 20px;
+  margin-bottom: 14px;
+}
+
+.employeeProfilePage .employeeProfileHeroLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.employeeProfilePage .employeeProfileAvatarWrap {
+  position: relative;
+  width: 108px;
+  height: 108px;
+  border-radius: 22px;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  background: linear-gradient(145deg, rgba(251, 191, 36, 0.2), rgba(251, 191, 36, 0.08));
+}
+
+.employeeProfileAvatar,
+.employeeProfilePage .employeeProfileAvatarInitial {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.employeeProfilePage .employeeProfileAvatarInitial {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--st-accent);
+}
+
+.employeeProfilePage .employeeProfileAvatarInitial[aria-hidden="true"] {
+  display: none;
+}
+
+.employeeProfilePage .employeeProfileIdentity {
+  min-width: 0;
+  flex: 1;
+}
+
+.employeeProfilePage .employeeProfileName {
+  margin: 0;
+  font-size: 29px;
+  line-height: 1.12;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.employeeProfilePage .employeeProfileRole {
+  margin: 5px 0 10px;
+  font-size: 14px;
+  color: var(--st-text-muted);
+}
+
+.employeeProfilePage .employeeProfileTagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.employeeProfilePage .employeeProfileTag {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--st-text);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.employeeProfilePage .employeeProfileActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.employeeProfilePage .employeeProfileActionBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 11px;
+  border-radius: 9px;
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: var(--st-text);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.employeeProfilePage .employeeProfileActionBtn:hover {
+  background: var(--st-surface-hover);
+  border-color: rgba(251, 191, 36, 0.3);
+}
+
+.employeeProfilePage .employeeProfileKpiStrip {
+  margin-bottom: 18px;
+}
+
+.employeeProfilePage .employeeProfileKpiGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.employeeProfilePage .employeeProfileKpiCard {
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  border-radius: 12px;
+  padding: 16px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 116px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.employeeProfilePage .employeeProfileKpiCard:hover {
+  border-color: rgba(251, 191, 36, 0.28);
+  background: var(--st-surface-hover);
+}
+
+.employeeProfilePage .employeeProfileKpiIconWrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: rgba(251, 191, 36, 0.14);
+  color: var(--st-accent);
+}
+
+.employeeProfilePage .employeeProfileKpiIconWrap svg {
+  width: 20px;
+  height: 20px;
+}
+
+.employeeProfilePage .employeeProfileKpiBody {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.employeeProfilePage .employeeProfileKpiLabel {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--st-text-muted);
+  line-height: 1.25;
+}
+
+.employeeProfilePage .employeeProfileKpiLabel small {
+  margin-left: 4px;
+  font-weight: 500;
+  color: var(--st-text-muted);
+}
+
+.employeeProfilePage .employeeProfileKpiValue {
+  font-size: 22px;
+  line-height: 1.05;
+  font-weight: 700;
+  color: var(--st-text);
+}
+
+.employeeProfilePage .employeeProfileKpiValue small {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.employeeProfilePage .employeeProfileKpiValue--status {
+  color: var(--st-accent);
+}
+
+.employeeProfilePage .employeeProfileKpiValue--metric {
+  color: var(--st-text);
+}
+
+.employeeProfilePage .employeeProfileStarsRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.employeeProfilePage .employeeProfileStar {
+  color: var(--st-text-muted);
+  opacity: 0.35;
+}
+
+.employeeProfilePage .employeeProfileStar--full {
+  color: var(--st-accent);
+  opacity: 1;
+}
+
+.employeeProfilePage .employeeProfilePanelGrid {
+  display: grid;
+  grid-template-columns: 330px minmax(0, 1fr);
+  gap: 16px;
+}
+
+.employeeProfilePage .employeeProfilePanel {
+  padding: 16px;
+}
+
+.employeeProfilePage .employeeProfileSectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--st-text-muted);
+}
+
+.employeeProfilePage .employeeProfileFacts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.employeeProfilePage .employeeProfileFacts--twoCol {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.employeeProfilePage .employeeProfileFactRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.employeeProfilePage .employeeProfileFactIconWrap {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: rgba(251, 191, 36, 0.14);
+}
+
+.employeeProfilePage .employeeProfileFactIcon {
+  color: var(--st-accent);
+}
+
+.employeeProfilePage .employeeProfileFactContent {
+  min-width: 0;
+  flex: 1;
+}
+
+.employeeProfilePage .employeeProfileFactLabel {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--st-text-muted);
+  margin-bottom: 3px;
+}
+
+.employeeProfilePage .employeeProfileFactValue {
+  display: block;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--st-text);
+  word-break: break-word;
+}
+
+.employeeProfilePage .employeeProfileDivider {
+  height: 1px;
+  background: var(--st-border);
+  margin: 14px 0;
+}
+
+.employeeProfilePage .employeeProfileNotes {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--st-text);
+  white-space: pre-wrap;
+}
+
+.employeeProfilePage .employeeProfileContent--empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 24px;
+}
+
+.employeeProfilePage .employeeProfileEmpty {
+  margin: 0 0 20px;
+  color: var(--st-text-muted);
+  font-size: 15px;
+  max-width: 420px;
+}
+
+@media (max-width: 1080px) {
+  .employeeProfilePage .employeeProfileKpiGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .employeeProfilePage .employeeProfilePanelGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .employeeProfilePage .employeeProfileFacts--twoCol {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .employeeProfilePage .employeeProfileHeader {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .employeeProfilePage .employeeProfileHeaderIcon {
+    display: none;
+  }
+
+  .employeeProfilePage .employeeProfileTitle {
+    font-size: 16px;
+  }
+
+  .employeeProfilePage .employeeProfileEditBtn {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .employeeProfilePage .employeeProfileContent {
+    padding: 12px;
+  }
+
+  .employeeProfilePage .employeeProfileHeroCard {
+    padding: 14px;
+  }
+
+  .employeeProfilePage .employeeProfileKpiGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .employeeProfilePage .employeeProfileHeroLeft {
+    align-items: flex-start;
+  }
+
+  .employeeProfilePage .employeeProfileAvatarWrap {
+    width: 84px;
+    height: 84px;
+    border-radius: 16px;
+  }
+
+  .employeeProfilePage .employeeProfileAvatarInitial {
+    font-size: 30px;
+  }
+
+  .employeeProfilePage .employeeProfileName {
+    font-size: 22px;
+  }
+
+  .employeeProfilePage .employeeProfileRole {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 520px) {
+  .employeeProfilePage .employeeProfileKpiGrid {
+    grid-template-columns: 1fr;
+  }
+}

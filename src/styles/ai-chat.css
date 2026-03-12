@@ -1,0 +1,265 @@
+/* AI Chat floating panel — no box-shadow to match theme; positioned clear of scrollbar */
+.aiChatFab {
+  position: fixed;
+  bottom: 20px;
+  right: calc(16px + 14px); /* offset from scrollbar (typical ~14px) so button stays left of it */
+  z-index: 9000;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.25), rgba(251, 191, 36, 0.08));
+  color: #fbbf24;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+.aiChatFab:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.35), rgba(251, 191, 36, 0.12));
+  border-color: rgba(251, 191, 36, 0.35);
+}
+
+.aiChatBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9001;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 0;
+  animation: aiChatBackdropIn 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.aiChatBackdrop--exiting {
+  animation: aiChatBackdropOut 0.22s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes aiChatBackdropIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes aiChatBackdropOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.aiChatPanel {
+  width: min(420px, 100vw);
+  height: min(560px, 85vh);
+  background: #0f1114;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  animation: aiChatPanelIn 0.3s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+.aiChatPanel--exiting {
+  animation: aiChatPanelOut 0.22s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes aiChatPanelIn {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes aiChatPanelOut {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(100%); opacity: 0; }
+}
+
+.aiChatHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+.aiChatTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
+}
+.aiChatClose {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+.aiChatClose:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.aiChatHint {
+  margin: 0;
+  padding: 8px 18px 12px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  flex-shrink: 0;
+}
+
+.aiChatList {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.aiChatEmpty {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.45);
+  padding: 20px 0;
+  text-align: center;
+}
+.aiChatMessage { display: flex; flex-direction: column; gap: 8px; }
+.aiChatMessage--user { align-items: flex-end; }
+.aiChatMessage--assistant { align-items: flex-start; }
+
+/* Message appear animations */
+.aiChatMessage--animate .aiChatBubble--user {
+  animation: aiChatBubbleUserIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.aiChatMessage--animate .aiChatBubble--assistant {
+  animation: aiChatBubbleAssistantIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.aiChatTableWrap--animate {
+  animation: aiChatTableIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.05s forwards;
+  opacity: 0;
+  transform: translateY(8px);
+}
+@keyframes aiChatBubbleUserIn {
+  from { opacity: 0; transform: translateX(12px) scale(0.96); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes aiChatBubbleAssistantIn {
+  from { opacity: 0; transform: translateX(-12px) scale(0.96); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes aiChatTableIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.aiChatBubble {
+  max-width: 90%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.aiChatBubble--user {
+  background: rgba(251, 191, 36, 0.2);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  color: rgba(255, 255, 255, 0.95);
+}
+.aiChatBubble--assistant {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.88);
+}
+.aiChatBubble.aiChatLoading {
+  opacity: 0.8;
+  animation: aiChatLoadingPulse 1.2s ease-in-out infinite;
+}
+@keyframes aiChatLoadingPulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+.aiChatError { color: #f87171; }
+.aiChatAnalysis {
+  margin-top: 6px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(251, 191, 36, 0.06);
+  border: 1px solid rgba(251, 191, 36, 0.12);
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.82);
+  white-space: pre-wrap;
+  animation: aiChatTableIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.05s forwards;
+}
+.aiChatTableWrap {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.2);
+  margin-top: 4px;
+}
+.aiChatTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.aiChatTable th,
+.aiChatTable td {
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.aiChatTable th {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+}
+.aiChatTable td { color: rgba(255, 255, 255, 0.88); }
+.aiChatTableMore {
+  margin: 0;
+  padding: 6px 10px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.aiChatInputWrap {
+  display: flex;
+  gap: 8px;
+  padding: 12px 18px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+.aiChatInput {
+  flex: 1;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.3);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.aiChatInput::placeholder { color: rgba(255, 255, 255, 0.4); }
+.aiChatInput:focus {
+  border-color: rgba(251, 191, 36, 0.45);
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.12);
+}
+.aiChatSend {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(251, 191, 36, 0.25);
+  color: #fbbf24;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, opacity 0.2s;
+}
+.aiChatSend:hover:not(:disabled) {
+  background: rgba(251, 191, 36, 0.4);
+}
+.aiChatSend:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

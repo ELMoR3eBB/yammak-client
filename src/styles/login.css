@@ -1,0 +1,387 @@
+/* Login — no scroll, password focus fixed, matches app #09090b / #fbbf24 */
+
+/* Lock viewport so login never scrolls */
+.login-page-root {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+}
+
+.login-wrap {
+  --login-bg: #09090b;
+  --login-surface: rgba(255, 255, 255, 0.04);
+  --login-border: rgba(255, 255, 255, 0.08);
+  --login-text: rgba(255, 255, 255, 0.94);
+  --login-text-muted: rgba(255, 255, 255, 0.52);
+  --login-accent: #fbbf24;
+  --login-accent-soft: rgba(251, 191, 36, 0.18);
+  --login-radius: 14px;
+  --login-radius-sm: 10px;
+
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--login-bg);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.login-wrap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 85% 60% at 50% 0%,
+    rgba(251, 191, 36, 0.07) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+}
+
+.login-card {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 20px;
+  padding: 24px 22px;
+  background: var(--login-surface);
+  border: 1px solid var(--login-border);
+  border-radius: var(--login-radius);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.03);
+  transform: translateY(10px);
+  opacity: 0;
+  animation: login-enter 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  flex-shrink: 0;
+}
+
+.login-card.exiting {
+  animation: login-exit 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Subtle top accent */
+.login-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 24px;
+  right: 24px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--login-accent), transparent);
+  opacity: 0.6;
+}
+
+.login-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.login-brand-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--login-radius-sm);
+  background: linear-gradient(145deg, #fbbf24 0%, #f59e0b 100%);
+  box-shadow: 0 4px 14px rgba(251, 191, 36, 0.35);
+  flex-shrink: 0;
+}
+
+.login-brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.login-brand-title {
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: -0.02em;
+  color: var(--login-text);
+  line-height: 1.2;
+}
+
+.login-brand-sub {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--login-text-muted);
+  letter-spacing: 0.02em;
+}
+
+.login-card .card-title {
+  margin-bottom: 14px;
+}
+
+.login-card .card-title h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--login-text);
+  letter-spacing: 0.01em;
+}
+
+.login-card .card-title p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--login-text-muted);
+}
+
+.login-card .panel-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.login-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.login-card .field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.login-card .field label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--login-text-muted);
+}
+
+.login-card .field .input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--login-border);
+  border-radius: var(--login-radius-sm);
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-card .field .input:focus-within {
+  border-color: var(--login-accent);
+  background: var(--login-accent-soft);
+  box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.12);
+}
+
+.login-card .field .input svg {
+  flex-shrink: 0;
+  color: var(--login-text-muted);
+  transition: color 0.2s ease;
+}
+
+.login-card .field .input:focus-within svg {
+  color: var(--login-accent);
+}
+
+.login-card .field .input input {
+  flex: 1;
+  min-width: 0;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  color: var(--login-text);
+  font-size: 14px;
+}
+
+.login-card .field .input input::placeholder {
+  color: var(--login-text-muted);
+  opacity: 0.85;
+}
+
+.login-card .field .input input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Password field: wrapper gets focus style; inner input has NO outline/box-shadow so nothing “pops” inside */
+.login-card .login-password-field {
+  position: relative;
+}
+
+.login-card .login-password-field .password-field {
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--login-border);
+  border-radius: var(--login-radius-sm);
+  padding: 0 10px 0 12px;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-card .login-password-field .password-field:focus-within {
+  border-color: var(--login-accent);
+  background: var(--login-accent-soft);
+  box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.12);
+}
+
+/* Remove any focus ring or “element” on the actual input */
+.login-card .login-password-field .password-field input {
+  flex: 1;
+  min-width: 0;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  color: var(--login-text);
+  font-size: 14px;
+  height: 42px;
+  padding: 0 36px 0 0;
+}
+
+.login-card .login-password-field .password-field input:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.login-card .login-password-field .password-field input::placeholder {
+  color: var(--login-text-muted);
+}
+
+/* Eye button: right side, no extra focus outline */
+.login-card .login-password-field .password-field button.eye {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(251, 191, 36, 0.1);
+  color: var(--login-accent);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+  outline: none !important;
+  box-shadow: none !important;
+  transition: background 0.15s ease;
+}
+
+.login-card .login-password-field .password-field button.eye:hover {
+  background: rgba(251, 191, 36, 0.18);
+}
+
+.login-card .login-password-field .password-field button.eye:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.login-card .login-password-field .password-field button.eye .eye-swap .eye-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.login-card .login-password-field label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--login-text-muted);
+}
+
+.login-card .error-msg {
+  margin-top: 0;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #fca5a5;
+  background: rgba(248, 113, 113, 0.1);
+  border-radius: var(--login-radius-sm);
+  border: 1px solid rgba(248, 113, 113, 0.2);
+}
+
+.login-card .btn {
+  margin-top: 2px;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--login-radius-sm);
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease;
+  user-select: none;
+  width: 100%;
+  background: var(--login-accent);
+  color: #09090b;
+  box-shadow: 0 2px 10px rgba(251, 191, 36, 0.25);
+}
+
+.login-card .btn:hover:not(:disabled) {
+  background: #fcd34d;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(251, 191, 36, 0.35);
+}
+
+.login-card .btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.login-card .btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.login-card .meta {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--login-border);
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--login-text-muted);
+}
+
+/* Footer tagline */
+.login-footer {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 10px;
+  color: var(--login-text-muted);
+  opacity: 0.7;
+  letter-spacing: 0.03em;
+}
+
+.login-card.shake {
+  animation: login-shake 0.4s ease;
+}
+
+@keyframes login-enter {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes login-exit {
+  to {
+    transform: translateY(-12px);
+    opacity: 0;
+  }
+}
+
+@keyframes login-shake {
+  0%, 100% { transform: translateX(0); }
+  15% { transform: translateX(-6px); }
+  35% { transform: translateX(5px); }
+  55% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}

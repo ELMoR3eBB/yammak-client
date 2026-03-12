@@ -1,0 +1,301 @@
+/* Driver Cashout Form — extra charges block, Add button, inline dropdown menu */
+/* Form body exit animation (used when changing driver in Driver Cash In / Driver Cashout) */
+.empCashoutFormBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.empCashoutFormBody--exiting {
+  animation: empCashoutFormBodyOut 0.25s var(--ec-ease, ease) forwards;
+}
+
+@keyframes empCashoutFormBodyOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.empCashoutFormBodyContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.driverExtraWrap {
+  position: relative;
+  overflow: visible;
+}
+
+.driverExtraBlock {
+  background: #16161a;
+  border: 1px solid #2a2a2e;
+  border-radius: 8px;
+  overflow: visible;
+}
+
+.driverExtraHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid #2a2a2e;
+}
+
+.driverExtraTitle {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.driverExtraAddBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #3f3f46;
+  background: #27272a;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.driverExtraAddBtn:hover:not(:disabled) {
+  border-color: #fbbf24;
+  background: #2d2d30;
+  color: #fbbf24;
+}
+
+.driverExtraAddBtn.is-open {
+  border-color: #fbbf24;
+  background: rgba(251, 191, 36, 0.12);
+  color: #fbbf24;
+}
+
+.driverExtraAddBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.driverExtraBody {
+  min-height: 44px;
+  padding: 10px 14px;
+}
+
+.driverExtraEmpty {
+  margin: 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+  line-height: 1.4;
+}
+
+.driverExtraAppliedList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.driverExtraTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px 5px 10px;
+  background: #1e1e22;
+  border: 1px solid #2d2d30;
+  border-radius: 6px;
+  max-width: 100%;
+}
+
+.driverExtraTagIn {
+  animation: driverExtraTagIn 0.2s var(--ec-ease) forwards;
+}
+
+@keyframes driverExtraTagIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.driverExtraTagOut {
+  animation: driverExtraTagOut 0.18s var(--ec-ease) forwards;
+  pointer-events: none;
+}
+
+@keyframes driverExtraTagOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+.driverExtraTagText {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.driverExtraTagRemove {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.driverExtraTagRemove:hover:not(:disabled) {
+  background: rgba(248, 113, 113, 0.18);
+  color: #f87171;
+}
+
+.driverExtraTagRemove:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Select-like menu: portal, wide, viewport-clamped; open/close animation */
+.driverExtraMenu {
+  --driver-extra-menu-min-w: 280px;
+  z-index: 9999;
+  min-width: var(--driver-extra-menu-min-w);
+  max-width: min(360px, calc(100vw - 24px));
+  background: #1a1a1e;
+  border: 1px solid #2d2d32;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  animation: driverExtraMenuIn 0.22s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  transform-origin: top center;
+  will-change: transform, opacity;
+}
+
+.driverExtraMenu--portal {
+  isolation: isolate;
+}
+
+.driverExtraMenu.is-closing {
+  animation: driverExtraMenuOut 0.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes driverExtraMenuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes driverExtraMenuOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+}
+
+.driverExtraMenuList {
+  list-style: none;
+  margin: 0;
+  padding: 6px 0;
+  max-height: 240px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.driverExtraMenuList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.driverExtraMenuList::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 4px 0;
+}
+
+.driverExtraMenuList::-webkit-scrollbar-thumb {
+  background: #404044;
+  border-radius: 3px;
+}
+
+.driverExtraMenuList::-webkit-scrollbar-thumb:hover {
+  background: #505054;
+}
+
+.driverExtraMenuLi {
+  margin: 0;
+  padding: 0;
+}
+
+.driverExtraMenuOption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  margin: 0;
+  padding: 8px 14px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 13px;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s ease;
+  box-sizing: border-box;
+}
+
+.driverExtraMenuOption:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.driverExtraMenuName {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.driverExtraMenuAmount {
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fbbf24;
+}

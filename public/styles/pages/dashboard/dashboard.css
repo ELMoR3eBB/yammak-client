@@ -1,0 +1,1716 @@
+/* dashboard.css — same design as Employee_List / Settings (--st-* theme) */
+
+.content:has(.dashboardPage) {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboardPage {
+  --st-bg: #09090b;
+  --st-bg-elevated: #0f0f12;
+  --st-surface: rgba(255, 255, 255, 0.03);
+  --st-surface-hover: rgba(255, 255, 255, 0.06);
+  --st-border: rgba(255, 255, 255, 0.06);
+  --st-text: rgba(255, 255, 255, 0.92);
+  --st-text-muted: rgba(255, 255, 255, 0.5);
+  --st-accent: #fbbf24;
+  --st-accent-soft: rgba(251, 191, 36, 0.18);
+  --st-accent-glow: rgba(251, 191, 36, 0.15);
+  --st-radius: 8px;
+  --st-radius-sm: 6px;
+  --st-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --st-duration: 0.25s;
+  --st-duration-fast: 0.15s;
+
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+  color: var(--st-text);
+  background: var(--st-bg);
+  overflow: hidden;
+  animation: dashboardPageIn 0.45s var(--st-ease) forwards;
+  position: relative;
+
+  padding-bottom: 25px;
+}
+
+.dashboardPage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 100% 50% at 0% 0%,
+    rgba(251, 191, 36, 0.04) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+  animation: dashboardBgIn 0.6s var(--st-ease) 0.15s both;
+}
+
+@keyframes dashboardPageIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dashboardBgIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dashboardMainIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes dashboardWelcomeGlow {
+  0%, 100% { opacity: 1; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25); }
+  50% { opacity: 1; box-shadow: 0 4px 28px rgba(251, 191, 36, 0.08); }
+}
+
+@keyframes dashboardKpiEnter {
+  from { opacity: 0; transform: translateY(6px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes dashboardListItemEnter {
+  from { opacity: 0; transform: translateX(-6px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ——— Header ——— */
+.dashboardHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--st-border);
+  flex-shrink: 0;
+  background: var(--st-bg-elevated);
+  transition: border-color var(--st-duration) var(--st-ease);
+}
+
+.dashboardHeader:hover .dashboardHeaderIcon {
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
+}
+
+.dashboardHeaderIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--st-radius);
+  background: linear-gradient(
+    135deg,
+    rgba(251, 191, 36, 0.2) 0%,
+    rgba(251, 191, 36, 0.06) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--st-accent);
+  flex-shrink: 0;
+  transition: transform var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration) var(--st-ease);
+}
+
+.dashboardHeaderText {
+  flex: 1;
+  min-width: 0;
+}
+
+.dashboardTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--st-text);
+}
+
+.dashboardSubtitle {
+  margin: 4px 0 0 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--st-text-muted);
+}
+
+/* ——— Main ——— */
+.dashboardMain {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  animation: dashboardMainIn 0.4s var(--st-ease) 0.12s both;
+}
+
+.dashboardContent {
+  flex: 1;
+  display: flex;
+  gap: 28px;
+  padding: 28px 32px 56px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  min-height: 0;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.dashboardContentMain {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ——— Presence block (vertical: current user top, then list online → offline) ——— */
+.dashboardPresenceBlock {
+  width: 300px;
+  min-width: 0;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid var(--st-border);
+  background: linear-gradient(
+    165deg,
+    var(--st-bg-elevated) 0%,
+    rgba(20, 20, 24, 0.97) 100%
+  );
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+  max-height: 440px;
+  overflow: hidden;
+  overflow-x: hidden;
+  transition: border-color var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration) var(--st-ease);
+}
+
+.dashboardPresenceBlock:hover {
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+}
+
+.dashboardPresenceTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--st-text-muted);
+  margin-bottom: 2px;
+}
+
+.dashboardPresenceCurrent {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  transition: border-color var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration) var(--st-ease);
+}
+
+.dashboardPresenceCurrent:hover {
+  border-color: rgba(251, 191, 36, 0.2);
+  box-shadow: 0 4px 20px rgba(251, 191, 36, 0.08);
+}
+
+.dashboardPresenceCurrent--clickable {
+  cursor: pointer;
+}
+
+.dashboardPresenceCurrent--clickable:hover {
+  border-color: rgba(251, 191, 36, 0.25);
+  box-shadow: 0 4px 20px rgba(251, 191, 36, 0.12);
+}
+
+.dashboardPresenceCurrent--clickable:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+.dashboardPresenceAvatarWrap {
+  position: relative;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+}
+
+.dashboardPresenceAvatar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  object-fit: cover;
+  display: block;
+}
+
+.dashboardPresenceAvatarInitial {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    135deg,
+    rgba(251, 191, 36, 0.25) 0%,
+    rgba(251, 191, 36, 0.1) 100%
+  );
+  color: var(--st-accent);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.dashboardPresenceAvatarInitial[aria-hidden="true"] {
+  display: none;
+}
+
+.dashboardPresenceDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dashboardPresenceDot--badge {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--st-bg-elevated);
+  box-sizing: content-box;
+}
+
+.dashboardPresenceDot--online {
+  background: #22c55e;
+  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.4);
+}
+
+.dashboardPresenceDot--offline {
+  background: var(--st-text-muted);
+  opacity: 0.65;
+}
+
+.dashboardPresenceCurrentText,
+.dashboardPresenceItemText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  justify-content: center;
+}
+
+.dashboardPresenceName {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--st-text);
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dashboardPresenceRole,
+.dashboardPresenceMeta {
+  font-size: 12px;
+  color: var(--st-text-muted);
+  margin-top: 1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dashboardPresencePage {
+  display: block;
+  font-size: 11px;
+  color: var(--st-accent);
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.9;
+}
+
+.dashboardPresenceRating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--st-accent);
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: rgba(251, 191, 36, 0.12);
+  transition: background var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardPresenceStar {
+  color: var(--st-accent);
+}
+
+.dashboardPresenceList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dashboardPresenceItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid transparent;
+  min-width: 0;
+  transition: background var(--st-duration-fast) var(--st-ease),
+    border-color var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardPresenceItem .dashboardPresenceAvatarWrap {
+  width: 40px;
+  height: 40px;
+}
+
+.dashboardPresenceItem .dashboardPresenceAvatar,
+.dashboardPresenceItem .dashboardPresenceAvatarInitial {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+}
+
+.dashboardPresenceItem .dashboardPresenceAvatarInitial {
+  font-size: 16px;
+}
+
+.dashboardPresenceItem--clickable {
+  cursor: pointer;
+}
+
+.dashboardPresenceItem--clickable:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(251, 191, 36, 0.15);
+}
+
+.dashboardPresenceItem--clickable:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+.dashboardPresenceEmpty {
+  margin: 0;
+  padding: 20px 12px;
+  font-size: 13px;
+  color: var(--st-text-muted);
+  text-align: center;
+}
+
+.dashboardSection {
+  margin-bottom: 32px;
+  animation: dashboardMainIn 0.4s var(--st-ease) backwards;
+}
+
+.dashboardSection:nth-child(1) { animation-delay: 0.02s; }
+.dashboardSection:nth-child(2) { animation-delay: 0.06s; }
+.dashboardSection:nth-child(3) { animation-delay: 0.1s; }
+.dashboardSection:nth-child(4) { animation-delay: 0.14s; }
+.dashboardSection:nth-child(5) { animation-delay: 0.18s; }
+.dashboardSection:nth-child(6) { animation-delay: 0.22s; }
+.dashboardSection:nth-child(7) { animation-delay: 0.26s; }
+.dashboardSection:nth-child(8) { animation-delay: 0.3s; }
+
+.dashboardSection:last-child {
+  margin-bottom: 0;
+}
+
+.dashboardSectionTitle {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--st-text-muted);
+  transition: color var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardSectionHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.dashboardSectionHead .dashboardSectionTitle {
+  margin-bottom: 0;
+}
+
+.dashboardSectionLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: var(--st-radius-sm);
+  background: transparent;
+  color: var(--st-accent);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--st-duration) var(--st-ease),
+    color var(--st-duration) var(--st-ease),
+    transform var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardSectionLink:hover {
+  background: var(--st-accent-soft);
+  color: var(--st-text);
+}
+
+.dashboardSectionLink:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+/* ——— Welcome card ——— */
+.dashboardWelcomeCard {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px 28px;
+  border-radius: var(--st-radius);
+  border: 1px solid var(--st-border);
+  background: var(--st-bg-elevated);
+  transition: border-color var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration) var(--st-ease);
+}
+
+.dashboardWelcomeCard {
+  animation: dashboardWelcomeGlow 4s var(--st-ease) infinite;
+}
+
+.dashboardWelcomeCard:hover {
+  box-shadow: 0 4px 28px rgba(251, 191, 36, 0.12);
+}
+
+.dashboardWelcomeIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--st-radius);
+  background: linear-gradient(
+    135deg,
+    rgba(251, 191, 36, 0.2) 0%,
+    rgba(251, 191, 36, 0.06) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--st-accent);
+  flex-shrink: 0;
+  transition: transform var(--st-duration) var(--st-ease);
+}
+
+.dashboardWelcomeCard:hover .dashboardWelcomeIcon {
+  transform: scale(1.05);
+}
+
+.dashboardWelcomeTitle {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--st-text);
+}
+
+.dashboardWelcomeRole {
+  margin: 6px 0 0 0;
+  font-size: 14px;
+  color: var(--st-text-muted);
+}
+
+.dashboardWelcomeRole strong {
+  color: var(--st-accent);
+  font-weight: 600;
+}
+
+/* ——— Right column (aside): Birthdays + Team ——— */
+.dashboardAsideColumn {
+  width: 300px;
+  min-width: 0;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow: hidden;
+}
+
+.dashboardBirthdaysBlock {
+  border-radius: 12px;
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  background: linear-gradient(
+    165deg,
+    rgba(251, 191, 36, 0.08) 0%,
+    rgba(251, 191, 36, 0.02) 50%,
+    var(--st-bg-elevated) 100%
+  );
+  box-shadow: 0 4px 20px rgba(251, 191, 36, 0.06);
+  overflow: hidden;
+}
+
+.dashboardBirthdaysBlockHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--st-text-muted);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.dashboardBirthdaysBlockIcon {
+  color: var(--st-accent);
+  flex-shrink: 0;
+}
+
+.dashboardBirthdaysBlockCount {
+  margin-left: auto;
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: rgba(251, 191, 36, 0.2);
+  color: var(--st-accent);
+  font-size: 11px;
+}
+
+.dashboardBirthdaysBlockList {
+  list-style: none;
+  margin: 0;
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dashboardBirthdaysBlockItem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid transparent;
+  transition: background 0.2s var(--st-ease), border-color 0.2s var(--st-ease);
+}
+
+.dashboardBirthdaysBlockItem:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(251, 191, 36, 0.15);
+}
+
+.dashboardBirthdaysBlockItemMain {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.dashboardBirthdaysBlockItemMain:focus-visible {
+  outline: none;
+}
+
+.dashboardBirthdaysBlockAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(251, 191, 36, 0.08) 100%);
+}
+
+.dashboardBirthdaysBlockAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dashboardBirthdaysBlockInitial {
+  width: 100%;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--st-accent);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.dashboardBirthdaysBlockInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dashboardBirthdaysBlockName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--st-text);
+}
+
+.dashboardBirthdaysBlockJob {
+  font-size: 12px;
+  color: var(--st-text-muted);
+}
+
+.dashboardBirthdaysBlockAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--st-accent);
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s var(--st-ease), border-color 0.2s var(--st-ease);
+}
+
+.dashboardBirthdaysBlockAction:hover {
+  background: rgba(251, 191, 36, 0.2);
+  border-color: rgba(251, 191, 36, 0.4);
+}
+
+.dashboardBirthdaysBlockAction:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+/* ——— KPI grid ——— */
+.dashboardKpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.dashboardKpiCard {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border-radius: var(--st-radius);
+  border: 1px solid var(--st-border);
+  background: var(--st-bg-elevated);
+  transition: border-color var(--st-duration) var(--st-ease),
+    background var(--st-duration) var(--st-ease),
+    transform var(--st-duration-fast) var(--st-ease),
+    box-shadow var(--st-duration) var(--st-ease);
+  animation: dashboardKpiEnter 0.4s var(--st-ease) backwards;
+}
+
+.dashboardKpiCard:nth-child(1) { animation-delay: 0.05s; }
+.dashboardKpiCard:nth-child(2) { animation-delay: 0.1s; }
+.dashboardKpiCard:nth-child(3) { animation-delay: 0.15s; }
+.dashboardKpiCard:nth-child(4) { animation-delay: 0.2s; }
+
+.dashboardKpiCard[role="button"] {
+  cursor: pointer;
+  text-align: left;
+}
+
+.dashboardKpiCard[role="button"]:hover {
+  background: var(--st-surface-hover);
+  border-color: rgba(251, 191, 36, 0.25);
+  box-shadow: 0 4px 20px rgba(251, 191, 36, 0.08);
+  transform: translateY(-2px);
+}
+
+.dashboardKpiCard[role="button"]:focus-visible {
+  outline: none;
+  border-color: var(--st-accent);
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+.dashboardKpiCard--static {
+  cursor: default;
+}
+
+.dashboardKpiIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--st-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform var(--st-duration) var(--st-ease);
+}
+
+.dashboardKpiIcon--users {
+  background: rgba(251, 191, 36, 0.15);
+  color: var(--st-accent);
+}
+
+.dashboardKpiIcon--roles {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+.dashboardKpiIcon--perms {
+  background: rgba(168, 85, 247, 0.15);
+  color: #a855f7;
+}
+
+.dashboardKpiCard:hover .dashboardKpiIcon {
+  transform: scale(1.05);
+}
+
+.dashboardKpiContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.dashboardKpiValue {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--st-text);
+  line-height: 1.2;
+  transition: color var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardKpiLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--st-text-muted);
+  margin-top: 4px;
+  transition: color var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardKpiChevron {
+  color: var(--st-text-muted);
+  opacity: 0.7;
+  flex-shrink: 0;
+  transition: color var(--st-duration-fast) var(--st-ease),
+    transform var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardKpiCard[role="button"]:hover .dashboardKpiChevron {
+  color: var(--st-accent);
+  transform: translateX(2px);
+}
+
+/* ——— Cards & lists ——— */
+.dashboardCard {
+  border-radius: var(--st-radius);
+  border: 1px solid var(--st-border);
+  background: var(--st-bg-elevated);
+  overflow: hidden;
+  transition: border-color var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration) var(--st-ease);
+}
+
+.dashboardTableCard:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+.dashboardList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dashboardListItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--st-border);
+  transition: background var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardListItem:last-child {
+  border-bottom: 0;
+}
+
+.dashboardListItem--clickable {
+  cursor: pointer;
+}
+
+.dashboardListItem {
+  animation: dashboardListItemEnter 0.3s var(--st-ease) backwards;
+}
+
+.dashboardList .dashboardListItem:nth-child(1) { animation-delay: 0.02s; }
+.dashboardList .dashboardListItem:nth-child(2) { animation-delay: 0.05s; }
+.dashboardList .dashboardListItem:nth-child(3) { animation-delay: 0.08s; }
+.dashboardList .dashboardListItem:nth-child(4) { animation-delay: 0.11s; }
+.dashboardList .dashboardListItem:nth-child(5) { animation-delay: 0.14s; }
+.dashboardList .dashboardListItem:nth-child(6) { animation-delay: 0.17s; }
+
+.dashboardListItem--clickable:hover {
+  background: var(--st-surface-hover);
+}
+
+.dashboardListItem--clickable:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--st-accent-glow);
+}
+
+.dashboardListItem--static {
+  cursor: default;
+}
+
+.dashboardList--compact .dashboardListItem {
+  padding: 10px 18px;
+}
+
+.dashboardListIcon {
+  flex-shrink: 0;
+  color: var(--st-accent);
+  opacity: 0.85;
+}
+
+.dashboardListBadge {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--st-text-muted);
+  background: var(--st-surface);
+  padding: 4px 10px;
+  border-radius: var(--st-radius-sm);
+}
+
+.dashboardListRating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--st-accent);
+  flex-shrink: 0;
+}
+
+.dashboardListRating svg {
+  color: var(--st-accent);
+}
+
+.dashboardListPrimary {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dashboardListName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--st-text);
+}
+
+.dashboardListMeta {
+  font-size: 12px;
+  color: var(--st-text-muted);
+}
+
+.dashboardRoleDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  border: 1px solid var(--st-border);
+}
+
+.dashboardListChevron {
+  color: var(--st-text-muted);
+  opacity: 0.6;
+  flex-shrink: 0;
+  transition: color var(--st-duration-fast) var(--st-ease),
+    transform var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardListItem--clickable:hover .dashboardListChevron {
+  color: var(--st-accent);
+  transform: translateX(2px);
+}
+
+/* ——— Empty state ——— */
+.dashboardEmpty {
+  text-align: center;
+  padding: 48px 24px;
+}
+
+.dashboardEmptyIcon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  border-radius: var(--st-radius);
+  background: var(--st-surface);
+  border: 1px solid var(--st-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--st-text-muted);
+  opacity: 0.8;
+}
+
+.dashboardEmptyText {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--st-text);
+}
+
+.dashboardEmptySub {
+  margin: 8px 0 24px 0;
+  font-size: 14px;
+  color: var(--st-text-muted);
+}
+
+.dashboardEmptyActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* ——— Buttons ——— */
+.dashboardBtn {
+  padding: 10px 20px;
+  border-radius: var(--st-radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--st-duration) var(--st-ease),
+    border-color var(--st-duration) var(--st-ease),
+    color var(--st-duration) var(--st-ease),
+    transform var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardBtn--primary {
+  border: 1px solid var(--st-border);
+  background: var(--st-accent-soft);
+  color: var(--st-accent);
+}
+
+.dashboardBtn--primary:hover {
+  background: rgba(251, 191, 36, 0.25);
+  border-color: rgba(251, 191, 36, 0.4);
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.15);
+  transform: translateY(-1px);
+}
+
+.dashboardBtn--secondary {
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: var(--st-text);
+}
+
+.dashboardBtn--secondary:hover {
+  background: var(--st-surface-hover);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.dashboardBtn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+/* ——— Quick actions (1–3 per permission) ——— */
+.dashboardQuickActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.dashboardQuickAction {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: var(--st-text);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform var(--st-duration-fast) var(--st-ease),
+    border-color var(--st-duration) var(--st-ease),
+    background var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration) var(--st-ease);
+}
+
+.dashboardQuickAction:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.dashboardQuickAction--hot {
+  border-color: rgba(251, 191, 36, 0.35);
+  background: rgba(251, 191, 36, 0.1);
+  color: #fbbf24;
+}
+.dashboardQuickAction--hot:hover {
+  background: rgba(251, 191, 36, 0.18);
+  box-shadow: 0 8px 24px rgba(251, 191, 36, 0.15);
+}
+
+.dashboardQuickAction--holiday {
+  border-color: rgba(59, 130, 246, 0.35);
+  background: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
+}
+.dashboardQuickAction--holiday:hover {
+  background: rgba(59, 130, 246, 0.18);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+}
+
+.dashboardQuickAction--report {
+  border-color: rgba(34, 197, 94, 0.3);
+  background: rgba(34, 197, 94, 0.08);
+  color: #4ade80;
+}
+.dashboardQuickAction--report:hover {
+  background: rgba(34, 197, 94, 0.15);
+}
+
+.dashboardQuickAction--suggest {
+  border-color: rgba(168, 85, 247, 0.35);
+  background: rgba(168, 85, 247, 0.08);
+  color: #c084fc;
+}
+.dashboardQuickAction--suggest:hover {
+  background: rgba(168, 85, 247, 0.15);
+}
+
+.dashboardQuickAction--drivers {
+  border-color: rgba(234, 88, 12, 0.35);
+  background: rgba(234, 88, 12, 0.08);
+  color: #fb923c;
+}
+.dashboardQuickAction--drivers:hover {
+  background: rgba(234, 88, 12, 0.15);
+}
+
+/* ——— Pending approvals (for managers) ——— */
+.dashboardSectionPendingApprovals {
+  margin-bottom: 24px;
+}
+
+.dashboardPendingApprovalsWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dashboardPendingApprovalLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: var(--st-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--st-duration) var(--st-ease),
+    border-color var(--st-duration) var(--st-ease),
+    transform var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardPendingApprovalLink:hover {
+  background: var(--st-surface-hover);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.dashboardPendingApprovalLink:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+.dashboardPendingApprovalLink span:first-of-type {
+  flex: 1;
+  font-weight: 500;
+}
+
+.dashboardPendingApprovalCount {
+  flex-shrink: 0;
+  min-width: 24px;
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: var(--st-accent-soft);
+  color: var(--st-accent);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* ——— Team activity summary ——— */
+.dashboardSectionTeamSummary {
+  margin-bottom: 20px;
+}
+
+.dashboardTeamSummaryText {
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--st-surface);
+  border: 1px solid var(--st-border);
+  font-size: 13px;
+  color: var(--st-text-muted);
+  line-height: 1.5;
+}
+
+.dashboardTeamSummaryLabel {
+  font-weight: 600;
+  color: var(--st-text);
+}
+
+/* ——— Hot items carousel ——— */
+.dashboardActivityHotCarousel {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 12px 8px 8px;
+  border-bottom: 1px solid var(--st-border);
+}
+
+.dashboardActivityHotCarouselRow {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+
+.dashboardActivityHotCarouselBtn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--st-text-muted);
+  cursor: pointer;
+  transition: background var(--st-duration) var(--st-ease),
+    color var(--st-duration) var(--st-ease);
+}
+
+.dashboardActivityHotCarouselBtn:hover {
+  background: var(--st-surface-hover);
+  color: var(--st-text);
+}
+
+.dashboardActivityHotCarouselBtn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+.dashboardActivityHotCarouselContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.dashboardActivityHotCarouselContent .dashboardActivityCard {
+  width: 100%;
+  border-radius: 10px;
+  border: none;
+  border-bottom: none;
+  margin: 0;
+}
+
+.dashboardActivityHotCarouselDots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0 0;
+  width: 100%;
+}
+
+.dashboardActivityHotCarouselCounter {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--st-text-muted);
+}
+
+.dashboardActivitySectionHead {
+  margin-bottom: 16px;
+}
+
+.dashboardActivitySectionTitleWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dashboardActivitySectionTitleWrap .dashboardSectionTitle {
+  margin: 0;
+}
+
+.dashboardActivitySectionSub {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--st-text-muted);
+  letter-spacing: 0.01em;
+}
+
+.dashboardActivityViewAll {
+  flex-shrink: 0;
+}
+
+.dashboardActivityWrap {
+  border-radius: 16px;
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.dashboardActivityLoading {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 20px 24px;
+}
+
+.dashboardActivityLoadingSkeleton {
+  height: 72px;
+  border-radius: 12px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  background-size: 200% 100%;
+  animation: dashboardActivitySkeleton 1.2s ease-in-out infinite;
+}
+
+.dashboardActivityLoadingSkeleton:nth-child(2) { animation-delay: 0.15s; }
+.dashboardActivityLoadingSkeleton:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes dashboardActivitySkeleton {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.dashboardActivityLoadingDots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 8px;
+}
+
+.dashboardActivityLoadingDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--st-accent);
+  animation: dashboardActivityDot 1s var(--st-ease) infinite;
+}
+
+.dashboardActivityLoadingDot:nth-child(2) { animation-delay: 0.15s; }
+.dashboardActivityLoadingDot:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes dashboardActivityDot {
+  0%, 100% { opacity: 0.4; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+.dashboardActivityEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 40px 28px;
+  text-align: center;
+}
+
+.dashboardActivityEmptyIconWrap {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed var(--st-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--st-text-muted);
+}
+
+.dashboardActivityEmptyIcon {
+  opacity: 0.6;
+}
+
+.dashboardActivityEmptyTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--st-text);
+}
+
+.dashboardActivityEmptySub {
+  margin: 0;
+  font-size: 13px;
+  color: var(--st-text-muted);
+  line-height: 1.5;
+  max-width: 280px;
+}
+
+.dashboardActivityEmptyBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--st-border);
+  background: var(--st-surface-hover);
+  color: var(--st-text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--st-duration) var(--st-ease),
+    border-color var(--st-duration) var(--st-ease),
+    transform var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardActivityEmptyBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.dashboardActivityEmptyBtn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+.dashboardActivity {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.dashboardActivityCard {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid var(--st-border);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: background var(--st-duration) var(--st-ease);
+  animation: dashboardActivityCardIn 0.35s var(--st-ease) backwards;
+}
+
+.dashboardActivityCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  pointer-events: none;
+  transition: background var(--st-duration) var(--st-ease);
+  z-index: 0;
+}
+
+.dashboardActivityCard:hover::before {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.dashboardActivityCardInner,
+.dashboardActivityCardChevron {
+  position: relative;
+  z-index: 1;
+}
+
+.dashboardActivityCard:last-child {
+  border-bottom: none;
+}
+
+.dashboardActivityCard:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--st-accent-glow);
+}
+
+.dashboardActivityCard--unread {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.dashboardActivityCard--unread::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background: var(--st-accent);
+}
+
+.dashboardActivityCard--new .dashboardActivityCardTime {
+  color: var(--st-accent);
+}
+
+@keyframes dashboardActivityCardIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dashboardActivityCardInner {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 18px;
+  min-height: 0;
+  flex: 1;
+  position: relative;
+}
+
+.dashboardActivityCardChevron {
+  flex-shrink: 0;
+  margin-right: 14px;
+  opacity: 0.35;
+  transition: opacity var(--st-duration) var(--st-ease);
+}
+
+.dashboardActivityCard:hover .dashboardActivityCardChevron {
+  opacity: 0.7;
+}
+
+.dashboardActivityCardBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.dashboardActivityCardTime {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--st-text-muted);
+  margin-bottom: 4px;
+}
+
+.dashboardActivityCardNewBadge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: var(--st-accent);
+  color: var(--st-bg, #0f0f12);
+}
+
+.dashboardActivityCardTitle {
+  margin: 0 0 2px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--st-text);
+  line-height: 1.35;
+}
+
+.dashboardActivityCardMessage {
+  margin: 0;
+  font-size: 13px;
+  color: var(--st-text-muted);
+  line-height: 1.45;
+}
+
+/* Birthday — warm celebratory card */
+.dashboardActivityCard--birthday {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.12) 0%, rgba(251, 146, 60, 0.06) 100%);
+  border-color: rgba(251, 191, 36, 0.25);
+}
+.dashboardActivityCardIconWrap--birthday {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.35) 0%, rgba(251, 146, 60, 0.2) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fbbf24;
+  flex-shrink: 0;
+}
+
+/* Hot — announcement banner */
+.dashboardActivityCard--hot {
+  background: linear-gradient(90deg, rgba(251, 191, 36, 0.15) 0%, rgba(251, 191, 36, 0.04) 100%);
+  border-color: rgba(251, 191, 36, 0.3);
+}
+.dashboardActivityCardBanner--hot {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(251, 191, 36, 0.25);
+  color: #fbbf24;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+/* Holiday request — calendar strip */
+.dashboardActivityCard--holiday-request {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.03) 100%);
+  border-color: rgba(59, 130, 246, 0.25);
+}
+.dashboardActivityCardStrip--holiday {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* Holiday decision — green strip */
+.dashboardActivityCard--holiday-decision {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(34, 197, 94, 0.02) 100%);
+  border-color: rgba(34, 197, 94, 0.2);
+}
+.dashboardActivityCardStrip--decision {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* Suggest — message bubble */
+.dashboardActivityCard--suggest-sent,
+.dashboardActivityCard--suggest-received {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.08) 0%, rgba(168, 85, 247, 0.02) 100%);
+  border-color: rgba(168, 85, 247, 0.2);
+}
+.dashboardActivityCardBubble--suggest {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(168, 85, 247, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #c084fc;
+  flex-shrink: 0;
+}
+
+/* Report — document style */
+.dashboardActivityCard--report-new,
+.dashboardActivityCard--report-sent {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.06) 0%, rgba(34, 197, 94, 0.02) 100%);
+  border-color: rgba(34, 197, 94, 0.18);
+}
+.dashboardActivityCardDoc--report {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(34, 197, 94, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4ade80;
+  flex-shrink: 0;
+}
+
+/* Info / default — minimal */
+.dashboardActivityCard--info,
+.dashboardActivityCard--permission-lost {
+  background: var(--st-surface);
+}
+.dashboardActivityCardMinimal {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--st-text-muted);
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .dashboardKpiGrid {
+    grid-template-columns: 1fr;
+  }
+  .dashboardWelcomeCard {
+    flex-direction: column;
+    text-align: center;
+  }
+}

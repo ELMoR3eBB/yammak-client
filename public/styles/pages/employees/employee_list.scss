@@ -1,0 +1,638 @@
+// employee_list.scss — design aligned with Settings (same tokens, colours, layout)
+
+// Same design tokens as Settings
+$st-text: var(--st-text);
+$st-text-muted: var(--st-text-muted);
+$st-accent: var(--st-accent);
+$st-border: var(--st-border);
+$st-surface: var(--st-surface);
+$st-surface-hover: var(--st-surface-hover);
+$st-accent-soft: var(--st-accent-soft);
+$st-accent-glow: var(--st-accent-glow);
+$st-radius: var(--st-radius);
+$st-radius-sm: var(--st-radius-sm);
+$st-ease: var(--st-ease);
+
+// Ensure employees page fills content like Settings
+.content:has(.employeesPage) {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.employeesPage {
+  --st-bg: #09090b;
+  --st-bg-elevated: #0f0f12;
+  --st-surface: rgba(255, 255, 255, 0.03);
+  --st-surface-hover: rgba(255, 255, 255, 0.06);
+  --st-border: rgba(255, 255, 255, 0.06);
+  --st-text: rgba(255, 255, 255, 0.92);
+  --st-text-muted: rgba(255, 255, 255, 0.5);
+  --st-accent: #fbbf24;
+  --st-accent-soft: rgba(251, 191, 36, 0.18);
+  --st-accent-glow: rgba(251, 191, 36, 0.15);
+  --st-radius: 8px;
+  --st-radius-sm: 6px;
+  --st-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+  color: $st-text;
+  background: var(--st-bg);
+  overflow: hidden;
+  animation: employeesPageIn 0.45s $st-ease forwards;
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      ellipse 100% 50% at 0% 0%,
+      rgba(251, 191, 36, 0.04) 0%,
+      transparent 50%
+    );
+    pointer-events: none;
+    animation: employeesBgIn 0.6s $st-ease 0.15s both;
+  }
+}
+
+@keyframes employeesPageIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes employeesBgIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes employeesMainIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-40%); }
+  100% { transform: translateX(140%); }
+}
+
+// ——— Header (same style as Settings) ———
+.employeesHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--st-border);
+  flex-shrink: 0;
+  background: var(--st-bg-elevated);
+
+  &:hover .employeesHeaderIcon {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
+  }
+}
+
+.employeesHeaderIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: $st-radius;
+  background: linear-gradient(
+    135deg,
+    rgba(251, 191, 36, 0.2) 0%,
+    rgba(251, 191, 36, 0.06) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $st-accent;
+  flex-shrink: 0;
+  transition: transform 0.25s $st-ease, box-shadow 0.25s $st-ease;
+}
+
+.employeesHeaderText {
+  flex: 1;
+  min-width: 0;
+}
+
+.employeesTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: $st-text;
+}
+
+.employeesSubtitle {
+  margin: 4px 0 0 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: $st-text-muted;
+}
+
+.employeesCreateBtn {
+  padding: 10px 24px;
+  border-radius: $st-radius-sm;
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: $st-text;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.25s $st-ease, border-color 0.25s $st-ease,
+    color 0.25s $st-ease, transform 0.2s $st-ease, box-shadow 0.25s $st-ease;
+
+  &:hover {
+    background: $st-accent-soft;
+    border-color: rgba(251, 191, 36, 0.4);
+    color: $st-accent;
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.15);
+  }
+  &:active {
+    transform: scale(0.97);
+  }
+  &:focus-visible {
+    outline: none;
+    border-color: $st-accent;
+    box-shadow: 0 0 0 2px $st-accent-glow;
+  }
+}
+
+// ——— Main content ———
+.employeesMain {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  animation: employeesMainIn 0.4s $st-ease 0.12s both;
+}
+
+.employeesContent {
+  flex: 1;
+  padding: 28px 32px 40px;
+}
+
+.employeesSection {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.employeesToolbar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+
+  .si-input {
+    background: var(--st-surface);
+    border: 1px solid var(--st-border);
+    color: $st-text;
+    border-radius: $st-radius-sm;
+    transition: border-color 0.25s $st-ease, background 0.25s $st-ease,
+      box-shadow 0.25s $st-ease;
+    &::placeholder {
+      color: $st-text-muted;
+      opacity: 0.7;
+    }
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.04);
+    }
+    &:focus {
+      border-color: $st-accent;
+      background: rgba(251, 191, 36, 0.06);
+      box-shadow: 0 0 0 2px $st-accent-glow;
+    }
+  }
+  .si-icon {
+    color: $st-text-muted;
+  }
+}
+
+.employeesTableWrap {
+  overflow-x: auto;
+  border-radius: $st-radius;
+}
+
+// ——— DataTable (Settings-style colours and radius) ———
+.employeesPage .employeesTableWrap .dt {
+  min-width: 860px;
+  border: 1px solid var(--st-border);
+  border-radius: $st-radius;
+  overflow: hidden;
+  background: var(--st-surface);
+}
+
+.employeesPage .employeesTableWrap .dt-head {
+  display: grid;
+  grid-template-columns: var(--dt-grid);
+  background: var(--st-bg-elevated);
+  border-bottom: 1px solid var(--st-border);
+}
+
+.employeesPage .employeesTableWrap .dt-th {
+  height: 44px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $st-text-muted;
+  white-space: nowrap;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.employeesPage .employeesTableWrap .dt-th.sort {
+  appearance: none;
+  width: 100%;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  gap: 8px;
+  transition: background 0.2s $st-ease;
+
+  &:hover {
+    background: $st-surface-hover;
+  }
+  &:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px rgba(251, 191, 36, 0.35);
+  }
+}
+
+.employeesPage .employeesTableWrap .dt-sortMark {
+  margin-left: auto;
+  color: $st-accent;
+  font-size: 11px;
+  min-width: 12px;
+  text-align: right;
+}
+
+.employeesPage .employeesTableWrap .dt-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.employeesPage .employeesTableWrap .dt-row {
+  display: grid;
+  grid-template-columns: var(--dt-grid);
+  align-items: center;
+  border-bottom: 1px solid var(--st-border);
+  min-height: 56px;
+  transition: background 0.2s $st-ease;
+
+  &:hover {
+    background: $st-surface-hover;
+  }
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.employeesPage .employeesTableWrap .dt-empty {
+  padding: 28px 16px;
+  text-align: center;
+  color: $st-text-muted;
+  font-size: 13px;
+  border-bottom: 1px solid var(--st-border);
+}
+
+.employeesPage .employeesTableWrap .dt-footer {
+  border-top: 1px solid var(--st-border);
+  padding: 0;
+  background: transparent;
+}
+
+// ——— Cells ———
+.employeesPage .td {
+  padding: 12px 16px;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.employeesPage .td-center {
+  display: flex;
+  justify-content: center;
+}
+
+.employeesPage .cell {
+  font-size: 13.5px;
+  line-height: 1.25;
+  color: $st-text;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &.mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+      "Liberation Mono", "Courier New", monospace;
+    letter-spacing: 0.02em;
+  }
+  &.strong {
+    font-weight: 700;
+  }
+  &.muted,
+  &.small {
+    color: $st-text-muted;
+  }
+  &.small {
+    font-size: 12px;
+    margin-top: 4px;
+  }
+}
+
+.employeesPage .hasTip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+
+  .tip {
+    position: absolute;
+    left: 0;
+    top: 110%;
+    z-index: 5;
+    padding: 8px 10px;
+    border-radius: $st-radius-sm;
+    border: 1px solid var(--st-border);
+    background: var(--st-bg-elevated);
+    color: $st-text;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(-4px);
+    pointer-events: none;
+    transition: opacity 0.2s $st-ease, transform 0.2s $st-ease;
+  }
+  &:hover .tip {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.employeesPage .salaryStack {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+
+  .amt {
+    font-weight: 500;
+    font-size: 13.5px;
+    line-height: 1;
+    color: $st-text;
+  }
+  .type {
+    font-size: 11.5px;
+    line-height: 1;
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--st-border);
+    background: var(--st-surface);
+    color: $st-text-muted;
+    white-space: nowrap;
+  }
+  &.monthly .type {
+    border-color: rgba(251, 191, 36, 0.3);
+    background: rgba(251, 191, 36, 0.1);
+    color: rgba(255, 235, 190, 0.95);
+  }
+  &.weekly .type {
+    border-color: rgba(59, 130, 246, 0.3);
+    background: rgba(59, 130, 246, 0.1);
+    color: rgba(210, 230, 255, 0.95);
+  }
+  &.hourly .type {
+    border-color: rgba(34, 197, 94, 0.3);
+    background: rgba(34, 197, 94, 0.1);
+    color: rgba(210, 255, 230, 0.95);
+  }
+  &.yearly .type {
+    border-color: rgba(168, 85, 247, 0.3);
+    background: rgba(168, 85, 247, 0.1);
+    color: rgba(240, 220, 255, 0.95);
+  }
+  &.daily .type {
+    border-color: rgba(239, 68, 68, 0.25);
+    background: rgba(239, 68, 68, 0.08);
+    color: rgba(255, 220, 220, 0.95);
+  }
+}
+
+.employeesPage .actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.employeesPage .deleteWrap.is-disabled .iconBtn {
+  opacity: 0.42;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.employeesPage .iconBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: $st-radius-sm;
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s $st-ease, border-color 0.2s $st-ease,
+    transform 0.2s $st-ease, color 0.2s $st-ease;
+  color: $st-text;
+
+  &:hover {
+    background: $st-surface-hover;
+    border-color: rgba(255, 255, 255, 0.1);
+    transform: translateX(1px);
+  }
+  &:focus-visible {
+    outline: none;
+    border-color: $st-accent;
+    box-shadow: 0 0 0 2px $st-accent-glow;
+  }
+  &.danger:hover {
+    border-color: rgba(239, 68, 68, 0.35);
+    background: rgba(239, 68, 68, 0.1);
+  }
+}
+
+// ——— Footer (Settings-style buttons) ———
+.employeesFooter {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 16px;
+  border-top: 1px solid var(--st-border);
+  background: var(--st-bg-elevated);
+}
+
+.employeesMuted {
+  color: $st-text-muted;
+  font-size: 13px;
+}
+
+.employeesFooterLeft,
+.employeesFooterMid,
+.employeesFooterRight {
+  display: flex;
+  align-items: center;
+}
+
+.employeesFooterLeft {
+  justify-content: flex-start;
+}
+.employeesFooterMid {
+  justify-content: center;
+  gap: 10px;
+}
+.employeesFooterRight {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.employeesPerPage {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.employeesSelect {
+  height: 36px;
+  padding: 0 32px 0 12px;
+  border-radius: $st-radius-sm;
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: $st-text;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.25s $st-ease, background 0.25s $st-ease;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, $st-accent 50%),
+    linear-gradient(135deg, $st-accent 50%, transparent 50%);
+  background-position: calc(100% - 12px) 50%, calc(100% - 7px) 50%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+
+  &:focus {
+    border-color: $st-accent;
+    background: rgba(251, 191, 36, 0.06);
+  }
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.04);
+  }
+  option {
+    background: var(--st-bg-elevated);
+    color: $st-text;
+  }
+}
+
+.employeesPagerBtn {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: $st-radius-sm;
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: $st-text;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.25s $st-ease, border-color 0.25s $st-ease,
+    color 0.25s $st-ease, transform 0.2s $st-ease;
+
+  &:hover:not(:disabled) {
+    background: $st-accent-soft;
+    border-color: rgba(251, 191, 36, 0.4);
+    color: $st-accent;
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  &:focus-visible {
+    outline: none;
+    border-color: $st-accent;
+    box-shadow: 0 0 0 2px $st-accent-glow;
+  }
+}
+
+.employeesPages {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.employeesPagesDots {
+  padding: 0 6px;
+  color: $st-text-muted;
+}
+
+.employeesPageBtn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: $st-radius-sm;
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: $st-text;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.25s $st-ease, border-color 0.25s $st-ease,
+    color 0.25s $st-ease;
+
+  &:hover {
+    background: $st-surface-hover;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  &.active {
+    background: $st-accent-soft;
+    border-color: rgba(251, 191, 36, 0.4);
+    color: $st-accent;
+  }
+  &:focus-visible {
+    outline: none;
+    border-color: $st-accent;
+    box-shadow: 0 0 0 2px $st-accent-glow;
+  }
+}
+
+@media (max-width: 860px) {
+  .employeesFooter {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+  .employeesFooterLeft,
+  .employeesFooterMid,
+  .employeesFooterRight {
+    justify-content: center;
+  }
+}

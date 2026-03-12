@@ -1,0 +1,151 @@
+/* holidayStatusModal.css - holiday approved/denied notification modal (app theme) */
+
+.holidayStatusModal-backdrop {
+  --st-bg: #09090b;
+  --st-bg-elevated: #0f0f12;
+  --st-surface: rgba(255, 255, 255, 0.03);
+  --st-surface-hover: rgba(255, 255, 255, 0.06);
+  --st-border: rgba(255, 255, 255, 0.08);
+  --st-text: rgba(255, 255, 255, 0.92);
+  --st-text-muted: rgba(255, 255, 255, 0.58);
+  --st-accent: #fbbf24;
+  --st-accent-soft: rgba(251, 191, 36, 0.16);
+  --st-accent-glow: rgba(251, 191, 36, 0.2);
+  --st-success: #22c55e;
+  --st-success-soft: rgba(34, 197, 94, 0.15);
+  --st-danger: #ef4444;
+  --st-danger-soft: rgba(239, 68, 68, 0.15);
+  --st-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --st-duration: 0.25s;
+
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.64);
+  backdrop-filter: blur(4px);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  z-index: 10001;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--st-duration) var(--st-ease);
+}
+
+.holidayStatusModal-backdrop.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.holidayStatusModal-backdrop.is-exiting {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.holidayStatusModal {
+  width: min(420px, 92vw);
+  padding: 28px 24px;
+  border-radius: 14px;
+  background:
+    radial-gradient(ellipse at top left, var(--st-accent-glow), transparent 50%),
+    var(--st-bg-elevated);
+  border: 1px solid var(--st-border);
+  box-shadow: 0 24px 72px rgba(0, 0, 0, 0.55);
+  text-align: center;
+  color: var(--st-text);
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  transition: opacity var(--st-duration) var(--st-ease), transform var(--st-duration) var(--st-ease);
+}
+
+.holidayStatusModal.is-open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.holidayStatusModal.is-exiting {
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+}
+
+.holidayStatusModal-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+}
+
+.holidayStatusModal-icon.approved {
+  color: var(--st-success);
+  background: var(--st-success-soft);
+  border-color: rgba(34, 197, 94, 0.28);
+  box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.08);
+}
+
+.holidayStatusModal-icon.denied {
+  color: var(--st-danger);
+  background: var(--st-danger-soft);
+  border-color: rgba(239, 68, 68, 0.28);
+  box-shadow: 0 0 0 6px rgba(239, 68, 68, 0.08);
+}
+
+.holidayStatusModal-title {
+  margin: 0 0 12px 0;
+  font-size: 20px;
+  font-weight: 650;
+  color: var(--st-text);
+  letter-spacing: -0.01em;
+}
+
+.holidayStatusModal-dates {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: var(--st-text-muted);
+}
+
+.holidayStatusModal-reason,
+.holidayStatusModal-decider,
+.holidayStatusModal-denial {
+  margin: 6px 0 0 0;
+  font-size: 13px;
+  color: var(--st-text-muted);
+}
+
+.holidayStatusModal-denial {
+  font-style: italic;
+  margin-top: 10px;
+}
+
+.holidayStatusModal-btn {
+  margin-top: 24px;
+  height: 42px;
+  padding: 0 24px;
+  border-radius: 8px;
+  border: 1px solid var(--st-accent);
+  background: var(--st-accent-soft);
+  color: var(--st-accent);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s var(--st-ease), border-color 0.15s var(--st-ease),
+    box-shadow 0.15s var(--st-ease), transform 0.12s var(--st-ease);
+}
+
+.holidayStatusModal-btn:hover {
+  background: rgba(251, 191, 36, 0.24);
+  border-color: rgba(251, 191, 36, 0.56);
+  box-shadow: 0 4px 14px var(--st-accent-glow);
+}
+
+.holidayStatusModal-btn:active {
+  transform: scale(0.98);
+}
+
+.holidayStatusModal-btn:focus-visible {
+  outline: none;
+  border-color: var(--st-accent);
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}

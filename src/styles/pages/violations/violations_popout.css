@@ -1,0 +1,514 @@
+/* Violations — sticky FAB (hover expand) + centered modal + message-style list */
+
+/* ========== Sticky FAB (like AI Assistant), left of AI FAB on profile pages ========== */
+/* Wrap: fixed width so button can grow to the left (right edge fixed) */
+.violationsFabWrap {
+  position: fixed;
+  bottom: 20px;
+  right: calc(16px + 14px + 44px + 12px); /* left of .aiChatFab */
+  z-index: 9000;
+  width: 120px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.violationsFab {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 44px;
+  width: 44px;
+  min-width: 0; /* allow shrinking so width: 44px is used; otherwise flex min-content wins */
+  max-width: 44px;
+  padding: 0;
+  border-radius: 22px;
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.28), rgba(251, 191, 36, 0.1));
+  color: #fbbf24;
+  cursor: pointer;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.2s, max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.2s,
+    background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+/* Expand immediately on hover; collapse delayed so text can fade out first */
+.violationsFab:hover {
+  width: 120px;
+  max-width: 120px;
+  transition-delay: 0s, 0s, 0s, 0s, 0s, 0s; /* no delay for width/max-width when expanding */
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.38), rgba(251, 191, 36, 0.14));
+  border-color: rgba(251, 191, 36, 0.45);
+  transform: scale(1.02);
+  box-shadow: 0 6px 24px rgba(251, 191, 36, 0.2);
+}
+
+.violationsFab:active {
+  transform: scale(0.98);
+}
+
+/* Inner strip: [58px spacer][44px icon][~56px text]. translateX(-58) so viewport shows icon when 44px, icon+text when 120px. */
+.violationsFabInner {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  width: 178px;
+  min-width: 178px;
+  height: 44px;
+  transform: translateX(-58px);
+  pointer-events: none;
+}
+
+.violationsFabSpacer {
+  flex-shrink: 0;
+  width: 58px;
+  height: 44px;
+}
+
+/* Icon centered in 44px (like AI FAB circle) */
+.violationsFabIconBox {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+}
+
+.violationsFabIcon {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+/* Text: fades out with no delay on hover out; fades in with 0.1s delay on hover in; tight to icon */
+.violationsFabText {
+  flex-shrink: 0;
+  width: 76px;
+  margin-left: 0;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  opacity: 0;
+  transition: opacity 0.2s ease 0s;
+}
+
+.violationsFab:hover .violationsFabText {
+  opacity: 1;
+  transition-delay: 0.1s;
+}
+
+/* ========== Centered modal backdrop ========== */
+.violationsPopoutBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.violationsPopoutBackdrop--enter {
+  animation: violationsBackdropIn 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.violationsPopoutBackdrop--exiting {
+  animation: violationsBackdropOut 0.26s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes violationsBackdropIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes violationsBackdropOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.violationsPopout {
+  --vp-bg: #0f1114;
+  --vp-bg-elevated: #16181c;
+  --vp-border: rgba(255, 255, 255, 0.08);
+  --vp-accent: #fbbf24;
+  --vp-text: rgba(255, 255, 255, 0.96);
+  --vp-muted: rgba(255, 255, 255, 0.5);
+  --vp-muted-soft: rgba(255, 255, 255, 0.35);
+  width: 100%;
+  max-width: 806px; /* +30% from 620px */
+  max-height: 92vh;
+  background: var(--vp-bg);
+  border: 1px solid var(--vp-border);
+  border-radius: 20px;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.violationsPopout--enter {
+  animation: violationsPanelIn 0.35s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+.violationsPopout--exiting {
+  animation: violationsPanelOut 0.26s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes violationsPanelIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes violationsPanelOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+.violationsPopoutHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--vp-border);
+  flex-shrink: 0;
+  background: var(--vp-bg-elevated);
+}
+
+.violationsPopoutTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--vp-text);
+}
+
+.violationsPopoutTitleIcon {
+  flex-shrink: 0;
+  color: var(--vp-accent);
+}
+
+.violationsPopoutClose {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--vp-muted);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.violationsPopoutClose:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--vp-text);
+}
+
+.violationsPopoutSubtitle {
+  margin: 0;
+  padding: 10px 20px 14px;
+  font-size: 0.8rem;
+  color: var(--vp-muted);
+  flex-shrink: 0;
+}
+
+/* ========== Message-style list ========== */
+.violationsPopoutListWrap {
+  flex: 1;
+  min-height: 140px;
+  max-height: 380px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px 20px;
+}
+
+.violationsPopoutEmpty {
+  padding: 32px 16px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--vp-muted);
+}
+
+.violationsPopoutList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* One message = avatar + body (name, role, amount+reason, meta) */
+.violationsPopoutItem {
+  display: flex;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  transition: background 0.2s ease;
+}
+
+.violationsPopoutItem:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.violationsPopoutItemIn {
+  animation: violationsMsgIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes violationsMsgIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.violationsPopoutItem--exiting {
+  animation: violationsMsgOut 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  pointer-events: none;
+}
+
+@keyframes violationsMsgOut {
+  to {
+    opacity: 0;
+    transform: translateX(-20px) scale(0.97);
+  }
+}
+
+.violationsPopoutItemAvatar {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.25), rgba(251, 191, 36, 0.1));
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--vp-accent);
+}
+
+.violationsPopoutItemBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.violationsPopoutItemName {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--vp-text);
+  margin-bottom: 2px;
+}
+
+.violationsPopoutItemRole {
+  font-size: 0.75rem;
+  color: var(--vp-muted);
+  margin-bottom: 6px;
+}
+
+.violationsPopoutItemContent {
+  font-size: 0.875rem;
+  color: var(--vp-text);
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+
+.violationsPopoutItemAmount {
+  font-weight: 600;
+  color: var(--vp-accent);
+  margin-right: 8px;
+}
+
+.violationsPopoutItemMeta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 0.72rem;
+  color: var(--vp-muted-soft);
+}
+
+.violationsPopoutItemTime {
+  color: var(--vp-muted-soft);
+}
+
+.violationsPopoutItemRelative {
+  color: var(--vp-muted);
+  font-style: italic;
+}
+
+.violationsPopoutItemRemove {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--vp-muted);
+  cursor: pointer;
+  opacity: 0.85;
+  transition: background 0.25s ease, color 0.25s ease, opacity 0.2s ease;
+}
+
+.violationsPopoutItem:hover .violationsPopoutItemRemove {
+  opacity: 1;
+}
+
+.violationsPopoutItemRemove:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+/* ========== Add section — row: amount (left) | reason | Add button ========== */
+.violationsPopoutAdd {
+  padding: 16px 24px 24px;
+  border-top: 1px solid var(--vp-border);
+  flex-shrink: 0;
+  background: var(--vp-bg-elevated);
+}
+
+.violationsPopoutAddLabel {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--vp-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+
+.violationsPopoutAddRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.violationsPopoutAddField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.violationsPopoutAddField--amount {
+  width: 120px;
+  min-width: 100px;
+}
+
+.violationsPopoutAddField--reason {
+  flex: 1;
+  min-width: 140px;
+}
+
+.violationsPopoutAddField--btn {
+  flex-shrink: 0;
+}
+
+.violationsPopoutAddFieldLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--vp-muted);
+}
+
+.violationsPopoutAddFieldLabel--hidden {
+  visibility: hidden;
+  height: 0;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+.violationsPopoutInput {
+  padding: 10px 12px;
+  border: 1px solid var(--vp-border);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--vp-text);
+  font-size: 0.875rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.violationsPopoutInput::placeholder {
+  color: var(--vp-muted-soft);
+}
+
+.violationsPopoutInput:focus {
+  outline: none;
+  border-color: var(--vp-accent);
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.12);
+}
+
+/* Amount: LTR and placeholder from left to right */
+.violationsPopoutInputAmount {
+  direction: ltr;
+  text-align: left;
+  color: var(--vp-accent);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.violationsPopoutInputReason {
+  min-width: 0;
+}
+
+.violationsPopoutAddBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--vp-accent) 0%, #f59e0b 100%);
+  color: #0c0c0e;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 16px rgba(251, 191, 36, 0.35);
+}
+
+.violationsPopoutAddBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(251, 191, 36, 0.45);
+}
+
+.violationsPopoutAddBtn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.violationsPopoutAddBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

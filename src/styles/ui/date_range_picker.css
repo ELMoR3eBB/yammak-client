@@ -1,0 +1,262 @@
+/* date_range_picker.css — single trigger + calendar popover, same look as audit date inputs / PaginatorSelect */
+
+.dateRangePicker {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dateRangePickerLabel {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--st-text-muted);
+}
+
+.dateRangePickerTrigger {
+  height: 38px;
+  min-width: 140px;
+  padding: 0 10px 0 10px;
+  border-radius: var(--st-radius-sm);
+  background: var(--st-surface);
+  border: 1px solid var(--st-border);
+  color: var(--st-text);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  outline: none;
+  transition: border-color var(--st-duration) var(--st-ease),
+    background var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration-fast) var(--st-ease);
+}
+
+.dateRangePickerTrigger:hover {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.dateRangePickerTrigger:focus-visible {
+  border-color: var(--st-accent);
+  background: rgba(251, 191, 36, 0.06);
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+.dateRangePickerTriggerIcon {
+  flex-shrink: 0;
+  color: var(--st-text-muted);
+}
+
+.dateRangePickerTriggerValue {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.dateRangePickerTriggerArrow {
+  flex-shrink: 0;
+  color: var(--st-accent);
+  transition: transform var(--st-duration) var(--st-ease);
+}
+
+.dateRangePicker--open .dateRangePickerTriggerArrow {
+  transform: rotate(180deg);
+}
+
+/* Portaled dropdown: theme when rendered in body */
+.dateRangePickerDrop {
+  --st-bg-elevated: #0f0f12;
+  --st-surface: rgba(255, 255, 255, 0.03);
+  --st-surface-hover: rgba(255, 255, 255, 0.06);
+  --st-border: rgba(255, 255, 255, 0.06);
+  --st-text: rgba(255, 255, 255, 0.92);
+  --st-text-muted: rgba(255, 255, 255, 0.5);
+  --st-accent: #fbbf24;
+  --st-accent-soft: rgba(251, 191, 36, 0.18);
+  --st-radius: 8px;
+  --st-radius-sm: 6px;
+  --st-duration: 0.25s;
+  --st-duration-fast: 0.15s;
+  --st-ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dateRangePickerDropInner {
+  background: var(--st-bg-elevated);
+  border: 1px solid var(--st-border);
+  border-radius: var(--st-radius);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  padding: 12px;
+  min-width: 280px;
+  animation: dateRangePickerDropIn 0.22s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes dateRangePickerDropIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes dateRangePickerDropOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+}
+
+.dateRangePickerDrop--exit .dateRangePickerDropInner {
+  animation: dateRangePickerDropOut 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.dateRangePickerDropHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 8px;
+}
+
+.dateRangePickerDropNav {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--st-radius-sm);
+  background: transparent;
+  color: var(--st-text);
+  cursor: pointer;
+  transition: background var(--st-duration-fast) var(--st-ease),
+    color var(--st-duration-fast) var(--st-ease);
+}
+
+.dateRangePickerDropNav:hover {
+  background: var(--st-surface-hover);
+  color: var(--st-accent);
+}
+
+.dateRangePickerDropNav:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--st-accent-soft);
+}
+
+.dateRangePickerDropMonth {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--st-text);
+}
+
+.dateRangePickerDropWeekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: 6px;
+}
+
+.dateRangePickerDropWeekday {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--st-text-muted);
+  text-align: center;
+  padding: 4px 0;
+}
+
+.dateRangePickerDropGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.dateRangePickerDropDay {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--st-radius-sm);
+  background: transparent;
+  color: var(--st-text);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--st-duration-fast) var(--st-ease),
+    color var(--st-duration-fast) var(--st-ease);
+}
+
+.dateRangePickerDropDay:hover:not(.dateRangePickerDropDay--disabled):not(.dateRangePickerDropDay--selected) {
+  background: var(--st-surface-hover);
+}
+
+.dateRangePickerDropDay--other {
+  color: var(--st-text-muted);
+  opacity: 0.6;
+}
+
+.dateRangePickerDropDay--inRange:not(.dateRangePickerDropDay--selected) {
+  background: var(--st-accent-soft);
+  color: var(--st-accent);
+}
+
+.dateRangePickerDropDay--selected {
+  background: var(--st-accent);
+  color: #09090b;
+  font-weight: 600;
+}
+
+.dateRangePickerDropDay--disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.dateRangePickerDropDay:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--st-accent-soft);
+}
+
+.dateRangePickerDropFooter {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--st-border);
+}
+
+.dateRangePickerDropClear {
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  border-radius: var(--st-radius-sm);
+  background: transparent;
+  color: var(--st-text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--st-duration-fast) var(--st-ease),
+    color var(--st-duration-fast) var(--st-ease);
+}
+
+.dateRangePickerDropClear:hover {
+  background: var(--st-surface-hover);
+  color: var(--st-text);
+}
+
+.dateRangePickerDropClear:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--st-accent-soft);
+}

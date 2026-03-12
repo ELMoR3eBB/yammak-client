@@ -1,0 +1,199 @@
+/* EmployeeProfileModal — same theme tokens as dashboard/list */
+.epmodal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  z-index: 10000;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.epmodal-backdrop.is-open {
+  opacity: 1;
+}
+
+.epmodal {
+  width: min(480px, 95vw);
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  background: #0f0f12;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transform: translateY(16px) scale(0.98);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.epmodal.is-open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.epmodal-header {
+  padding: 28px 24px 20px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.epmodal-avatar-wrap {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 16px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(251, 191, 36, 0.06) 100%);
+}
+
+.epmodal-avatar,
+.epmodal-avatar-initial {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.epmodal-avatar-initial {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 700;
+  color: #fbbf24;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.25) 0%, rgba(251, 191, 36, 0.1) 100%);
+}
+
+.epmodal-avatar-initial[aria-hidden="true"] {
+  display: none;
+}
+
+.epmodal-title {
+  margin: 0 0 4px;
+  font-size: 20px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.epmodal-role {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.epmodal-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fbbf24;
+}
+
+.epmodal-star {
+  color: #fbbf24;
+}
+
+.epmodal-body {
+  padding: 20px 24px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.epmodal-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.epmodal-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.epmodal-item-icon {
+  flex-shrink: 0;
+  color: rgba(251, 191, 36, 0.9);
+  margin-top: 2px;
+}
+
+.epmodal-item div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.epmodal-item-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.epmodal-item-value {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.epmodal-notes {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.epmodal-notes-text {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.epmodal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding: 16px 24px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.epmodal-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.1s;
+}
+
+.epmodal-btn--ghost {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.epmodal-btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.epmodal-btn--primary {
+  background: rgba(251, 191, 36, 0.2);
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  color: #fbbf24;
+}
+
+.epmodal-btn--primary:hover {
+  background: rgba(251, 191, 36, 0.28);
+  border-color: rgba(251, 191, 36, 0.45);
+}

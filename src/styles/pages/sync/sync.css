@@ -1,0 +1,238 @@
+/* Sync page: data sync (drivers, stores) — standalone, no audit_logs.css */
+
+.content:has(.syncPage) {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.syncPage {
+  --st-bg: #09090b;
+  --st-bg-elevated: #0f0f12;
+  --st-border: rgba(255, 255, 255, 0.06);
+  --st-text: rgba(255, 255, 255, 0.92);
+  --st-text-muted: rgba(255, 255, 255, 0.5);
+  --st-accent: #fbbf24;
+  --st-radius: 8px;
+  --st-radius-sm: 6px;
+  --st-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+  color: var(--st-text);
+  background: var(--st-bg);
+  overflow: hidden;
+  position: relative;
+}
+
+.syncPage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 100% 50% at 0% 0%,
+    rgba(251, 191, 36, 0.04) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+}
+
+.syncPage.syncPage--enter {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: syncPageEnter 0.35s var(--st-ease) forwards;
+}
+
+@keyframes syncPageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header */
+.syncPage .syncHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--st-border);
+  flex-shrink: 0;
+  background: var(--st-bg-elevated);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 1px 0 rgba(251, 191, 36, 0.06);
+}
+
+.syncPage .syncHeader:hover .syncHeaderIcon {
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
+}
+
+.syncPage .syncHeaderIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--st-radius);
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(251, 191, 36, 0.06) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--st-accent);
+  flex-shrink: 0;
+  transition: transform 0.25s var(--st-ease), box-shadow 0.25s var(--st-ease);
+}
+
+.syncPage .syncHeaderText {
+  flex: 1;
+  min-width: 0;
+}
+
+.syncPage .syncTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--st-text);
+}
+
+.syncPage .syncSubtitle {
+  margin: 4px 0 0 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--st-text-muted);
+}
+
+/* Main */
+.syncPage .syncMain {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.syncPage .syncContent {
+  flex: 1;
+  padding: 28px 32px 40px;
+}
+
+.syncPage .syncSection {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.syncCard {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 24px;
+  border-radius: var(--st-radius, 8px);
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.06));
+  background: linear-gradient(180deg, var(--st-bg-elevated, #0f0f12) 0%, rgba(15, 15, 18, 0.98) 100%);
+  flex-wrap: wrap;
+}
+
+.syncCardHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  min-width: 0;
+}
+
+.syncCardIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--st-radius, 8px);
+  background: rgba(251, 191, 36, 0.12);
+  color: var(--st-accent, #fbbf24);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.syncCardTitleWrap {
+  min-width: 0;
+}
+
+.syncCardTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--st-text, rgba(255, 255, 255, 0.92));
+}
+
+.syncCardDesc {
+  margin: 4px 0 0 0;
+  font-size: 13px;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+}
+
+.syncCardActions {
+  flex-shrink: 0;
+}
+
+.syncCardBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: var(--st-radius-sm, 6px);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  background: rgba(251, 191, 36, 0.12);
+  color: var(--st-accent, #fbbf24);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s var(--st-ease), border-color 0.2s var(--st-ease), transform 0.15s var(--st-ease);
+}
+
+.syncCardBtn:hover:not(:disabled) {
+  background: rgba(251, 191, 36, 0.2);
+  border-color: rgba(251, 191, 36, 0.6);
+  transform: translateY(-1px);
+}
+
+.syncCardBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.syncCardBtnIcon.spinning {
+  animation: syncSpin 0.8s linear infinite;
+}
+
+@keyframes syncSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.syncResult {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: var(--st-radius-sm, 6px);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.syncResult--success {
+  background: rgba(34, 197, 94, 0.12);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.syncResult--error {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}

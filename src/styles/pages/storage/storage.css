@@ -1,0 +1,757 @@
+/* Storage page — company clothes for drivers; own class names and CSS */
+
+.content:has(.storagePage) {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.storagePage {
+  --st-bg: #09090b;
+  --st-bg-elevated: #0f0f12;
+  --st-border: rgba(255, 255, 255, 0.06);
+  --st-text: rgba(255, 255, 255, 0.92);
+  --st-text-muted: rgba(255, 255, 255, 0.5);
+  --st-accent: #fbbf24;
+  --st-radius: 8px;
+  --st-radius-sm: 6px;
+  --st-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+  color: var(--st-text);
+  background: var(--st-bg);
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) rgba(255, 255, 255, 0.06);
+  opacity: 0;
+  animation: storagePageIn 0.4s var(--st-ease) forwards;
+}
+
+.storagePage::-webkit-scrollbar {
+  width: 10px;
+}
+.storagePage::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 5px;
+}
+.storagePage::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+}
+.storagePage::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+@keyframes storagePageIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Header */
+.storageHeader {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--st-border);
+  flex-shrink: 0;
+  background: var(--st-bg-elevated);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 1px 0 rgba(251, 191, 36, 0.06);
+}
+
+.storageHeader:hover .storageHeaderIcon {
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
+}
+
+.storageHeaderIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--st-radius);
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(251, 191, 36, 0.06) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--st-accent);
+  flex-shrink: 0;
+  transition: transform 0.25s var(--st-ease), box-shadow 0.25s var(--st-ease);
+}
+
+.storageHeaderText {
+  flex: 1;
+  min-width: 0;
+}
+
+.storageTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--st-text);
+}
+
+.storageSubtitle {
+  margin: 4px 0 0 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--st-text-muted);
+}
+
+/* Main — single content wrapper, no extra element */
+.storageMain {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 24px 32px;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+/* Remove number input spinners (arrows) */
+.storagePage input[type="number"],
+.storageModal input[type="number"] {
+  -moz-appearance: textfield;
+}
+.storagePage input[type="number"]::-webkit-outer-spin-button,
+.storagePage input[type="number"]::-webkit-inner-spin-button,
+.storageModal input[type="number"]::-webkit-outer-spin-button,
+.storageModal input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Chart section — direct in main body */
+.storageChartBlock {
+  flex-shrink: 0;
+  margin-bottom: 24px;
+  padding: 20px;
+  border-radius: var(--st-radius, 12px);
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.08));
+  background: var(--st-bg-elevated, #0f0f12);
+}
+
+.storageChartHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.storageChartHeaderIcon {
+  color: var(--st-accent, #fbbf24);
+  opacity: 0.9;
+}
+
+.storageChartTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--st-text, rgba(255, 255, 255, 0.95));
+  letter-spacing: 0.01em;
+}
+
+.storageChartWrap {
+  height: 240px;
+  width: 100%;
+  position: relative;
+}
+
+.storageChartPlaceholder,
+.storageChartNoData {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+  font-size: 14px;
+  text-align: center;
+  padding: 24px;
+}
+
+.storageChartPlaceholder .storageSpinner {
+  margin-bottom: 12px;
+}
+
+.storageChartNoData {
+  margin: 0;
+}
+
+.storageAddBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--st-radius-sm, 8px);
+  border: 1px solid var(--st-accent, #fbbf24);
+  background: rgba(251, 191, 36, 0.12);
+  color: var(--st-accent, #fbbf24);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.storageAddBtn:hover {
+  background: rgba(251, 191, 36, 0.2);
+  border-color: rgba(251, 191, 36, 0.5);
+}
+
+.storageLoading {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: 32px;
+  text-align: center;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+  font-size: 14px;
+}
+
+.storageEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  padding: 32px;
+  text-align: center;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+  font-size: 14px;
+}
+
+.storageSpinner {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 16px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--st-accent, #fbbf24);
+  border-radius: 50%;
+  animation: storageSpin 0.8s linear infinite;
+}
+
+@keyframes storageSpin {
+  to { transform: rotate(360deg); }
+}
+
+.storageEmptyIcon {
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
+.storageEmptyAdd {
+  margin-top: 16px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--st-accent, #fbbf24);
+  background: rgba(251, 191, 36, 0.1);
+  color: var(--st-accent, #fbbf24);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.storageEmptyAdd:hover {
+  background: rgba(251, 191, 36, 0.2);
+  border-color: rgba(251, 191, 36, 0.5);
+  color: var(--st-accent, #fbbf24);
+}
+
+/* Summary (KPI) section — direct in main body */
+.storageSummary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 0;
+}
+
+.storageSummaryCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  border-radius: var(--st-radius, 12px);
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.08));
+  background: rgba(255, 255, 255, 0.03);
+  min-width: 160px;
+}
+
+.storageSummaryIconWrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(251, 191, 36, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--st-accent, #fbbf24);
+}
+
+.storageSummaryIconWrap--total {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+.storageSummaryText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.storageSummaryValue {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--st-text, rgba(255, 255, 255, 0.95));
+  line-height: 1.2;
+}
+
+.storageSummaryLabel {
+  font-size: 12px;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+}
+
+/* List — same block as chart and KPI, no inner scroll */
+.storageList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0;
+  padding-bottom: 30px;
+}
+
+.storageCard {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: var(--st-radius, 12px);
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.08));
+  background: var(--st-bg-elevated, #0f0f12);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.storageCard:hover {
+  border-color: rgba(251, 191, 36, 0.2);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.storageCard--low {
+  border-left: 3px solid #f59e0b;
+}
+
+.storageCard--out {
+  border-left: 3px solid rgba(239, 68, 68, 0.8);
+}
+
+.storageCard--good {
+  border-left: 3px solid rgba(34, 197, 94, 0.6);
+}
+
+.storageCardLeft {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  min-width: 0;
+  flex: 1;
+  padding: 20px 20px 18px;
+}
+
+.storageCardIconWrap {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: rgba(251, 191, 36, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.storageCard:hover .storageCardIconWrap {
+  background: rgba(251, 191, 36, 0.2);
+  transform: scale(1.02);
+}
+
+.storageCardIcon {
+  color: var(--st-accent, #fbbf24);
+  opacity: 0.95;
+}
+
+.storageCardInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.storageCardName {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--st-text, rgba(255, 255, 255, 0.95));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+.storageCardMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  row-gap: 4px;
+}
+
+.storageCardStock {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.storageCardStock--good {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+}
+
+.storageCardStock--low {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+}
+
+.storageCardStock--out {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+.storageCardBroken {
+  font-size: 12px;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+}
+
+.storageCardBroken::before {
+  content: "· ";
+  margin-right: 2px;
+}
+
+.storageReplaceHint {
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.65));
+}
+
+.storageCardUpdated {
+  font-size: 12px;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.45));
+}
+
+.storageCardBarWrap {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+  max-width: 200px;
+}
+
+.storageCardBar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.storageCardBar--good {
+  background: linear-gradient(90deg, #22c55e, #4ade80);
+}
+
+.storageCardBar--low {
+  background: linear-gradient(90deg, #d97706, #fbbf24);
+}
+
+.storageCardBar--out {
+  background: rgba(239, 68, 68, 0.6);
+  width: 0% !important;
+}
+
+.storageCardRight {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 22px;
+  border-left: 1px solid var(--st-border, rgba(255, 255, 255, 0.06));
+  background: rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
+}
+
+.storageCardQuantityWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  min-width: 72px;
+}
+
+.storageCardQuantity {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--st-accent, #fbbf24);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.storageCard--good .storageCardQuantity {
+  color: #4ade80;
+}
+
+.storageCard--low .storageCardQuantity {
+  color: #fbbf24;
+}
+
+.storageCard--out .storageCardQuantity {
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+}
+
+.storageCardUnits {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+}
+
+.storageCardActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.storageCardBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.1));
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--st-text, rgba(255, 255, 255, 0.9));
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.storageCardBtn:hover:not(:disabled) {
+  background: rgba(251, 191, 36, 0.1);
+  border-color: rgba(251, 191, 36, 0.3);
+  color: var(--st-accent, #fbbf24);
+}
+
+.storageCardBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.storageCardBtn--danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+.storageCardBtn--replace:hover:not(:disabled) {
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.35);
+  color: #fbbf24;
+}
+
+/* Modals — storage own classes */
+.storageBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.storageModal {
+  background: var(--st-bg-elevated, #0f0f12);
+  border-radius: var(--st-radius, 12px);
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.08));
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+  max-width: 440px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.storageModalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--st-border, rgba(255, 255, 255, 0.08));
+  flex-shrink: 0;
+}
+
+.storageModalHeader h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--st-text, rgba(255, 255, 255, 0.95));
+  flex: 1;
+  min-width: 0;
+}
+
+.storageModalClose {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.6));
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.storageModalClose:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--st-text, rgba(255, 255, 255, 0.9));
+}
+
+.storageModalBody {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.storageModalLabel {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.6));
+}
+
+.storageModalLabel + .storageModalInput,
+.storageModalLabel + .storageModalBody > .storageDeleteMessage {
+  margin-top: 0;
+}
+
+.storageModalInput {
+  display: block;
+  width: 100%;
+  margin-bottom: 14px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--st-text, rgba(255, 255, 255, 0.95));
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.1));
+  border-radius: 8px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+.storageModalInput::placeholder {
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.4));
+}
+.storageModalInput:focus {
+  outline: none;
+  border-color: var(--st-accent, #fbbf24);
+}
+
+.storageModalFooter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--st-border, rgba(255, 255, 255, 0.06));
+}
+
+.storageModalBtn {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.1));
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--st-text, rgba(255, 255, 255, 0.9));
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.storageModalBtn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+.storageModalBtn--primary {
+  background: rgba(251, 191, 36, 0.2);
+  border-color: var(--st-accent, #fbbf24);
+  color: var(--st-accent, #fbbf24);
+}
+.storageModalBtn--primary:hover:not(:disabled) {
+  background: rgba(251, 191, 36, 0.3);
+  border-color: rgba(251, 191, 36, 0.6);
+}
+.storageModalBtn--danger {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+.storageModalBtn--danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.6);
+  color: #fecaca;
+}
+.storageModalBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.storageDeleteMessage {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--st-text, rgba(255, 255, 255, 0.9));
+}
+
+.storageDeleteMessage strong {
+  color: var(--st-text, rgba(255, 255, 255, 0.95));
+  font-weight: 600;
+}

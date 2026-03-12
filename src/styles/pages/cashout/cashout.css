@@ -1,0 +1,1221 @@
+/* Cashout list page: toolbar, table, request modal, deny modal, status, actions */
+
+.content:has(.cashoutListPage) {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.cashoutListPage {
+  --st-bg: #09090b;
+  --st-bg-elevated: #0f0f12;
+  --st-surface: rgba(255, 255, 255, 0.03);
+  --st-border: rgba(255, 255, 255, 0.06);
+  --st-text: rgba(255, 255, 255, 0.92);
+  --st-text-muted: rgba(255, 255, 255, 0.5);
+  --st-accent: #fbbf24;
+  --st-accent-soft: rgba(251, 191, 36, 0.18);
+  --st-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  transform: translateY(8px);
+  animation: cashoutPageEnter 0.35s var(--st-ease) forwards;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  color: var(--st-text);
+  background: var(--st-bg);
+}
+
+.cashoutListPage .auditLogsMain {
+  overflow: hidden;
+}
+
+/* Scrollable cashout list: page scroll, no scroll inside table, paginator */
+.cashoutListPage--scrollable .auditLogsMain {
+  overflow-y: auto;
+}
+
+.cashoutListPage--scrollable .auditLogsTableWrap .dt-body {
+  overflow: visible;
+  max-height: none;
+}
+
+/* Cashout list footer (paginator + row selector) — same layout as drivers/transactions */
+.cashoutListPage .cashoutListFooter {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 20px;
+  background: linear-gradient(180deg, var(--st-bg-elevated, #0f0f12) 0%, rgba(15, 15, 18, 0.98) 100%);
+}
+
+.cashoutListPage .cashoutListMuted {
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.cashoutListPage .cashoutListFooterLeft,
+.cashoutListPage .cashoutListFooterMid,
+.cashoutListPage .cashoutListFooterRight {
+  display: flex;
+  align-items: center;
+}
+
+.cashoutListPage .cashoutListFooterLeft {
+  justify-content: flex-start;
+}
+
+.cashoutListPage .cashoutListFooterMid {
+  justify-content: center;
+  gap: 12px;
+}
+
+.cashoutListPage .cashoutListFooterRight {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.cashoutListPage .cashoutListPerPage {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cashoutListPage .cashoutListPagerBtn {
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 8px;
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.06));
+  background: var(--st-surface, rgba(255, 255, 255, 0.03));
+  color: var(--st-text, rgba(255, 255, 255, 0.92));
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.cashoutListPage .cashoutListPagerBtn:hover:not(:disabled) {
+  background: rgba(251, 191, 36, 0.1);
+  border-color: rgba(251, 191, 36, 0.4);
+  color: var(--st-accent, #fbbf24);
+}
+
+.cashoutListPage .cashoutListPagerBtn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.cashoutListPage .cashoutListPagerBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.cashoutListPage .cashoutListPages {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cashoutListPage .cashoutListPagesDots {
+  padding: 0 6px;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+  font-weight: 500;
+}
+
+.cashoutListPage .cashoutListPageBtn {
+  min-width: 38px;
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.06));
+  background: var(--st-surface, rgba(255, 255, 255, 0.03));
+  color: var(--st-text, rgba(255, 255, 255, 0.92));
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.cashoutListPage .cashoutListPageBtn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.cashoutListPage .cashoutListPageBtn.active {
+  background: rgba(251, 191, 36, 0.12);
+  border-color: rgba(251, 191, 36, 0.45);
+  color: var(--st-accent, #fbbf24);
+}
+
+.cashoutListPage .cashoutListPageBtn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+@media (max-width: 860px) {
+  .cashoutListPage .cashoutListFooter {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+  .cashoutListPage .cashoutListFooterLeft,
+  .cashoutListPage .cashoutListFooterMid,
+  .cashoutListPage .cashoutListFooterRight {
+    justify-content: center;
+  }
+}
+
+@keyframes cashoutPageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Centered layout: section and table fit between header and main */
+.cashoutListPage .auditLogsSection {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.cashoutListPage .auditLogsTableWrap .dt {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.cashoutListPage .auditLogsTableWrap .dt-head,
+.cashoutListPage .auditLogsTableWrap .dt-row {
+  box-sizing: border-box;
+}
+
+.cashoutListPage .auditLogsTableWrap .dt-th {
+  padding: 0 18px;
+  box-sizing: border-box;
+}
+
+.cashoutToolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+/* Toolbar search input: match driver input bg */
+.cashoutListPage .auditLogsToolbar.cashoutToolbar .si-input {
+  background: var(--st-surface, rgba(255, 255, 255, 0.03));
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.06));
+  color: var(--st-text, rgba(255, 255, 255, 0.92));
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+.cashoutListPage .auditLogsToolbar.cashoutToolbar .si-input::placeholder {
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+  opacity: 0.7;
+}
+.cashoutListPage .auditLogsToolbar.cashoutToolbar .si-input:hover {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+}
+.cashoutListPage .auditLogsToolbar.cashoutToolbar .si-input:focus {
+  border-color: var(--st-accent, #fbbf24);
+  background: rgba(251, 191, 36, 0.06);
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.15);
+}
+.cashoutListPage .auditLogsToolbar.cashoutToolbar .si-icon {
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+}
+
+.cashoutRequestBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--st-accent-soft);
+  background: var(--st-accent-soft);
+  color: var(--st-accent);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s var(--st-ease), border-color 0.2s var(--st-ease), transform 0.15s var(--st-ease);
+}
+
+.cashoutRequestBtn:hover {
+  background: rgba(251, 191, 36, 0.22);
+  border-color: rgba(251, 191, 36, 0.45);
+  transform: translateY(-1px);
+}
+
+.cashoutRequestBtn:active {
+  transform: translateY(0);
+}
+
+.cell--right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ——— Cashout list table: holiday-like row and actions (modern, clean) ——— */
+.cashoutListPage .auditLogsTableWrap {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.06));
+  background: var(--st-bg-elevated, #0f0f12);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  border-radius: var(--st-radius, 8px);
+}
+
+.cashoutListPage .auditLogsTableWrap .dt-head {
+  background: linear-gradient(180deg, rgba(251, 191, 36, 0.06) 0%, var(--st-bg-elevated, #0f0f12) 100%);
+  border-bottom: 2px solid rgba(251, 191, 36, 0.2);
+}
+
+.cashoutListPage .auditLogsTableWrap .dt-body {
+  background: var(--st-surface, rgba(255, 255, 255, 0.03));
+}
+
+.cashoutListPage .auditLogsTableWrap .dt-row {
+  min-height: 56px;
+  padding: 0;
+  border-bottom: 1px solid var(--st-border, rgba(255, 255, 255, 0.06));
+  border-left: none;
+  box-shadow: none;
+  transition: background 0.15s var(--st-ease);
+}
+
+.cashoutListPage .auditLogsTableWrap .dt-row:nth-child(even) {
+  background: transparent;
+}
+
+.cashoutListPage .auditLogsTableWrap .dt-row:last-child {
+  border-bottom: none;
+}
+
+.cashoutListPage .auditLogsTableWrap .dt-row:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-left: none;
+  box-shadow: none;
+}
+
+.cashoutListPage .auditLogsTableWrap .td {
+  padding: 12px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cashoutListPage .auditLogsTableWrap .td-status {
+  flex-shrink: 0;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.cashoutListPage .auditLogsTableWrap .td-actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+}
+
+.cashoutListPage .auditLogsTableWrap .cell {
+  font-size: 13.5px;
+  color: var(--st-text, rgba(255, 255, 255, 0.92));
+}
+
+.cashoutListPage .auditLogsTableWrap .cell.strong {
+  font-weight: 600;
+}
+
+.cashoutListPage .auditLogsTableWrap .cell.cell--muted {
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+}
+
+/* Status badge — holiday-style */
+.cashoutStatusBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  width: fit-content;
+  max-width: 100%;
+  border: 1px solid transparent;
+  transition: opacity 0.2s var(--st-ease);
+}
+
+.cashoutStatusBadge--pending {
+  background: rgba(251, 191, 36, 0.18);
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.3);
+}
+
+.cashoutStatusBadge--approved {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border-color: rgba(34, 197, 94, 0.35);
+}
+
+.cashoutStatusBadge--denied {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+.cashoutStatusBadge--cashed {
+  background: rgba(20, 184, 166, 0.15);
+  color: #14b8a6;
+  border-color: rgba(20, 184, 166, 0.35);
+}
+
+.cashoutStatusBadge--rejected {
+  background: rgba(248, 113, 113, 0.15);
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.35);
+}
+
+/* Status badge: fade-out + bounce out, then fade-in + bounce in */
+@keyframes cashoutStatusFadeOutBounce {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+}
+
+@keyframes cashoutStatusFadeInBounce {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  60% {
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.cashoutStatusBadge--exit {
+  animation: cashoutStatusFadeOutBounce 0.25s ease-out forwards;
+}
+
+.cashoutStatusBadge--enter {
+  animation: cashoutStatusFadeInBounce 0.3s ease-out;
+}
+
+/* Action buttons — next to each other */
+.cashoutRowActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.cashoutRowBtn {
+  height: 32px;
+  padding: 0 14px;
+  border-radius: var(--st-radius-sm, 6px);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s var(--st-ease);
+  border: 1px solid transparent;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cashoutRowBtn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.25);
+}
+
+.cashoutRowBtn--approve {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border-color: rgba(34, 197, 94, 0.35);
+}
+
+.cashoutRowBtn--approve:hover:not(:disabled) {
+  background: rgba(34, 197, 94, 0.28);
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.2);
+}
+
+.cashoutRowBtn--deny {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+.cashoutRowBtn--deny:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.28);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2);
+}
+
+.cashoutRowBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cashoutDecidedPlaceholder {
+  font-size: 12px !important;
+}
+
+/* ——— Modals (request + deny) ——— */
+.cashoutModalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+  backdrop-filter: blur(6px);
+  animation: cashoutBackdropIn 0.2s ease-out forwards;
+}
+
+/* Request modal portaled to body: cover entire app viewport */
+.cashoutModalBackdrop--fullApp {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  min-width: 100vw;
+  min-height: 100vh;
+}
+
+@keyframes cashoutBackdropIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.cashoutModalBackdrop--exit {
+  animation: cashoutBackdropOut 0.22s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes cashoutBackdropOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.cashoutModal {
+  --st-surface: rgba(255, 255, 255, 0.03);
+  --st-border: rgba(255, 255, 255, 0.06);
+  --st-text: rgba(255, 255, 255, 0.92);
+  --st-text-muted: rgba(255, 255, 255, 0.5);
+  --st-accent: #fbbf24;
+  background: #0F0F12;
+  border: 1px solid var(--st-border);
+  border-radius: 14px;
+  padding: 24px 28px;
+  min-width: 320px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  animation: cashoutModalIn 0.25s ease-out forwards;
+  box-sizing: border-box;
+}
+
+/* Request modal: compact width, inputs only */
+.cashoutModal--request {
+  width: max(32vw, 320px);
+  max-width: 500px;
+  padding: 0;
+  max-height: min(520px, calc(100vh - 48px));
+  overflow: hidden;
+  background: #0F0F12;
+}
+
+.cashoutModal--request.cashoutModal--exit,
+.cashoutModal.cashoutModal--exit {
+  animation: cashoutModalOut 0.22s ease-out forwards;
+}
+
+@keyframes cashoutModalOut {
+  from { opacity: 1; transform: scale(1) translateY(0); }
+  to { opacity: 0; transform: scale(0.98) translateY(8px); }
+}
+
+.cashoutModalForm {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header: title (with icon) left, close right */
+.cashoutModalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--st-border);
+  flex-shrink: 0;
+}
+
+.cashoutModalForm .cashoutModalTitle {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--st-text);
+  line-height: 1.3;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cashoutModalTitleIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--st-accent);
+}
+
+.cashoutModalClose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.cashoutModalClose:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.cashoutModalBody {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 14px 20px 12px;
+}
+
+.cashoutModalRow {
+  margin-bottom: 12px;
+}
+
+.cashoutModalRow:last-child {
+  margin-bottom: 0;
+}
+
+.cashoutModalRow--two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.cashoutModalForm .cashoutModalField {
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+.cashoutModalForm .cashoutModalField label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.01em;
+}
+
+/* Inputs */
+.cashoutModalForm .cashoutModalField input {
+  width: 100%;
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--st-text, #fff);
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cashoutModalForm .cashoutModalField input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.cashoutModalForm .cashoutModalField input:focus {
+  outline: none;
+  border-color: rgba(251, 191, 36, 0.5);
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.12);
+}
+
+.cashoutModalForm .cashoutModalField input.cashoutModalInput--readOnly {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.6));
+  cursor: default;
+  pointer-events: none;
+}
+
+/* Date field with calendar icon on the right */
+.cashoutModalField--date .cashoutModalDateWrap {
+  position: relative;
+  display: block;
+}
+
+.cashoutModalField--date .cashoutModalDateWrap input {
+  padding-right: 36px;
+}
+
+.cashoutModalDateIcon {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+}
+
+.cashoutModalForm .cashoutModalTextarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--st-text, #fff);
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cashoutModalForm .cashoutModalTextarea::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.cashoutModalForm .cashoutModalTextarea:focus {
+  outline: none;
+  border-color: rgba(251, 191, 36, 0.5);
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.12);
+}
+
+.cashoutModalNote {
+  margin: 0 20px 14px;
+  padding: 10px 12px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  border-left: 3px solid rgba(251, 191, 36, 0.5);
+  flex-shrink: 0;
+}
+
+.cashoutModalForm .cashoutModalActions {
+  margin: 0;
+  padding: 12px 20px 16px;
+  border-top: 1px solid var(--st-border);
+  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+@media (max-width: 680px) {
+  .cashoutModal--request {
+    width: calc(100vw - 32px);
+    max-width: none;
+    max-height: calc(100vh - 48px);
+  }
+  .cashoutModalHeader {
+    padding: 14px 16px 10px;
+  }
+  .cashoutModalBody {
+    padding: 12px 16px 10px;
+  }
+  .cashoutModalNote {
+    margin: 0 16px 12px;
+    font-size: 11px;
+  }
+  .cashoutModalForm .cashoutModalActions {
+    padding: 10px 16px 14px;
+  }
+  .cashoutModalRow--two {
+    grid-template-columns: 1fr;
+  }
+}
+
+@keyframes cashoutModalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.cashoutModalTitle {
+  margin: 0 0 20px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--st-text, rgba(255, 255, 255, 0.95));
+}
+
+.cashoutModalField {
+  margin-bottom: 16px;
+}
+
+.cashoutModalField label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cashoutModalField input {
+  width: 100%;
+  height: 42px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--st-text, rgba(255, 255, 255, 0.95));
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cashoutModalField input:focus {
+  outline: none;
+  border-color: rgba(251, 191, 36, 0.4);
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.12);
+}
+
+.cashoutModalField input.cashoutModalInput--readOnly,
+.cashoutModalField input[readOnly]:disabled {
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.5);
+  cursor: default;
+}
+
+.cashoutModalTextarea {
+  width: 100%;
+  min-height: 72px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--st-text, rgba(255, 255, 255, 0.95));
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.cashoutModalTextarea:focus {
+  outline: none;
+  border-color: rgba(251, 191, 36, 0.4);
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.12);
+}
+
+.cashoutModalTextarea:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.cashoutModalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.cashoutModalBtn {
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+  border: 1px solid transparent;
+}
+
+.cashoutModalBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cashoutModalBtn--secondary {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--st-text, rgba(255, 255, 255, 0.9));
+}
+
+.cashoutModalBtn--secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.cashoutModalBtn--primary {
+  background: var(--st-accent-soft);
+  border-color: rgba(251, 191, 36, 0.45);
+  color: var(--st-accent);
+}
+
+.cashoutModalBtn--primary:hover:not(:disabled) {
+  background: rgba(251, 191, 36, 0.28);
+  border-color: rgba(251, 191, 36, 0.55);
+  transform: translateY(-1px);
+}
+
+.cashoutModalBtn--deny {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+.cashoutModalBtn--deny:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.3);
+  border-color: rgba(239, 68, 68, 0.55);
+  transform: translateY(-1px);
+}
+
+.cashoutDenyText {
+  margin: 0 0 16px;
+  font-size: 14px;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.7));
+}
+
+.cashoutDenyText strong {
+  color: var(--st-text, rgba(255, 255, 255, 0.95));
+}
+
+/* ——— Transactions detail modal (row click) ——— */
+.transactionsDetailBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+  backdrop-filter: blur(4px);
+  animation: transactionsDetailBackdropIn 0.22s ease-out forwards;
+}
+
+.transactionsDetailBackdrop--exiting {
+  animation: transactionsDetailBackdropOut 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  pointer-events: none;
+}
+
+.transactionsDetailModal {
+  background: var(--st-bg-elevated, #0f0f12);
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.06));
+  border-radius: 14px;
+  min-width: 280px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  animation: transactionsDetailModalIn 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.transactionsDetailModal--exiting {
+  animation: transactionsDetailModalOut 0.22s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes transactionsDetailBackdropIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes transactionsDetailBackdropOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes transactionsDetailModalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes transactionsDetailModalOut {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+}
+
+.transactionsDetailHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--st-border, rgba(255, 255, 255, 0.06));
+}
+
+.transactionsDetailTitle {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--st-text, rgba(255, 255, 255, 0.95));
+}
+
+.transactionsDetailClose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.transactionsDetailClose:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.transactionsDetailBody {
+  padding: 16px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.transactionsDetailRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.transactionsDetailLabel {
+  font-size: 13px;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+  flex-shrink: 0;
+}
+
+.transactionsDetailValue {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--st-text, rgba(255, 255, 255, 0.95));
+  text-align: right;
+}
+
+.transactionsDetailRow--total .transactionsDetailValue {
+  font-weight: 700;
+  color: var(--st-accent, #fbbf24);
+}
+
+.transactionsDetailNote {
+  text-align: right;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ——— Transactions page: no scroll inside table, scroll outside (main), paginator ——— */
+.transactionsPage .auditLogsMain {
+  overflow-y: auto;
+}
+
+.transactionsPage .transactionsToolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.transactionsPage .auditLogsTableWrap .dt-body {
+  overflow: visible;
+  max-height: none;
+}
+
+.transactionsPage .transactionsFooter {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 20px;
+  background: linear-gradient(180deg, var(--st-bg-elevated, #0f0f12) 0%, rgba(15, 15, 18, 0.98) 100%);
+}
+
+.transactionsPage .transactionsMuted {
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.transactionsPage .transactionsFooterLeft,
+.transactionsPage .transactionsFooterMid,
+.transactionsPage .transactionsFooterRight {
+  display: flex;
+  align-items: center;
+}
+
+.transactionsPage .transactionsPerPage {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.transactionsPage .transactionsFooterMid {
+  justify-content: center;
+  gap: 12px;
+}
+
+.transactionsPage .transactionsFooterLeft {
+  justify-content: flex-start;
+}
+
+.transactionsPage .transactionsFooterRight {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.transactionsPage .transactionsPagerBtn {
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 8px;
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.06));
+  background: var(--st-surface, rgba(255, 255, 255, 0.03));
+  color: var(--st-text, rgba(255, 255, 255, 0.92));
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.transactionsPage .transactionsPagerBtn:hover:not(:disabled) {
+  background: rgba(251, 191, 36, 0.1);
+  border-color: rgba(251, 191, 36, 0.4);
+  color: var(--st-accent, #fbbf24);
+}
+
+.transactionsPage .transactionsPagerBtn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.transactionsPage .transactionsPagerBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.transactionsPage .transactionsPages {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.transactionsPage .transactionsPagesDots {
+  padding: 0 6px;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+  font-weight: 500;
+}
+
+.transactionsPage .transactionsPageBtn {
+  min-width: 38px;
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.06));
+  background: var(--st-surface, rgba(255, 255, 255, 0.03));
+  color: var(--st-text, rgba(255, 255, 255, 0.92));
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.transactionsPage .transactionsPageBtn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.transactionsPage .transactionsPageBtn.active {
+  background: rgba(251, 191, 36, 0.12);
+  border-color: rgba(251, 191, 36, 0.45);
+  color: var(--st-accent, #fbbf24);
+}
+
+.transactionsPage .transactionsPageBtn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+@media (max-width: 860px) {
+  .transactionsPage .transactionsFooter {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+  .transactionsPage .transactionsFooterLeft,
+  .transactionsPage .transactionsFooterMid,
+  .transactionsPage .transactionsFooterRight {
+    justify-content: center;
+  }
+}

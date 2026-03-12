@@ -1,0 +1,120 @@
+.driverContextMenu {
+  --driver-menu-bg: color-mix(in srgb, var(--st-bg-elevated, #0f0f12) 92%, #050508 8%);
+  --driver-menu-border: color-mix(in srgb, var(--st-accent, #fbbf24) 25%, rgba(255, 255, 255, 0.08) 75%);
+  --driver-menu-shadow: 0 20px 42px rgba(0, 0, 0, 0.48), 0 0 0 1px rgba(251, 191, 36, 0.08);
+  position: fixed;
+  z-index: 1500;
+  width: 248px;
+  border-radius: 14px;
+  border: 1px solid var(--driver-menu-border);
+  background:
+    radial-gradient(120% 70% at 100% -5%, rgba(251, 191, 36, 0.16), rgba(251, 191, 36, 0) 52%),
+    var(--driver-menu-bg);
+  box-shadow: var(--driver-menu-shadow);
+  backdrop-filter: blur(8px);
+  overflow: hidden;
+}
+
+.driverContextMenuHead {
+  padding: 11px 12px 9px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0));
+}
+
+.driverContextMenuDriverInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.driverContextMenuName {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--st-text, rgba(255, 255, 255, 0.95));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.driverContextMenuMeta {
+  font-size: 11px;
+  line-height: 1.3;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.54));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.driverContextMenuActions {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.driverContextMenuAction {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--st-text, rgba(255, 255, 255, 0.94));
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.16s ease, border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.driverContextMenuAction:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.driverContextMenuAction:active {
+  transform: scale(0.98);
+}
+
+.driverContextMenuActionIcon {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.82);
+  flex-shrink: 0;
+}
+
+.driverContextMenuActionLabel {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.driverContextMenuAction--accent:hover {
+  border-color: rgba(251, 191, 36, 0.42);
+  background: rgba(251, 191, 36, 0.14);
+  color: var(--st-accent, #fbbf24);
+}
+
+.driverContextMenuAction--accent:hover .driverContextMenuActionIcon {
+  color: var(--st-accent, #fbbf24);
+  background: rgba(251, 191, 36, 0.2);
+}
+
+.driverContextMenuAction--positive:hover {
+  border-color: rgba(52, 211, 153, 0.35);
+  background: rgba(52, 211, 153, 0.14);
+  color: rgba(110, 231, 183, 0.95);
+}
+
+.driverContextMenuAction--positive:hover .driverContextMenuActionIcon {
+  color: rgba(110, 231, 183, 0.95);
+  background: rgba(52, 211, 153, 0.2);
+}

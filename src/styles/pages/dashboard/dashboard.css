@@ -1,0 +1,2877 @@
+/* dashboard.css — same design as Employee_List / Settings (--st-* theme) */
+
+.content:has(.dashboardPage) {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboardPage {
+  --st-bg: #09090b;
+  --st-bg-elevated: #0f0f12;
+  --st-surface: rgba(255, 255, 255, 0.03);
+  --st-surface-hover: rgba(255, 255, 255, 0.06);
+  --st-border: rgba(255, 255, 255, 0.06);
+  --st-text: rgba(255, 255, 255, 0.92);
+  --st-text-muted: rgba(255, 255, 255, 0.5);
+  --st-accent: #fbbf24;
+  --st-accent-soft: rgba(251, 191, 36, 0.18);
+  --st-accent-glow: rgba(251, 191, 36, 0.15);
+  --st-radius: 8px;
+  --st-radius-sm: 6px;
+  --st-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --st-duration: 0.25s;
+  --st-duration-fast: 0.15s;
+
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+  color: var(--st-text);
+  background: var(--st-bg);
+  overflow: hidden;
+  animation: dashboardPageIn 0.45s var(--st-ease) forwards;
+  position: relative;
+}
+
+.dashboardPage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 100% 50% at 0% 0%,
+    rgba(251, 191, 36, 0.04) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+  animation: dashboardBgIn 0.6s var(--st-ease) 0.15s both;
+}
+
+@keyframes dashboardPageIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dashboardBgIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dashboardMainIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes dashboardWelcomeGlow {
+  0%, 100% { opacity: 1; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25); }
+  50% { opacity: 1; box-shadow: 0 4px 28px rgba(251, 191, 36, 0.08); }
+}
+
+@keyframes dashboardKpiEnter {
+  from { opacity: 0; transform: translateY(6px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes dashboardListItemEnter {
+  from { opacity: 0; transform: translateX(-6px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ——— Header ——— */
+.dashboardPage .dashboardHeader{
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--st-border);
+  flex-shrink: 0;
+  background: var(--st-bg-elevated);
+  transition: border-color var(--st-duration) var(--st-ease);
+}
+
+.dashboardPage .dashboardHeader:hover .dashboardHeaderIcon{
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
+}
+
+.dashboardPage .dashboardHeaderIcon{
+  width: 40px;
+  height: 40px;
+  border-radius: var(--st-radius);
+  background: linear-gradient(
+    135deg,
+    rgba(251, 191, 36, 0.2) 0%,
+    rgba(251, 191, 36, 0.06) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--st-accent);
+  flex-shrink: 0;
+  transition: transform var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration) var(--st-ease);
+}
+
+.dashboardPage .dashboardHeaderText{
+  flex: 1;
+  min-width: 0;
+}
+
+.dashboardPage .dashboardTitle{
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--st-text);
+}
+
+.dashboardPage .dashboardSubtitle{
+  margin: 4px 0 0 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--st-text-muted);
+}
+
+.dashboardPage .dashboardLastSync{
+  margin: 6px 0 0 0;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--st-text-muted);
+  opacity: 0.85;
+}
+
+/* ——— Main ——— */
+.dashboardPage .dashboardMain{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  animation: dashboardMainIn 0.4s var(--st-ease) 0.12s both;
+}
+
+.dashboardPage .dashboardMainPlaceholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--st-text-muted);
+  font-size: 14px;
+}
+
+.dashboardPage .dashboardContent{
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+  padding: 28px 32px 56px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  min-width: 0;
+}
+
+.dashboardPage .dashboardContentMain{
+  flex: 1;
+  min-width: 0;
+}
+
+/* ——— Presence block (vertical: current user top, then list online → offline) ——— */
+.dashboardPage .dashboardPresenceBlock{
+  width: 300px;
+  min-width: 0;
+  flex: 1 1 auto;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid var(--st-border);
+  background: linear-gradient(
+    165deg,
+    var(--st-bg-elevated) 0%,
+    rgba(20, 20, 24, 0.97) 100%
+  );
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+  overflow: hidden;
+  overflow-x: hidden;
+  transition: border-color var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration) var(--st-ease);
+}
+
+/* When birthday block is hidden, no separator line between calendar and Team */
+.dashboardPage .dashboardCalendarBlock:has(+ .dashboardPresenceBlock){
+  border-bottom: none;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.dashboardPage .dashboardCalendarBlock + .dashboardPresenceBlock{
+  border-top: none;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.dashboardPage .dashboardPresenceBlock:hover{
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+}
+
+.dashboardPage .dashboardPresenceTitle{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--st-text-muted);
+  margin-bottom: 2px;
+}
+
+.dashboardPage .dashboardPresenceCurrent{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  transition: border-color var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration) var(--st-ease);
+}
+
+.dashboardPage .dashboardPresenceCurrent:hover{
+  border-color: rgba(251, 191, 36, 0.2);
+  box-shadow: 0 4px 20px rgba(251, 191, 36, 0.08);
+}
+
+.dashboardPage .dashboardPresenceCurrent--clickable{
+  cursor: pointer;
+}
+
+.dashboardPage .dashboardPresenceCurrent--clickable:hover{
+  border-color: rgba(251, 191, 36, 0.25);
+  box-shadow: 0 4px 20px rgba(251, 191, 36, 0.12);
+}
+
+.dashboardPage .dashboardPresenceCurrent--clickable:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+.dashboardPage .dashboardPresenceAvatarWrap{
+  position: relative;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+}
+
+.dashboardPage .dashboardPresenceAvatar{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  object-fit: cover;
+  display: block;
+}
+
+.dashboardPage .dashboardPresenceAvatarInitial{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    135deg,
+    rgba(251, 191, 36, 0.25) 0%,
+    rgba(251, 191, 36, 0.1) 100%
+  );
+  color: var(--st-accent);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.dashboardPage .dashboardPresenceAvatarInitial[aria-hidden="true"]{
+  display: none;
+}
+
+.dashboardPage .dashboardPresenceDot{
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dashboardPage .dashboardPresenceDot--badge{
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--st-bg-elevated);
+  box-sizing: content-box;
+}
+
+.dashboardPage .dashboardPresenceDot--online{
+  background: #22c55e;
+  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.4);
+}
+
+.dashboardPage .dashboardPresenceDot--offline{
+  background: var(--st-text-muted);
+  opacity: 0.65;
+}
+
+.dashboardPresenceCurrentText,
+.dashboardPage .dashboardPresenceItemText{
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  justify-content: center;
+}
+
+.dashboardPage .dashboardPresenceName{
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--st-text);
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dashboardPresenceRole,
+.dashboardPage .dashboardPresenceMeta{
+  font-size: 12px;
+  color: var(--st-text-muted);
+  margin-top: 1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dashboardPage .dashboardPresencePage{
+  display: block;
+  font-size: 11px;
+  color: var(--st-accent);
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.9;
+}
+
+.dashboardPage .dashboardPresenceRating{
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--st-accent);
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: rgba(251, 191, 36, 0.12);
+  transition: background var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardPage .dashboardPresenceStar{
+  color: var(--st-accent);
+}
+
+.dashboardPage .dashboardPresenceList{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dashboardPage .dashboardPresenceItem{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid transparent;
+  min-width: 0;
+  transition: background var(--st-duration-fast) var(--st-ease),
+    border-color var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardPage .dashboardPresenceItem .dashboardPresenceAvatarWrap{
+  width: 40px;
+  height: 40px;
+}
+
+.dashboardPresenceItem .dashboardPresenceAvatar,
+.dashboardPage .dashboardPresenceItem .dashboardPresenceAvatarInitial{
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+}
+
+.dashboardPage .dashboardPresenceItem .dashboardPresenceAvatarInitial{
+  font-size: 16px;
+}
+
+.dashboardPage .dashboardPresenceItem--clickable{
+  cursor: pointer;
+}
+
+.dashboardPage .dashboardPresenceItem--clickable:hover{
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(251, 191, 36, 0.15);
+}
+
+.dashboardPage .dashboardPresenceItem--clickable:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+.dashboardPage .dashboardPresenceEmpty{
+  margin: 0;
+  padding: 20px 12px;
+  font-size: 13px;
+  color: var(--st-text-muted);
+  text-align: center;
+}
+
+.dashboardPage .dashboardSection{
+  margin-bottom: 32px;
+  animation: dashboardMainIn 0.4s var(--st-ease) backwards;
+}
+
+.dashboardPage .dashboardSection:nth-child(1){ animation-delay: 0.02s; }
+.dashboardPage .dashboardSection:nth-child(2){ animation-delay: 0.06s; }
+.dashboardPage .dashboardSection:nth-child(3){ animation-delay: 0.1s; }
+.dashboardPage .dashboardSection:nth-child(4){ animation-delay: 0.14s; }
+.dashboardPage .dashboardSection:nth-child(5){ animation-delay: 0.18s; }
+.dashboardPage .dashboardSection:nth-child(6){ animation-delay: 0.22s; }
+.dashboardPage .dashboardSection:nth-child(7){ animation-delay: 0.26s; }
+.dashboardPage .dashboardSection:nth-child(8){ animation-delay: 0.3s; }
+
+.dashboardPage .dashboardSection:last-child{
+  margin-bottom: 0;
+}
+
+/* Scroll-triggered section animation (Finance, Today, Overview) */
+.dashboardPage .dashboardSection--scroll {
+  animation: none;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dashboardPage .dashboardSection--scroll.dashboardSection--inView {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.dashboardPage .dashboardSectionTitle{
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--st-text-muted);
+  transition: color var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardPage .dashboardSectionHead{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.dashboardPage .dashboardSectionHead .dashboardSectionTitle{
+  margin-bottom: 0;
+}
+
+.dashboardPage .dashboardSectionLink{
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: var(--st-radius-sm);
+  background: transparent;
+  color: var(--st-accent);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--st-duration) var(--st-ease),
+    color var(--st-duration) var(--st-ease),
+    transform var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardPage .dashboardSectionLink:hover{
+  background: var(--st-accent-soft);
+  color: var(--st-text);
+}
+
+.dashboardPage .dashboardSectionLink:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+/* ——— Welcome card ——— */
+.dashboardPage .dashboardWelcomeCard{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px 28px;
+  border-radius: var(--st-radius);
+  border: 1px solid var(--st-border);
+  background: var(--st-bg-elevated);
+  transition: border-color var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration) var(--st-ease);
+  animation: dashboardWelcomeGlow 4s var(--st-ease) infinite;
+}
+
+.dashboardPage .dashboardWelcomeCard:hover{
+  box-shadow: 0 4px 28px rgba(251, 191, 36, 0.12);
+}
+
+.dashboardPage .dashboardWelcomeContent{
+  flex: 1;
+  min-width: 0;
+}
+
+.dashboardPage .dashboardWelcomeTitle{
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--st-text);
+}
+
+.dashboardPage .dashboardWelcomeTagline{
+  margin: 8px 0 0 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--st-text-muted);
+}
+
+.dashboardPage .dashboardWelcomeIllustration{
+  flex-shrink: 0;
+  width: 180px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboardPage .dashboardWelcomeIllustrationImg{
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.dashboardPage .dashboardWelcomeIcon{
+  width: 56px;
+  height: 56px;
+  border-radius: var(--st-radius);
+  background: linear-gradient(
+    135deg,
+    rgba(251, 191, 36, 0.2) 0%,
+    rgba(251, 191, 36, 0.06) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--st-accent);
+  flex-shrink: 0;
+  transition: transform var(--st-duration) var(--st-ease);
+}
+
+.dashboardPage .dashboardWelcomeRole{
+  margin: 6px 0 0 0;
+  font-size: 14px;
+  color: var(--st-text-muted);
+}
+
+.dashboardPage .dashboardWelcomeRole strong{
+  color: var(--st-accent);
+  font-weight: 600;
+}
+
+/* ——— Right column (aside): Calendar, Birthdays, Team ——— */
+.dashboardPage .dashboardAsideColumn{
+  width: 300px;
+  min-width: 0;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dashboardPage .dashboardCalendarBlock,
+.dashboardPage .dashboardBirthdaysBlock{
+  flex-shrink: 0;
+}
+
+/* ——— Calendar (dark mode) ——— */
+.dashboardPage .dashboardCalendarBlock{
+  border-radius: 12px;
+  border: 1px solid var(--st-border);
+  background: var(--st-bg-elevated);
+  padding: 14px 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.dashboardPage .dashboardCalendarGridWrap{
+  overflow: hidden;
+}
+
+.dashboardPage .dashboardCalendarGrid{
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+/* Previous month: slide from left + fade in */
+.dashboardPage .dashboardCalendarGridWrap--prev .dashboardCalendarGrid{
+  animation: dashboardCalendarSlideFromLeft 0.3s var(--st-ease) forwards;
+}
+
+/* Next month: slide from right (slide to left) + fade in */
+.dashboardPage .dashboardCalendarGridWrap--next .dashboardCalendarGrid{
+  animation: dashboardCalendarSlideFromRight 0.3s var(--st-ease) forwards;
+}
+
+@keyframes dashboardCalendarSlideFromLeft{
+  from{
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  to{
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes dashboardCalendarSlideFromRight{
+  from{
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to{
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.dashboardPage .dashboardCalendarHeader{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 8px;
+}
+
+.dashboardPage .dashboardCalendarTitle{
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--st-text);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.dashboardPage .dashboardCalendarNav{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--st-radius-sm);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--st-text-muted);
+  cursor: pointer;
+  transition: background var(--st-duration) var(--st-ease), color var(--st-duration) var(--st-ease);
+}
+
+.dashboardPage .dashboardCalendarNav:hover{
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--st-text);
+}
+
+.dashboardPage .dashboardCalendarWeekdays{
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--st-text-muted);
+  text-align: center;
+}
+
+.dashboardPage .dashboardCalendarWeekday{
+  padding: 4px 0;
+}
+
+.dashboardPage .dashboardCalendarDay{
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--st-text);
+  border-radius: 8px;
+  transition: background var(--st-duration) var(--st-ease);
+}
+
+.dashboardPage .dashboardCalendarDay--other{
+  color: var(--st-text-muted);
+  opacity: 0.6;
+}
+
+.dashboardPage .dashboardCalendarDay--today{
+  background: rgba(251, 191, 36, 0.25);
+  color: var(--st-accent);
+  font-weight: 600;
+}
+
+.dashboardPage .dashboardBirthdaysBlock{
+  border-radius: 12px;
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  background: linear-gradient(
+    165deg,
+    rgba(251, 191, 36, 0.08) 0%,
+    rgba(251, 191, 36, 0.02) 50%,
+    var(--st-bg-elevated) 100%
+  );
+  box-shadow: 0 4px 20px rgba(251, 191, 36, 0.06);
+  overflow: hidden;
+}
+
+.dashboardPage .dashboardBirthdaysBlockHeader{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--st-text-muted);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.dashboardPage .dashboardBirthdaysBlockIcon{
+  color: var(--st-accent);
+  flex-shrink: 0;
+}
+
+.dashboardPage .dashboardBirthdaysBlockCount{
+  margin-left: auto;
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: rgba(251, 191, 36, 0.2);
+  color: var(--st-accent);
+  font-size: 11px;
+}
+
+.dashboardPage .dashboardBirthdaysBlockList{
+  list-style: none;
+  margin: 0;
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dashboardPage .dashboardBirthdaysBlockItem{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid transparent;
+  transition: background 0.2s var(--st-ease), border-color 0.2s var(--st-ease);
+}
+
+.dashboardPage .dashboardBirthdaysBlockItem:hover{
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(251, 191, 36, 0.15);
+}
+
+.dashboardPage .dashboardBirthdaysBlockItemMain{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.dashboardPage .dashboardBirthdaysBlockItemMain:focus-visible{
+  outline: none;
+}
+
+.dashboardPage .dashboardBirthdaysBlockAvatar{
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(251, 191, 36, 0.08) 100%);
+}
+
+.dashboardPage .dashboardBirthdaysBlockAvatar img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dashboardPage .dashboardBirthdaysBlockInitial{
+  width: 100%;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--st-accent);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.dashboardPage .dashboardBirthdaysBlockInfo{
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dashboardPage .dashboardBirthdaysBlockName{
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--st-text);
+}
+
+.dashboardPage .dashboardBirthdaysBlockJob{
+  font-size: 12px;
+  color: var(--st-text-muted);
+}
+
+.dashboardPage .dashboardBirthdaysBlockAction{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--st-accent);
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s var(--st-ease), border-color 0.2s var(--st-ease);
+}
+
+.dashboardPage .dashboardBirthdaysBlockAction:hover{
+  background: rgba(251, 191, 36, 0.2);
+  border-color: rgba(251, 191, 36, 0.4);
+}
+
+.dashboardPage .dashboardBirthdaysBlockAction:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+/* ——— Birthday card variant (Happy Birthday + Upcoming) ——— */
+.dashboardPage .dashboardBirthdaysBlock--card{
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Loading state: avoid empty-then-pop when navigating to dashboard */
+.dashboardPage .dashboardBirthdayLoading{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 28px 20px;
+  min-height: 120px;
+}
+
+.dashboardPage .dashboardBirthdayLoadingIcon{
+  color: var(--st-accent);
+  opacity: 0.7;
+  animation: dashboardBirthdayLoadingPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes dashboardBirthdayLoadingPulse{
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+.dashboardPage .dashboardBirthdayLoadingText{
+  margin: 0;
+  font-size: 13px;
+  color: var(--st-text-muted);
+}
+
+/* Happy Birthday section — improved design and colours */
+.dashboardPage .dashboardBirthdayHappy{
+  padding: 20px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(
+    180deg,
+    rgba(251, 191, 36, 0.06) 0%,
+    rgba(168, 85, 247, 0.04) 35%,
+    transparent 100%
+  );
+  border-radius: 12px 12px 0 0;
+}
+
+.dashboardPage .dashboardBirthdayHappyHeader{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  font-size: 17px;
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: 0.03em;
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(168, 85, 247, 0.12) 100%);
+  color: #fbbf24;
+  text-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+}
+
+.dashboardPage .dashboardBirthdayHappyHeaderIcon{
+  flex-shrink: 0;
+  color: #f59e0b;
+  filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.4));
+}
+
+.dashboardPage .dashboardBirthdayHappyPerson{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 12px 10px;
+  border-radius: 12px;
+  transition: background var(--st-duration) var(--st-ease), transform var(--st-duration) var(--st-ease);
+}
+
+.dashboardPage .dashboardBirthdayHappyPerson:hover{
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-1px);
+}
+
+.dashboardPage .dashboardBirthdayHappyPerson:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+/* Outer: gradient ring only */
+.dashboardPage .dashboardBirthdayHappyAvatar{
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  padding: 3px;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #a855f7 100%);
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.3), 0 4px 16px rgba(251, 191, 36, 0.2);
+  display: block;
+}
+
+/* Inner: clips content to circle; img and initial stack in same space */
+.dashboardPage .dashboardBirthdayHappyAvatarInner{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(168, 85, 247, 0.15) 100%);
+}
+
+.dashboardPage .dashboardBirthdayHappyAvatar img{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.dashboardPage .dashboardBirthdayHappyInitial{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.25) 0%, rgba(168, 85, 247, 0.2) 100%);
+  color: #fbbf24;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.dashboardPage .dashboardBirthdayHappyName{
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--st-text);
+  letter-spacing: 0.02em;
+}
+
+.dashboardPage .dashboardBirthdayHappyDate{
+  font-size: 12px;
+  color: var(--st-text-muted);
+  font-weight: 500;
+}
+
+.dashboardPage .dashboardBirthdayUpcoming{
+  padding: 14px 18px;
+}
+
+.dashboardPage .dashboardBirthdayUpcomingHeader{
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--st-text-muted);
+  margin-bottom: 10px;
+}
+
+.dashboardPage .dashboardBirthdayUpcomingPerson{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background var(--st-duration) var(--st-ease);
+}
+
+.dashboardPage .dashboardBirthdayUpcomingPerson:hover{
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dashboardPage .dashboardBirthdayUpcomingPerson:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+.dashboardPage .dashboardBirthdayUpcomingAvatar{
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(251, 191, 36, 0.08) 100%);
+  display: block;
+}
+
+.dashboardPage .dashboardBirthdayUpcomingAvatar img{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  z-index: 1;
+}
+
+.dashboardPage .dashboardBirthdayUpcomingInitial{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--st-accent);
+  font-size: 18px;
+  font-weight: 700;
+  z-index: 0;
+}
+
+.dashboardPage .dashboardBirthdayUpcomingInfo{
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dashboardPage .dashboardBirthdayUpcomingName{
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--st-text);
+}
+
+.dashboardPage .dashboardBirthdayUpcomingDate{
+  font-size: 12px;
+  color: var(--st-text-muted);
+}
+
+.dashboardPage .dashboardBirthdayUpcomingEmpty{
+  margin: 0;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--st-text-muted);
+  text-align: center;
+}
+
+/* ——— KPI grid ——— */
+.dashboardPage .dashboardKpiGrid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.dashboardPage .dashboardKpiCard{
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border-radius: var(--st-radius);
+  border: 1px solid var(--st-border);
+  background: var(--st-bg-elevated);
+  transition: border-color var(--st-duration) var(--st-ease),
+    background var(--st-duration) var(--st-ease),
+    transform var(--st-duration-fast) var(--st-ease),
+    box-shadow var(--st-duration) var(--st-ease);
+  animation: dashboardKpiEnter 0.4s var(--st-ease) backwards;
+}
+
+.dashboardPage .dashboardKpiCard:nth-child(1){ animation-delay: 0.05s; }
+.dashboardPage .dashboardKpiCard:nth-child(2){ animation-delay: 0.1s; }
+.dashboardPage .dashboardKpiCard:nth-child(3){ animation-delay: 0.15s; }
+.dashboardPage .dashboardKpiCard:nth-child(4){ animation-delay: 0.2s; }
+
+.dashboardPage .dashboardKpiCard[role="button"]{
+  cursor: pointer;
+  text-align: left;
+}
+
+.dashboardPage .dashboardKpiCard[role="button"]:hover{
+  background: var(--st-surface-hover);
+  border-color: rgba(251, 191, 36, 0.25);
+  box-shadow: 0 4px 20px rgba(251, 191, 36, 0.08);
+  transform: translateY(-2px);
+}
+
+.dashboardPage .dashboardKpiCard[role="button"]:focus-visible{
+  outline: none;
+  border-color: var(--st-accent);
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+.dashboardPage .dashboardKpiCard--static{
+  cursor: default;
+}
+
+.dashboardPage .dashboardKpiIcon{
+  width: 48px;
+  height: 48px;
+  border-radius: var(--st-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform var(--st-duration) var(--st-ease);
+}
+
+.dashboardPage .dashboardKpiIcon--users{
+  background: rgba(251, 191, 36, 0.15);
+  color: var(--st-accent);
+}
+
+.dashboardPage .dashboardKpiIcon--roles{
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+.dashboardPage .dashboardKpiIcon--perms{
+  background: rgba(168, 85, 247, 0.15);
+  color: #a855f7;
+}
+
+.dashboardPage .dashboardKpiIcon--report{
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.dashboardPage .dashboardKpiIcon--holiday{
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+.dashboardPage .dashboardKpiIcon--suggest{
+  background: rgba(168, 85, 247, 0.15);
+  color: #a855f7;
+}
+
+.dashboardPage .dashboardKpiIcon--finance{
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.dashboardPage .dashboardKpiIcon--stores{
+  background: rgba(251, 191, 36, 0.15);
+  color: var(--st-accent);
+}
+
+.dashboardPage .dashboardKpiIcon--drivers{
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+.dashboardPage .dashboardKpiIcon--pending{
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.dashboardPage .dashboardKpiIcon--transactions{
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.dashboardPage .dashboardKpiSummarySection .dashboardKpiGrid--summary{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px 16px;
+}
+
+.dashboardPage .dashboardKpiCard--summary{
+  min-width: 0;
+}
+
+.dashboardPage .dashboardKpiSummarySection .dashboardKpiContent{
+  flex: 1;
+  min-width: 0;
+  margin-right: 12px;
+}
+
+.dashboardPage .dashboardKpiSummarySection .dashboardKpiChevron{
+  margin-left: 10px;
+  flex-shrink: 0;
+}
+
+/* ——— Store performance ranking ——— */
+.dashboardPage .dashboardStoreRankingSection {
+  margin-bottom: 0;
+}
+
+.dashboardPage .dashboardStoreRankingHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.dashboardPage .dashboardStoreRankingHeader .dashboardSectionTitle {
+  margin-bottom: 0;
+}
+
+.dashboardPage .dashboardStoreRankingTabs {
+  display: flex;
+  gap: 6px;
+}
+
+.dashboardPage .dashboardStoreRankingTab {
+  padding: 6px 12px;
+  border-radius: var(--st-radius-sm);
+  border: 1px solid var(--st-border);
+  background: var(--st-bg-elevated);
+  color: var(--st-text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color var(--st-duration) var(--st-ease),
+    background var(--st-duration) var(--st-ease),
+    color var(--st-duration) var(--st-ease);
+}
+
+.dashboardPage .dashboardStoreRankingTab:hover {
+  background: var(--st-surface-hover);
+  color: var(--st-text);
+}
+
+.dashboardPage .dashboardStoreRankingTab.active {
+  border-color: var(--st-accent);
+  background: var(--st-accent-soft);
+  color: var(--st-accent);
+}
+
+.dashboardPage .dashboardStoreRankingCard {
+  padding: 16px 20px;
+  border-radius: var(--st-radius);
+  border: 1px solid var(--st-border);
+  background: var(--st-bg-elevated);
+}
+
+.dashboardPage .dashboardStoreRankingList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dashboardPage .dashboardStoreRankingItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--st-border);
+  font-size: 14px;
+}
+
+.dashboardPage .dashboardStoreRankingItem:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.dashboardPage .dashboardStoreRankingRank {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--st-accent-soft);
+  color: var(--st-accent);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboardPage .dashboardStoreRankingName {
+  flex: 1;
+  min-width: 0;
+  color: var(--st-text);
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dashboardPage .dashboardStoreRankingValue {
+  flex-shrink: 0;
+  font-weight: 700;
+  color: var(--st-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.dashboardPage .dashboardStoreRankingEmpty {
+  margin: 0;
+  padding: 12px 0;
+  font-size: 13px;
+  color: var(--st-text-muted);
+  text-align: center;
+}
+
+.dashboardPage .dashboardStoreRankingViewAll {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: var(--st-radius-sm);
+  border: 1px solid var(--st-border);
+  background: transparent;
+  color: var(--st-accent);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--st-duration) var(--st-ease),
+    border-color var(--st-duration) var(--st-ease);
+}
+
+.dashboardPage .dashboardStoreRankingViewAll:hover {
+  background: var(--st-accent-soft);
+  border-color: rgba(251, 191, 36, 0.35);
+}
+
+.dashboardPage .dashboardSectionFinance .dashboardKpiGrid {
+  margin-bottom: 16px;
+}
+
+/* Merged Finance section (company + drivers strip) */
+.dashboardPage .dashboardSectionFinanceMerged .dashboardFinanceMergedInner {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dashboardPage .dashboardFinanceCompany {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dashboardPage .dashboardKpiGrid--financeSingle {
+  grid-template-columns: repeat(1, minmax(200px, 1fr));
+  max-width: 320px;
+}
+
+.dashboardPage .dashboardFinanceDriversStrip {
+  position: relative;
+  padding: 20px 24px;
+  border-radius: var(--st-radius);
+  border: 1px solid var(--st-border);
+  background: linear-gradient(
+    135deg,
+    rgba(251, 191, 36, 0.06) 0%,
+    var(--st-bg-elevated) 45%,
+    var(--st-bg-elevated) 100%
+  );
+  overflow: hidden;
+  transition: border-color var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration) var(--st-ease);
+}
+
+.dashboardPage .dashboardFinanceDriversStrip::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(
+    180deg,
+    var(--st-accent) 0%,
+    rgba(251, 191, 36, 0.4) 100%
+  );
+  border-radius: 4px 0 0 4px;
+}
+
+.dashboardPage .dashboardFinanceDriversStrip:hover {
+  border-color: rgba(251, 191, 36, 0.25);
+  box-shadow: 0 4px 24px rgba(251, 191, 36, 0.08);
+}
+
+.dashboardPage .dashboardFinanceDriversStripHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--st-text-muted);
+}
+
+.dashboardPage .dashboardFinanceDriversStripIcon {
+  color: var(--st-accent);
+  flex-shrink: 0;
+}
+
+.dashboardPage .dashboardFinanceDriversStripGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.dashboardPage .dashboardFinanceDriversCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 18px;
+  border-radius: var(--st-radius-sm);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background var(--st-duration-fast) var(--st-ease),
+    border-color var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardPage .dashboardFinanceDriversCard:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(251, 191, 36, 0.15);
+}
+
+.dashboardPage .dashboardFinanceDriversCardValue {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--st-text);
+}
+
+.dashboardPage .dashboardFinanceDriversCardLabel {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--st-text-muted);
+}
+
+@media (max-width: 640px) {
+  .dashboardPage .dashboardFinanceDriversStripGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dashboardPage .dashboardRevenueChartWrap {
+  background: var(--st-bg-elevated, #0f0f12);
+  border: 1px solid var(--st-border, rgba(255,255,255,0.08));
+  border-radius: var(--st-radius, 12px);
+  padding: 16px;
+  margin-top: 0;
+}
+
+.dashboardPage .dashboardRevenueChartHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.dashboardPage .dashboardRevenueChartTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--st-text-muted);
+  margin: 0;
+}
+
+.dashboardPage .dashboardRevenueChartDays {
+  display: flex;
+  gap: 6px;
+}
+
+.dashboardPage .dashboardRevenueChartDayBtn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--st-border, rgba(255,255,255,0.08));
+  background: rgba(255,255,255,0.04);
+  color: var(--st-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.dashboardPage .dashboardRevenueChartDayBtn:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.12);
+  color: var(--st-text);
+}
+
+.dashboardPage .dashboardRevenueChartDayBtn.active {
+  background: rgba(251, 191, 36, 0.15);
+  border-color: rgba(251, 191, 36, 0.4);
+  color: var(--st-accent, #fbbf24);
+}
+
+.dashboardPage .dashboardRevenueChartEmpty {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--st-text-muted);
+  font-size: 14px;
+}
+
+.dashboardPage .dashboardRevenueChartInner {
+  height: 240px;
+  position: relative;
+}
+
+.dashboardPage .dashboardKpiCard:hover .dashboardKpiIcon{
+  transform: scale(1.05);
+}
+
+.dashboardPage .dashboardKpiContent{
+  flex: 1;
+  min-width: 0;
+}
+
+.dashboardPage .dashboardKpiValue{
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--st-text);
+  line-height: 1.2;
+  transition: color var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardPage .dashboardKpiLabel{
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--st-text-muted);
+  margin-top: 4px;
+  transition: color var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardPage .dashboardKpiChevron{
+  color: var(--st-text-muted);
+  opacity: 0.7;
+  flex-shrink: 0;
+  transition: color var(--st-duration-fast) var(--st-ease),
+    transform var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardPage .dashboardKpiCard[role="button"]:hover .dashboardKpiChevron{
+  color: var(--st-accent);
+  transform: translateX(2px);
+}
+
+/* ——— Best delivery representatives (compact block in aside, below Team) ——— */
+.dashboardPage .dashboardTopDriversBlock {
+  margin-top: 16px;
+}
+
+.dashboardPage .dashboardTopDriversBlockCard {
+  background: var(--st-bg-elevated);
+  border: 1px solid var(--st-border);
+  border-radius: var(--st-radius);
+  overflow: hidden;
+  padding: 12px 14px;
+}
+
+.dashboardPage .dashboardTopDriversBlockTitle {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--st-text);
+}
+
+.dashboardPage .dashboardTopDriversBlockToolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.dashboardPage .dashboardTopDriversTabs {
+  display: flex;
+  gap: 6px;
+}
+
+.dashboardPage .dashboardTopDriversTab {
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: var(--st-text-muted);
+  cursor: pointer;
+  transition: background 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dashboardPage .dashboardTopDriversTab:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.dashboardPage .dashboardTopDriversTab:hover:not(:disabled) {
+  background: var(--st-surface-hover);
+  color: var(--st-text);
+}
+
+.dashboardPage .dashboardTopDriversTab:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.dashboardPage .dashboardTopDriversTab--active {
+  background: var(--st-accent-soft);
+  border-color: rgba(251, 191, 36, 0.35);
+  color: var(--st-accent);
+}
+
+.dashboardPage .dashboardTopDriversShowAll {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--st-accent);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.dashboardPage .dashboardTopDriversShowAll:hover {
+  opacity: 0.9;
+  text-decoration: underline;
+}
+
+.dashboardPage .dashboardTopDriversCard {
+  border-radius: var(--st-radius-sm);
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--st-border);
+  min-height: 280px;
+  position: relative;
+}
+
+.dashboardPage .dashboardTopDriversCardContent {
+  animation: dashboardTopDriversContentIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes dashboardTopDriversContentIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dashboardPage .dashboardTopDriversList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Skeleton list: staggered fade-in for a polished loading state */
+.dashboardPage .dashboardTopDriversList[aria-busy="true"] {
+  animation: dashboardTopDriversContentIn 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.dashboardPage .dashboardTopDriversList[aria-busy="true"] .dashboardTopDriversItem--skeleton {
+  opacity: 0;
+  animation: dashboardSkeletonRowIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.dashboardPage .dashboardTopDriversList[aria-busy="true"] .dashboardTopDriversItem--skeleton:nth-child(1) { animation-delay: 0.05s; }
+.dashboardPage .dashboardTopDriversList[aria-busy="true"] .dashboardTopDriversItem--skeleton:nth-child(2) { animation-delay: 0.1s; }
+.dashboardPage .dashboardTopDriversList[aria-busy="true"] .dashboardTopDriversItem--skeleton:nth-child(3) { animation-delay: 0.15s; }
+.dashboardPage .dashboardTopDriversList[aria-busy="true"] .dashboardTopDriversItem--skeleton:nth-child(4) { animation-delay: 0.2s; }
+.dashboardPage .dashboardTopDriversList[aria-busy="true"] .dashboardTopDriversItem--skeleton:nth-child(5) { animation-delay: 0.25s; }
+.dashboardPage .dashboardTopDriversList[aria-busy="true"] .dashboardTopDriversItem--skeleton:nth-child(6) { animation-delay: 0.3s; }
+.dashboardPage .dashboardTopDriversList[aria-busy="true"] .dashboardTopDriversItem--skeleton:nth-child(7) { animation-delay: 0.35s; }
+.dashboardPage .dashboardTopDriversList[aria-busy="true"] .dashboardTopDriversItem--skeleton:nth-child(8) { animation-delay: 0.4s; }
+.dashboardPage .dashboardTopDriversList[aria-busy="true"] .dashboardTopDriversItem--skeleton:nth-child(9) { animation-delay: 0.45s; }
+.dashboardPage .dashboardTopDriversList[aria-busy="true"] .dashboardTopDriversItem--skeleton:nth-child(10) { animation-delay: 0.5s; }
+
+@keyframes dashboardSkeletonRowIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Data list: smooth staggered reveal with scale and slide */
+.dashboardPage .dashboardTopDriversList--enter {
+  animation: dashboardTopDriversContentIn 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.dashboardPage .dashboardTopDriversList--enter .dashboardTopDriversItem {
+  opacity: 0;
+  transform: translateY(10px) scale(0.97);
+  animation: dashboardTopDriversItemIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.dashboardPage .dashboardTopDriversList--enter .dashboardTopDriversItem:nth-child(1) { animation-delay: 0.04s; }
+.dashboardPage .dashboardTopDriversList--enter .dashboardTopDriversItem:nth-child(2) { animation-delay: 0.08s; }
+.dashboardPage .dashboardTopDriversList--enter .dashboardTopDriversItem:nth-child(3) { animation-delay: 0.12s; }
+.dashboardPage .dashboardTopDriversList--enter .dashboardTopDriversItem:nth-child(4) { animation-delay: 0.16s; }
+.dashboardPage .dashboardTopDriversList--enter .dashboardTopDriversItem:nth-child(5) { animation-delay: 0.2s; }
+.dashboardPage .dashboardTopDriversList--enter .dashboardTopDriversItem:nth-child(6) { animation-delay: 0.24s; }
+.dashboardPage .dashboardTopDriversList--enter .dashboardTopDriversItem:nth-child(7) { animation-delay: 0.28s; }
+.dashboardPage .dashboardTopDriversList--enter .dashboardTopDriversItem:nth-child(8) { animation-delay: 0.32s; }
+.dashboardPage .dashboardTopDriversList--enter .dashboardTopDriversItem:nth-child(9) { animation-delay: 0.36s; }
+.dashboardPage .dashboardTopDriversList--enter .dashboardTopDriversItem:nth-child(10) { animation-delay: 0.4s; }
+
+@keyframes dashboardTopDriversItemIn {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.dashboardPage .dashboardTopDriversItem {
+  border-bottom: 1px solid var(--st-border);
+}
+
+.dashboardPage .dashboardTopDriversItem:last-child {
+  border-bottom: none;
+}
+
+.dashboardPage .dashboardTopDriversRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  text-align: left;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  transition: background 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dashboardPage .dashboardTopDriversRow:hover {
+  background: var(--st-surface-hover);
+}
+
+.dashboardPage .dashboardTopDriversAvatar {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--st-accent-soft);
+}
+
+.dashboardPage .dashboardTopDriversAvatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.dashboardPage .dashboardTopDriversInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.dashboardPage .dashboardTopDriversName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--st-text);
+}
+
+.dashboardPage .dashboardTopDriversPhone {
+  font-size: 11px;
+  color: var(--st-text-muted);
+}
+
+.dashboardPage .dashboardTopDriversBadge {
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--st-accent-soft);
+  color: var(--st-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.dashboardPage .dashboardTopDriversEmpty {
+  padding: 24px 12px;
+  text-align: center;
+  color: var(--st-text-muted);
+  font-size: 12px;
+  animation: dashboardTopDriversContentIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Skeleton loading */
+.dashboardPage .dashboardTopDriversItem--skeleton {
+  pointer-events: none;
+}
+
+.dashboardPage .dashboardTopDriversRow--skeleton {
+  cursor: default;
+}
+
+.dashboardPage .dashboardTopDriversAvatar--skeleton {
+  background: rgba(255, 255, 255, 0.08);
+  animation: dashboardSkeletonPulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.dashboardPage .dashboardTopDriversSkeletonLine {
+  display: block;
+  height: 12px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  animation: dashboardSkeletonPulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.dashboardPage .dashboardTopDriversSkeletonName {
+  width: 70%;
+  margin-bottom: 6px;
+}
+
+.dashboardPage .dashboardTopDriversSkeletonPhone {
+  width: 50%;
+}
+
+.dashboardPage .dashboardTopDriversBadge--skeleton {
+  width: 44px;
+  height: 22px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.08);
+  animation: dashboardSkeletonPulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes dashboardSkeletonPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* Driver KPIs in main column (Total money in hand, earnings, withdrawal) */
+.dashboardPage .dashboardKpiIcon--drivers {
+  background: var(--st-accent-soft);
+  color: var(--st-accent);
+}
+
+.dashboardPage .dashboardKpiGrid--drivers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+/* ——— Cards & lists ——— */
+.dashboardPage .dashboardCard{
+  border-radius: var(--st-radius);
+  border: 1px solid var(--st-border);
+  background: var(--st-bg-elevated);
+  overflow: hidden;
+  transition: border-color var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration) var(--st-ease);
+}
+
+.dashboardPage .dashboardTableCard:hover{
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+.dashboardPage .dashboardList{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dashboardPage .dashboardListItem{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--st-border);
+  transition: background var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardPage .dashboardListItem:last-child{
+  border-bottom: 0;
+}
+
+.dashboardPage .dashboardListItem--clickable{
+  cursor: pointer;
+}
+
+.dashboardPage .dashboardListItem{
+  animation: dashboardListItemEnter 0.3s var(--st-ease) backwards;
+}
+
+.dashboardPage .dashboardList .dashboardListItem:nth-child(1){ animation-delay: 0.02s; }
+.dashboardPage .dashboardList .dashboardListItem:nth-child(2){ animation-delay: 0.05s; }
+.dashboardPage .dashboardList .dashboardListItem:nth-child(3){ animation-delay: 0.08s; }
+.dashboardPage .dashboardList .dashboardListItem:nth-child(4){ animation-delay: 0.11s; }
+.dashboardPage .dashboardList .dashboardListItem:nth-child(5){ animation-delay: 0.14s; }
+.dashboardPage .dashboardList .dashboardListItem:nth-child(6){ animation-delay: 0.17s; }
+
+.dashboardPage .dashboardListItem--clickable:hover{
+  background: var(--st-surface-hover);
+}
+
+.dashboardPage .dashboardListItem--clickable:focus-visible{
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--st-accent-glow);
+}
+
+.dashboardPage .dashboardListItem--static{
+  cursor: default;
+}
+
+.dashboardPage .dashboardList--compact .dashboardListItem{
+  padding: 10px 18px;
+}
+
+.dashboardPage .dashboardListIcon{
+  flex-shrink: 0;
+  color: var(--st-accent);
+  opacity: 0.85;
+}
+
+.dashboardPage .dashboardListBadge{
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--st-text-muted);
+  background: var(--st-surface);
+  padding: 4px 10px;
+  border-radius: var(--st-radius-sm);
+}
+
+.dashboardPage .dashboardListRating{
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--st-accent);
+  flex-shrink: 0;
+}
+
+.dashboardPage .dashboardListRating svg{
+  color: var(--st-accent);
+}
+
+.dashboardPage .dashboardListPrimary{
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dashboardPage .dashboardListName{
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--st-text);
+}
+
+.dashboardPage .dashboardListMeta{
+  font-size: 12px;
+  color: var(--st-text-muted);
+}
+
+.dashboardPage .dashboardRoleDot{
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  border: 1px solid var(--st-border);
+}
+
+.dashboardPage .dashboardListChevron{
+  color: var(--st-text-muted);
+  opacity: 0.6;
+  flex-shrink: 0;
+  transition: color var(--st-duration-fast) var(--st-ease),
+    transform var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardPage .dashboardListItem--clickable:hover .dashboardListChevron{
+  color: var(--st-accent);
+  transform: translateX(2px);
+}
+
+/* ——— Empty state ——— */
+.dashboardPage .dashboardEmpty{
+  text-align: center;
+  padding: 48px 24px;
+}
+
+.dashboardPage .dashboardEmptyIcon{
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  border-radius: var(--st-radius);
+  background: var(--st-surface);
+  border: 1px solid var(--st-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--st-text-muted);
+  opacity: 0.8;
+}
+
+.dashboardPage .dashboardEmptyText{
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--st-text);
+}
+
+.dashboardPage .dashboardEmptySub{
+  margin: 8px 0 24px 0;
+  font-size: 14px;
+  color: var(--st-text-muted);
+}
+
+.dashboardPage .dashboardEmptyActions{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* ——— Buttons ——— */
+.dashboardPage .dashboardBtn{
+  padding: 10px 20px;
+  border-radius: var(--st-radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--st-duration) var(--st-ease),
+    border-color var(--st-duration) var(--st-ease),
+    color var(--st-duration) var(--st-ease),
+    transform var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardPage .dashboardBtn--primary{
+  border: 1px solid var(--st-border);
+  background: var(--st-accent-soft);
+  color: var(--st-accent);
+}
+
+.dashboardPage .dashboardBtn--primary:hover{
+  background: rgba(251, 191, 36, 0.25);
+  border-color: rgba(251, 191, 36, 0.4);
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.15);
+  transform: translateY(-1px);
+}
+
+.dashboardPage .dashboardBtn--secondary{
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: var(--st-text);
+}
+
+.dashboardPage .dashboardBtn--secondary:hover{
+  background: var(--st-surface-hover);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.dashboardPage .dashboardBtn:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+/* ——— Quick actions (1–3 per permission) ——— */
+.dashboardPage .dashboardQuickActions{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.dashboardPage .dashboardQuickAction{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: var(--st-text);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform var(--st-duration-fast) var(--st-ease),
+    border-color var(--st-duration) var(--st-ease),
+    background var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration) var(--st-ease);
+}
+
+.dashboardPage .dashboardQuickAction:hover{
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.dashboardPage .dashboardQuickAction--hot{
+  border-color: rgba(251, 191, 36, 0.35);
+  background: rgba(251, 191, 36, 0.1);
+  color: #fbbf24;
+}
+.dashboardPage .dashboardQuickAction--hot:hover{
+  background: rgba(251, 191, 36, 0.18);
+  box-shadow: 0 8px 24px rgba(251, 191, 36, 0.15);
+}
+
+.dashboardPage .dashboardQuickAction--holiday{
+  border-color: rgba(59, 130, 246, 0.35);
+  background: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
+}
+.dashboardPage .dashboardQuickAction--holiday:hover{
+  background: rgba(59, 130, 246, 0.18);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+}
+
+.dashboardPage .dashboardQuickAction--report{
+  border-color: rgba(34, 197, 94, 0.3);
+  background: rgba(34, 197, 94, 0.08);
+  color: #4ade80;
+}
+.dashboardPage .dashboardQuickAction--report:hover{
+  background: rgba(34, 197, 94, 0.15);
+}
+
+.dashboardPage .dashboardQuickAction--suggest{
+  border-color: rgba(168, 85, 247, 0.35);
+  background: rgba(168, 85, 247, 0.08);
+  color: #c084fc;
+}
+.dashboardPage .dashboardQuickAction--suggest:hover{
+  background: rgba(168, 85, 247, 0.15);
+}
+
+.dashboardPage .dashboardQuickAction--drivers{
+  border-color: rgba(234, 88, 12, 0.35);
+  background: rgba(234, 88, 12, 0.08);
+  color: #fb923c;
+}
+.dashboardPage .dashboardQuickAction--drivers:hover{
+  background: rgba(234, 88, 12, 0.15);
+}
+
+/* ——— Pending approvals (for managers) ——— */
+.dashboardPage .dashboardSectionPendingApprovals{
+  margin-bottom: 24px;
+}
+
+.dashboardPage .dashboardPendingApprovalsWrap{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dashboardPage .dashboardPendingApprovalLink{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: var(--st-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--st-duration) var(--st-ease),
+    border-color var(--st-duration) var(--st-ease),
+    transform var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardPage .dashboardPendingApprovalLink:hover{
+  background: var(--st-surface-hover);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.dashboardPage .dashboardPendingApprovalLink:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+.dashboardPage .dashboardPendingApprovalLink span:first-of-type{
+  flex: 1;
+  font-weight: 500;
+}
+
+.dashboardPage .dashboardPendingApprovalCount{
+  flex-shrink: 0;
+  min-width: 24px;
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: var(--st-accent-soft);
+  color: var(--st-accent);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* ——— Team activity summary ——— */
+.dashboardPage .dashboardSectionTeamSummary{
+  margin-bottom: 20px;
+}
+
+.dashboardPage .dashboardTeamSummaryText{
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--st-surface);
+  border: 1px solid var(--st-border);
+  font-size: 13px;
+  color: var(--st-text-muted);
+  line-height: 1.5;
+}
+
+.dashboardPage .dashboardTeamSummaryLabel{
+  font-weight: 600;
+  color: var(--st-text);
+}
+
+/* ——— Hot items carousel ——— */
+.dashboardPage .dashboardActivityHotCarousel{
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 12px 8px 8px;
+  border-bottom: 1px solid var(--st-border);
+}
+
+.dashboardPage .dashboardActivityHotCarouselRow{
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+
+.dashboardPage .dashboardActivityHotCarouselBtn{
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--st-text-muted);
+  cursor: pointer;
+  transition: background var(--st-duration) var(--st-ease),
+    color var(--st-duration) var(--st-ease);
+}
+
+.dashboardPage .dashboardActivityHotCarouselBtn:hover{
+  background: var(--st-surface-hover);
+  color: var(--st-text);
+}
+
+.dashboardPage .dashboardActivityHotCarouselBtn:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+.dashboardPage .dashboardActivityHotCarouselContent{
+  flex: 1;
+  min-width: 0;
+}
+
+.dashboardPage .dashboardActivityHotCarouselContent .dashboardActivityCard{
+  width: 100%;
+  border-radius: 10px;
+  border: none;
+  border-bottom: none;
+  margin: 0;
+}
+
+.dashboardPage .dashboardActivityHotCarouselDots{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0 0;
+  width: 100%;
+}
+
+.dashboardPage .dashboardActivityHotCarouselCounter{
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--st-text-muted);
+}
+
+.dashboardPage .dashboardActivitySectionHead{
+  margin-bottom: 16px;
+}
+
+.dashboardPage .dashboardActivitySectionTitleWrap{
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dashboardPage .dashboardActivitySectionTitleWrap .dashboardSectionTitle{
+  margin: 0;
+}
+
+.dashboardPage .dashboardActivitySectionSub{
+  margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--st-text-muted);
+  letter-spacing: 0.01em;
+}
+
+.dashboardPage .dashboardActivityViewAll{
+  flex-shrink: 0;
+}
+
+.dashboardPage .dashboardActivityWrap{
+  border-radius: 16px;
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.dashboardPage .dashboardActivityLoading{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 20px 24px;
+}
+
+.dashboardPage .dashboardActivityLoadingText{
+  margin: 0;
+  font-size: 13px;
+  color: var(--st-text-muted);
+}
+
+.dashboardPage .dashboardActivityLoadingDots{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 8px;
+}
+
+.dashboardPage .dashboardActivityLoadingDot{
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--st-accent);
+  animation: dashboardActivityDot 1s var(--st-ease) infinite;
+}
+
+.dashboardPage .dashboardActivityLoadingDot:nth-child(2){ animation-delay: 0.15s; }
+.dashboardPage .dashboardActivityLoadingDot:nth-child(3){ animation-delay: 0.3s; }
+
+@keyframes dashboardActivityDot {
+  0%, 100% { opacity: 0.4; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+.dashboardPage .dashboardActivityEmpty{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 40px 28px;
+  text-align: center;
+}
+
+.dashboardPage .dashboardActivityEmptyIconWrap{
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed var(--st-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--st-text-muted);
+}
+
+.dashboardPage .dashboardActivityEmptyIcon{
+  opacity: 0.6;
+}
+
+.dashboardPage .dashboardActivityEmptyTitle{
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--st-text);
+}
+
+.dashboardPage .dashboardActivityEmptySub{
+  margin: 0;
+  font-size: 13px;
+  color: var(--st-text-muted);
+  line-height: 1.5;
+  max-width: 280px;
+}
+
+.dashboardPage .dashboardActivityEmptyBtn{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--st-border);
+  background: var(--st-surface-hover);
+  color: var(--st-text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--st-duration) var(--st-ease),
+    border-color var(--st-duration) var(--st-ease),
+    transform var(--st-duration-fast) var(--st-ease);
+}
+
+.dashboardPage .dashboardActivityEmptyBtn:hover{
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.dashboardPage .dashboardActivityEmptyBtn:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+.dashboardPage .dashboardActivity{
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.dashboardPage .dashboardActivityCard{
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid var(--st-border);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: background var(--st-duration) var(--st-ease);
+  animation: dashboardActivityCardIn 0.35s var(--st-ease) backwards;
+}
+
+.dashboardPage .dashboardActivityCard::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  pointer-events: none;
+  transition: background var(--st-duration) var(--st-ease);
+  z-index: 0;
+}
+
+.dashboardPage .dashboardActivityCard:hover::before{
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.dashboardActivityCardInner,
+.dashboardPage .dashboardActivityCardChevron{
+  position: relative;
+  z-index: 1;
+}
+
+.dashboardPage .dashboardActivityCard:last-child{
+  border-bottom: none;
+}
+
+.dashboardPage .dashboardActivityCard:focus-visible{
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--st-accent-glow);
+}
+
+.dashboardPage .dashboardActivityCard--unread{
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.dashboardPage .dashboardActivityCard--unread::before{
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background: var(--st-accent);
+}
+
+.dashboardPage .dashboardActivityCard--new .dashboardActivityCardTime{
+  color: var(--st-accent);
+}
+
+@keyframes dashboardActivityCardIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dashboardPage .dashboardActivityCardInner{
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 18px;
+  min-height: 0;
+  flex: 1;
+  position: relative;
+}
+
+.dashboardPage .dashboardActivityCardChevron{
+  flex-shrink: 0;
+  margin-right: 14px;
+  opacity: 0.35;
+  transition: opacity var(--st-duration) var(--st-ease);
+}
+
+.dashboardPage .dashboardActivityCard:hover .dashboardActivityCardChevron{
+  opacity: 0.7;
+}
+
+.dashboardPage .dashboardActivityCardBody{
+  flex: 1;
+  min-width: 0;
+}
+
+.dashboardPage .dashboardActivityCardTime{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--st-text-muted);
+  margin-bottom: 4px;
+}
+
+.dashboardPage .dashboardActivityCardNewBadge{
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: var(--st-accent);
+  color: var(--st-bg, #0f0f12);
+}
+
+.dashboardPage .dashboardActivityCardTitle{
+  margin: 0 0 2px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--st-text);
+  line-height: 1.35;
+}
+
+.dashboardPage .dashboardActivityCardMessage{
+  margin: 0;
+  font-size: 13px;
+  color: var(--st-text-muted);
+  line-height: 1.45;
+}
+
+/* Birthday — warm amber/orange */
+.dashboardPage .dashboardActivityCard--birthday{
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.14) 0%, rgba(251, 146, 60, 0.06) 100%);
+  border-color: rgba(245, 158, 11, 0.28);
+}
+.dashboardPage .dashboardActivityCardIconWrap--birthday{
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.35) 0%, rgba(251, 146, 60, 0.2) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f59e0b;
+  flex-shrink: 0;
+}
+
+/* Hot — yellow accent (distinct from birthday) */
+.dashboardPage .dashboardActivityCard--hot{
+  background: linear-gradient(90deg, rgba(234, 179, 8, 0.14) 0%, rgba(234, 179, 8, 0.04) 100%);
+  border-color: rgba(234, 179, 8, 0.28);
+}
+.dashboardPage .dashboardActivityCardIconWrap--hot{
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(234, 179, 8, 0.35) 0%, rgba(234, 179, 8, 0.15) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #eab308;
+  flex-shrink: 0;
+}
+
+/* Holiday request — blue */
+.dashboardPage .dashboardActivityCard--holiday-request{
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.12) 0%, rgba(59, 130, 246, 0.04) 100%);
+  border-color: rgba(59, 130, 246, 0.28);
+}
+.dashboardPage .dashboardActivityCardIconWrap--holiday{
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.35) 0%, rgba(59, 130, 246, 0.15) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3b82f6;
+  flex-shrink: 0;
+}
+
+/* Holiday decision — teal */
+.dashboardPage .dashboardActivityCard--holiday-decision{
+  background: linear-gradient(135deg, rgba(20, 184, 166, 0.1) 0%, rgba(20, 184, 166, 0.03) 100%);
+  border-color: rgba(20, 184, 166, 0.22);
+}
+.dashboardPage .dashboardActivityCardIconWrap--holiday-decision{
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(20, 184, 166, 0.35) 0%, rgba(20, 184, 166, 0.15) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #14b8a6;
+  flex-shrink: 0;
+}
+
+/* Suggest — violet/purple */
+.dashboardActivityCard--suggest-sent,
+.dashboardPage .dashboardActivityCard--suggest-received{
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(168, 85, 247, 0.03) 100%);
+  border-color: rgba(139, 92, 246, 0.22);
+}
+.dashboardPage .dashboardActivityCardBubble--suggest{
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(139, 92, 246, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8b5cf6;
+  flex-shrink: 0;
+}
+
+/* Report — cyan / emerald (distinct from holiday decision) */
+.dashboardActivityCard--report-new,
+.dashboardPage .dashboardActivityCard--report-sent{
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%);
+  border-color: rgba(6, 182, 212, 0.2);
+}
+.dashboardPage .dashboardActivityCardDoc--report{
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(16, 185, 129, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #10b981;
+  flex-shrink: 0;
+}
+
+/* Cash in recorded — emerald green */
+.dashboardPage .dashboardActivityCard--cashin-created{
+  background: linear-gradient(135deg, rgba(5, 150, 105, 0.12) 0%, rgba(5, 150, 105, 0.04) 100%);
+  border-color: rgba(5, 150, 105, 0.22);
+}
+.dashboardPage .dashboardActivityCardIconWrap--cashin-created{
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(5, 150, 105, 0.35) 0%, rgba(5, 150, 105, 0.15) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #059669;
+  flex-shrink: 0;
+}
+
+/* Cashout (all variants) — indigo */
+.dashboardPage .dashboardActivityCard--cashout-created,
+.dashboardPage .dashboardActivityCard--cashout-cashed,
+.dashboardPage .dashboardActivityCard--cashout-request-submitted,
+.dashboardPage .dashboardActivityCard--cashout-new-request,
+.dashboardPage .dashboardActivityCard--cashout-approved-pending,
+.dashboardPage .dashboardActivityCard--cashout-rejected,
+.dashboardPage .dashboardActivityCard--cashout-action-done,
+.dashboardPage .dashboardActivityCard--cashout-request-approved,
+.dashboardPage .dashboardActivityCard--cashout-request-denied,
+.dashboardPage .dashboardActivityCard--cashout-cash-done,
+.dashboardPage .dashboardActivityCard--cashout-reject-done{
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.03) 100%);
+  border-color: rgba(99, 102, 241, 0.22);
+}
+.dashboardPage .dashboardActivityCardIconWrap--cashout{
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.35) 0%, rgba(99, 102, 241, 0.15) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6366f1;
+  flex-shrink: 0;
+}
+
+/* Info / default — minimal */
+.dashboardActivityCard--info,
+.dashboardPage .dashboardActivityCard--permission-lost{
+  background: var(--st-surface);
+}
+.dashboardPage .dashboardActivityCardMinimal{
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--st-text-muted);
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .dashboardPage .dashboardKpiGrid {
+    grid-template-columns: 1fr;
+  }
+  .dashboardPage .dashboardWelcomeCard{
+    flex-direction: column;
+    text-align: center;
+  }
+}

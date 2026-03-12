@@ -1,0 +1,71 @@
+/* Drivers page: empty state and number alignment */
+
+.content:has(.driversPage) {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.driversPage {
+  --st-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  transform: translateY(8px);
+  animation: driversPageEnter 0.35s var(--st-ease) forwards;
+}
+
+@keyframes driversPageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.driversEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+  padding: 32px;
+  text-align: center;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+  font-size: 14px;
+}
+
+.driversSpinner {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 16px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--st-accent, #fbbf24);
+  border-radius: 50%;
+  animation: driversSpin 0.8s linear infinite;
+}
+
+@keyframes driversSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.driversEmptyIll {
+  width: 300px;
+  height: auto;
+  margin-bottom: 20px;
+  opacity: 0.85;
+}
+
+.driversEmpty p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.driversNum {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}

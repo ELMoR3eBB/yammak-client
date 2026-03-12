@@ -1,0 +1,76 @@
+/* Skeleton — loading placeholder with shimmer animation */
+
+.skeleton {
+  --skeleton-bg: rgba(255, 255, 255, 0.06);
+  --skeleton-shimmer: rgba(255, 255, 255, 0.12);
+  --skeleton-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  min-width: 1px;
+  min-height: 1em;
+  border-radius: 6px;
+}
+
+.skeleton .skeleton__base {
+  position: absolute;
+  inset: 0;
+  background: var(--skeleton-bg);
+}
+
+.skeleton .skeleton__base::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    transparent 40%,
+    var(--skeleton-shimmer) 50%,
+    transparent 60%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s var(--skeleton-ease) infinite;
+}
+
+.skeleton--no-animation .skeleton__base::after {
+  animation: none;
+}
+
+.skeleton--loaded .skeleton__base {
+  display: none;
+}
+
+.skeleton .skeleton__content {
+  position: relative;
+  display: block;
+}
+
+.skeleton:not(.skeleton--loaded) .skeleton__content {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.skeleton:not(.skeleton--loaded) .skeleton__content > * {
+  visibility: hidden;
+}
+
+.skeleton--loaded .skeleton__content {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.skeleton--loaded .skeleton__content > * {
+  visibility: visible;
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

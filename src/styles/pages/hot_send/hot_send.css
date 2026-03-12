@@ -1,0 +1,508 @@
+.content:has(.hotSendPage) {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.hotSendPage {
+  --st-bg: #09090b;
+  --st-bg-elevated: #0f0f12;
+  --st-surface: rgba(255, 255, 255, 0.03);
+  --st-border: rgba(255, 255, 255, 0.06);
+  --st-text: rgba(255, 255, 255, 0.92);
+  --st-text-muted: rgba(255, 255, 255, 0.5);
+  --st-accent: #fbbf24;
+  --st-radius: 8px;
+  --st-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+  color: var(--st-text);
+  background: var(--st-bg);
+  overflow: hidden;
+  position: relative;
+  opacity: 0;
+  animation: hotSendPageIn 0.4s var(--st-ease) forwards;
+}
+
+.hotSendPage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 100% 50% at 0% 0%,
+    rgba(251, 191, 36, 0.04) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+}
+
+@keyframes hotSendPageIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hotSendPage .hotSendHeader{
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--st-border);
+  flex-shrink: 0;
+  background: var(--st-bg-elevated);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 1px 0 rgba(251, 191, 36, 0.06);
+}
+
+.hotSendPage .hotSendHeader:hover .hotSendHeaderIcon{
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
+}
+
+.hotSendPage .hotSendHeaderIcon{
+  width: 40px;
+  height: 40px;
+  border-radius: var(--st-radius);
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(251, 191, 36, 0.06) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--st-accent);
+  flex-shrink: 0;
+  transition: transform 0.25s var(--st-ease), box-shadow 0.25s var(--st-ease);
+}
+
+.hotSendPage .hotSendTitle{ margin: 0; font-size: 18px; font-weight: 600; color: var(--st-text); }
+.hotSendPage .hotSendSubtitle{ margin: 4px 0 0 0; font-size: 12px; color: var(--st-text-muted); }
+
+.hotSendPage .hotSendMain{
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 32px;
+}
+
+.hotSendPage .hotSendForm{
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.hotSendPage .hotSendTemplates{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hotSendPage .hotSendTemplateBtn{
+  padding: 8px 14px;
+  border-radius: var(--st-radius);
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: var(--st-text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.hotSendPage .hotSendTemplateBtn:hover{
+  border-color: rgba(251, 191, 36, 0.35);
+  background: rgba(251, 191, 36, 0.08);
+  color: var(--st-text);
+}
+
+.hotSendPage .hotSendTemplateBtn.active{
+  border-color: var(--st-accent);
+  background: rgba(251, 191, 36, 0.15);
+  color: var(--st-accent);
+}
+
+.hotSendPage .hotSendField{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hotSendPage .hotSendField--radio{
+  transition: opacity 0.25s ease;
+}
+
+.hotSendPage .hotSendField--radio .hotSendLabel{
+  transition: color 0.2s ease;
+}
+
+.hotSendPage .hotSendLabel{
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--st-text-muted);
+}
+
+.hotSendInput,
+.hotSendPage .hotSendTextarea{
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--st-radius);
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: var(--st-text);
+  font-size: 14px;
+  color-scheme: dark;
+  transition: border-color 0.2s var(--st-ease), background-color 0.2s var(--st-ease),
+    box-shadow 0.2s var(--st-ease), color 0.2s var(--st-ease);
+}
+
+.hotSendInput:hover,
+.hotSendPage .hotSendTextarea:hover{
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.hotSendInput:focus,
+.hotSendPage .hotSendTextarea:focus{
+  outline: none;
+  border-color: var(--st-accent);
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.15);
+}
+
+.hotSendPage .hotSendTextarea{
+  resize: vertical;
+  min-height: 100px;
+}
+
+.hotSendPage .hotSendRadioGroup{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hotSendPage .hotSendRadio{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--st-text);
+}
+
+.hotSendPage .hotSendRadio input{ accent-color: var(--st-accent); }
+
+.hotSendPage .hotSendSubmit{
+  align-self: flex-start;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #09090b;
+  background: var(--st-accent);
+  border: none;
+  border-radius: var(--st-radius);
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+.hotSendPage .hotSendSubmit:hover:not(:disabled){
+  opacity: 0.95;
+  transform: translateY(-1px);
+}
+
+.hotSendPage .hotSendSubmit:disabled{
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+label span.required {
+  color: #ef4444;
+}
+
+/* Send to: roles / users */
+.hotSendPage .hotSendField--target{
+  gap: 12px;
+}
+
+.hotSendPage .hotSendTargetList{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+  padding: 14px;
+  border-radius: var(--st-radius);
+  border: 1px solid var(--st-border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.hotSendPage .hotSendTargetListLabel{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--st-text-muted);
+}
+
+.hotSendPage .hotSendTargetChips{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hotSendPage .hotSendTargetChips--users{
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.hotSendPage .hotSendTargetChip{
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: var(--st-text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s var(--st-ease), background 0.2s var(--st-ease), color 0.2s var(--st-ease);
+}
+
+.hotSendPage .hotSendTargetChip:hover{
+  border-color: rgba(251, 191, 36, 0.4);
+  background: rgba(251, 191, 36, 0.08);
+}
+
+.hotSendPage .hotSendTargetChip.active{
+  border-color: var(--st-accent);
+  background: rgba(251, 191, 36, 0.2);
+  color: var(--st-accent);
+}
+
+/* Recipient count indicator (info/warning) */
+.hotSendRecipientIndicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--st-radius);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  background: rgba(251, 191, 36, 0.08);
+  color: var(--st-text);
+  font-size: 13px;
+}
+
+.hotSendRecipientIndicatorIcon {
+  flex-shrink: 0;
+  color: var(--st-accent);
+}
+
+.hotSendRecipientIndicator strong {
+  color: var(--st-accent);
+}
+
+/* 35%: 5-second confirm block */
+.hotSendConfirm35 {
+  padding: 16px 18px;
+  border-radius: var(--st-radius);
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  background: rgba(251, 191, 36, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hotSendConfirm35Text {
+  margin: 0;
+  font-size: 13px;
+  color: var(--st-text);
+}
+
+.hotSendConfirm35Text strong {
+  color: var(--st-accent);
+}
+
+.hotSendConfirm35Actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hotSendConfirm35Btn {
+  padding: 10px 20px;
+  border-radius: var(--st-radius);
+  border: none;
+  background: var(--st-accent);
+  color: #09090b;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+.hotSendConfirm35Btn:hover:not(:disabled) {
+  opacity: 0.95;
+  transform: translateY(-1px);
+}
+
+.hotSendConfirm35Btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.hotSendConfirm35Cancel {
+  padding: 8px 14px;
+  border: none;
+  background: transparent;
+  color: var(--st-text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.hotSendConfirm35Cancel:hover {
+  color: var(--st-text);
+}
+
+/* 50%: modal (portaled to body so it covers the full app) */
+.hotSendModalBackdrop {
+  --st-bg-elevated: #0f0f12;
+  --st-border: rgba(255, 255, 255, 0.06);
+  --st-surface: rgba(255, 255, 255, 0.03);
+  --st-text: rgba(255, 255, 255, 0.92);
+  --st-text-muted: rgba(255, 255, 255, 0.5);
+  --st-accent: #fbbf24;
+  --st-radius: 8px;
+  --st-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  position: fixed;
+  inset: 0;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 24px;
+  animation: hotSendModalBackdropIn 0.22s var(--st-ease) forwards;
+}
+
+.hotSendModalBackdrop--exit {
+  animation: hotSendModalBackdropOut 0.22s var(--st-ease) forwards;
+  pointer-events: none;
+}
+
+@keyframes hotSendModalBackdropIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes hotSendModalBackdropOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.hotSendModal {
+  max-width: 420px;
+  width: 100%;
+  border-radius: 16px;
+  border: 1px solid var(--st-border);
+  background: var(--st-bg-elevated);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: hotSendModalIn 0.26s var(--st-ease) forwards;
+}
+
+.hotSendModal--exit {
+  animation: hotSendModalOut 0.22s var(--st-ease) forwards;
+}
+
+@keyframes hotSendModalIn {
+  from { opacity: 0; transform: scale(0.96) translateY(-12px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes hotSendModalOut {
+  from { opacity: 1; transform: scale(1) translateY(0); }
+  to { opacity: 0; transform: scale(0.96) translateY(12px); }
+}
+
+.hotSendModalIll {
+  width: 140px;
+  height: auto;
+  margin-bottom: 16px;
+  object-fit: contain;
+}
+
+.hotSendModalTitle {
+  margin: 0 0 10px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--st-text);
+}
+
+.hotSendModalMessage {
+  margin: 0 0 24px;
+  font-size: 14px;
+  color: var(--st-text-muted);
+  line-height: 1.5;
+}
+
+.hotSendModalMessage strong {
+  color: var(--st-accent);
+}
+
+.hotSendModalActions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.hotSendModalBtn {
+  padding: 12px 24px;
+  border-radius: var(--st-radius);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s, border-color 0.2s, background 0.2s;
+}
+
+.hotSendModalBtn--close {
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: var(--st-text);
+}
+
+.hotSendModalBtn--close:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.hotSendModalBtn--confirm {
+  border: none;
+  background: var(--st-accent);
+  color: #09090b;
+}
+
+.hotSendModalBtn--confirm:hover:not(:disabled) {
+  opacity: 0.95;
+  transform: translateY(-1px);
+}
+
+.hotSendModalBtn--confirm:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}

@@ -1,0 +1,481 @@
+/* Documents page — list cards, view/print modal, upload/edit modals */
+
+.documentsPage .auditLogsHeader {
+  align-items: center;
+}
+
+/* Space below header so content isn’t stuck to it */
+.documentsPage .auditLogsMain {
+  padding-top: 0;
+}
+
+.documentsPage .auditLogsSection {
+  padding: 28px 24px 40px;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.documentsUploadBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--st-radius-sm, 8px);
+  border: 1px solid var(--st-accent, #fbbf24);
+  background: rgba(251, 191, 36, 0.12);
+  color: var(--st-accent, #fbbf24);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.documentsUploadBtn:hover {
+  background: rgba(251, 191, 36, 0.2);
+  border-color: rgba(251, 191, 36, 0.5);
+}
+
+.documentsLoading,
+.documentsEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+  padding: 32px;
+  text-align: center;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+  font-size: 14px;
+}
+
+.documentsSpinner {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 16px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--st-accent, #fbbf24);
+  border-radius: 50%;
+  animation: documentsSpin 0.8s linear infinite;
+}
+
+@keyframes documentsSpin {
+  to { transform: rotate(360deg); }
+}
+
+.documentsEmptyIcon {
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
+.documentsEmptyUpload {
+  margin-top: 16px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--st-accent, #fbbf24);
+  background: rgba(251, 191, 36, 0.1);
+  color: var(--st-accent, #fbbf24);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Drop zone (main content area) */
+.documentsDropZone {
+  position: relative;
+}
+.documentsDropZone.documentsDropZone--active {
+  outline: 2px dashed var(--st-accent, #fbbf24);
+  outline-offset: -4px;
+  background: rgba(251, 191, 36, 0.04);
+  border-radius: var(--st-radius, 12px);
+}
+.documentsDropOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: var(--st-radius, 12px);
+  z-index: 10;
+  color: var(--st-text, #fff);
+  gap: 12px;
+}
+
+.documentsEmptyHint {
+  font-size: 13px;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.45));
+  margin: 0 0 8px 0;
+}
+
+.documentsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 4px;
+}
+
+.documentsCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px 22px;
+  border-radius: var(--st-radius, 12px);
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.08));
+  background: var(--st-bg-elevated, #0f0f12);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.documentsCard:hover {
+  border-color: rgba(251, 191, 36, 0.25);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.documentsCardMain {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.documentsCardIconWrap {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(251, 191, 36, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.documentsCard:hover .documentsCardIconWrap {
+  background: rgba(251, 191, 36, 0.2);
+}
+
+.documentsCardIcon {
+  color: var(--st-accent, #fbbf24);
+  opacity: 0.95;
+}
+
+.documentsCardInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.documentsCardTitle {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--st-text, rgba(255, 255, 255, 0.92));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.documentsCardMeta {
+  font-size: 12px;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+  line-height: 1.4;
+}
+
+.documentsCardMeta--print {
+  margin-top: 2px;
+  font-size: 11px;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.45));
+}
+
+.documentsCardActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.documentsCardBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.1));
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--st-text, rgba(255, 255, 255, 0.9));
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.documentsCardBtn:hover:not(:disabled) {
+  background: rgba(251, 191, 36, 0.1);
+  border-color: rgba(251, 191, 36, 0.3);
+  color: var(--st-accent, #fbbf24);
+}
+
+.documentsCardBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.documentsCardBtn--danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+/* View / Print modal */
+.documentsViewBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.documentsViewModal {
+  display: flex;
+  flex-direction: column;
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
+  background: var(--st-bg-elevated, #0f0f12);
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.08));
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.documentsViewHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--st-border, rgba(255, 255, 255, 0.08));
+  flex-shrink: 0;
+}
+
+.documentsViewTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--st-text, rgba(255, 255, 255, 0.92));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.documentsViewActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.documentsViewBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.1));
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--st-text, rgba(255, 255, 255, 0.9));
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.documentsViewBtn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.documentsViewBtn--print {
+  border-color: var(--st-accent, #fbbf24);
+  background: rgba(251, 191, 36, 0.15);
+  color: var(--st-accent, #fbbf24);
+}
+
+.documentsViewBtn--print:hover:not(:disabled) {
+  background: rgba(251, 191, 36, 0.25);
+  border-color: rgba(251, 191, 36, 0.5);
+}
+
+.documentsViewBtn--close {
+  padding: 8px;
+}
+
+.documentsViewBody {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  overflow: auto;
+}
+
+/* In-app PDF viewer (react-pdf) */
+.documentsPdfViewer {
+  flex: 1;
+  min-height: 400px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 0;
+  background: #525659;
+}
+
+.documentsPdfViewer .react-pdf__Document {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.documentsPdfViewer .react-pdf__Page {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  background: #fff;
+}
+
+.documentsPdfViewer .react-pdf__Page__canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Upload / Edit modal */
+.documentsUploadModal {
+  max-width: 440px;
+  max-height: none;
+}
+
+.documentsUploadModal .documentsViewHeader h2 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--st-text, rgba(255, 255, 255, 0.92));
+}
+
+.documentsUploadBody {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.documentsUploadLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  transition: color 0.2s ease;
+}
+
+.documentsUploadInput {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.1));
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--st-text, rgba(255, 255, 255, 0.92));
+  font-size: 14px;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.documentsUploadInput:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.documentsUploadInput:focus {
+  outline: none;
+  border-color: var(--st-accent, #fbbf24);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.15);
+}
+
+.documentsUploadInput::placeholder {
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.4));
+}
+
+.documentsUploadFileRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.documentsUploadSelect {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--st-accent, #fbbf24);
+  background: rgba(251, 191, 36, 0.1);
+  color: var(--st-accent, #fbbf24);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.documentsUploadSelect:hover {
+  background: rgba(251, 191, 36, 0.2);
+  border-color: rgba(251, 191, 36, 0.5);
+}
+
+.documentsUploadFileName {
+  font-size: 13px;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.documentsUploadFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--st-border, rgba(255, 255, 255, 0.06));
+}
+
+/* Delete confirmation modal */
+.documentsDeleteModal .documentsUploadBody {
+  gap: 20px;
+}
+
+.documentsDeleteMessage {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--st-text, rgba(255, 255, 255, 0.9));
+}
+
+.documentsDeleteMessage strong {
+  color: var(--st-text, rgba(255, 255, 255, 0.95));
+  font-weight: 600;
+}
+
+.documentsDeleteModal .documentsViewBtn.documentsCardBtn--danger {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+.documentsDeleteModal .documentsViewBtn.documentsCardBtn--danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.6);
+  color: #fecaca;
+}

@@ -1,0 +1,796 @@
+/* Employee Cashout Form — app theme, scrollbar right, compact layout */
+.empCashoutForm {
+  --ec-bg: #0f0f12;
+  --ec-surface: rgba(255, 255, 255, 0.03);
+  --ec-surface-hover: rgba(255, 255, 255, 0.06);
+  --ec-border: rgba(255, 255, 255, 0.06);
+  --ec-text: rgba(255, 255, 255, 0.92);
+  --ec-text-muted: rgba(255, 255, 255, 0.5);
+  --ec-accent: #fbbf24;
+  --ec-accent-soft: rgba(251, 191, 36, 0.18);
+  --ec-radius: 8px;
+  --ec-radius-sm: 6px;
+  --ec-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ec-duration: 0.2s;
+
+  min-height: min-content;
+  overflow: visible;
+  color: var(--ec-text);
+  transition: opacity var(--ec-duration) var(--ec-ease);
+  direction: ltr;
+}
+
+.empCashoutFormInner {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 2px 2px 2px 12px;
+  min-height: min-content;
+}
+
+.empCashoutField {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.empCashoutField--full {
+  width: 100%;
+}
+
+.empCashoutLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ec-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.empCashoutLabel--inline {
+  margin-left: 0;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.empCashoutInputWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.empCashoutInputWrap--mt {
+  margin-top: 6px;
+}
+
+.empCashoutUseBalanceBtn {
+  padding: 6px 10px;
+  border-radius: var(--ec-radius-sm);
+  border: 1px solid var(--ec-accent);
+  background: var(--ec-accent-soft);
+  color: var(--ec-accent);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--ec-duration) var(--ec-ease),
+    transform var(--ec-duration) var(--ec-ease),
+    border-color var(--ec-duration) var(--ec-ease);
+  white-space: nowrap;
+}
+
+.empCashoutUseBalanceBtn:hover:not(:disabled) {
+  background: rgba(251, 191, 36, 0.25);
+}
+
+.empCashoutUseBalanceBtn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.empCashoutUseBalanceBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.empCashoutInputIcon {
+  color: var(--ec-text-muted);
+  flex-shrink: 0;
+}
+
+/* Date input: dark color-scheme for native picker */
+.empCashoutDateWrap {
+  color-scheme: dark;
+}
+
+.empCashoutDateInput {
+  color-scheme: dark;
+}
+
+.empCashoutInput,
+.empCashoutTextarea {
+  flex: 1;
+  min-width: 100px;
+  padding: 6px 10px;
+  border-radius: var(--ec-radius-sm);
+  border: 1px solid var(--ec-border);
+  background: var(--ec-surface);
+  color: var(--ec-text);
+  font-size: 13px;
+  transition: border-color var(--ec-duration) var(--ec-ease), background var(--ec-duration) var(--ec-ease);
+}
+
+.empCashoutInput::placeholder,
+.empCashoutTextarea::placeholder {
+  color: var(--ec-text-muted);
+}
+
+.empCashoutInput:hover,
+.empCashoutTextarea:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.empCashoutInput--error {
+  border-color: var(--ec-accent);
+  box-shadow: 0 0 0 1px var(--ec-accent);
+}
+
+.empCashoutInput:focus,
+.empCashoutTextarea:focus {
+  outline: none;
+  border-color: var(--ec-accent);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.empCashoutReadOnlyWrap {
+  min-height: 32px;
+  align-items: center;
+}
+
+.empCashoutReadOnly {
+  display: block;
+  padding: 6px 10px;
+  border-radius: var(--ec-radius-sm);
+  border: 1px solid var(--ec-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ec-text);
+  font-size: 13px;
+  cursor: default;
+  user-select: none;
+}
+
+.empCashoutTextarea {
+  resize: vertical;
+  min-height: 56px;
+}
+
+.empCashoutUseSalaryBtn {
+  padding: 6px 10px;
+  border-radius: var(--ec-radius-sm);
+  border: 1px solid var(--ec-accent);
+  background: var(--ec-accent-soft);
+  color: var(--ec-accent);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--ec-duration) var(--ec-ease), transform var(--ec-duration) var(--ec-ease), border-color var(--ec-duration) var(--ec-ease);
+  white-space: nowrap;
+}
+
+.empCashoutUseSalaryBtn:hover {
+  background: rgba(251, 191, 36, 0.25);
+}
+
+.empCashoutUseSalaryBtn:active {
+  transform: scale(0.98);
+}
+
+/* Employee selector — searchable (Chosen-style) */
+.empCashoutSelectWrap {
+  position: relative;
+}
+
+.empCashoutSelectBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  border-radius: var(--ec-radius-sm);
+  border: 1px solid var(--ec-border);
+  background: var(--ec-surface);
+  color: var(--ec-text);
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--ec-duration) var(--ec-ease), border-color var(--ec-duration) var(--ec-ease), box-shadow var(--ec-duration) var(--ec-ease);
+}
+
+.empCashoutSelectBtn:hover {
+  background: var(--ec-surface-hover);
+}
+
+.empCashoutSelectValue {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.empCashoutSelectChev {
+  color: var(--ec-text-muted);
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.empCashoutSelectBtn[aria-expanded="true"] .empCashoutSelectChev {
+  transform: rotate(180deg);
+}
+
+.empCashoutDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  border-radius: var(--ec-radius-sm);
+  border: 1px solid var(--ec-border);
+  background: var(--ec-bg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  z-index: 10;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 220px;
+  animation: empCashoutDropdownIn 0.22s var(--ec-ease) forwards;
+}
+
+.empCashoutDropdown--exiting {
+  animation: empCashoutDropdownOut 0.2s var(--ec-ease) forwards;
+}
+
+@keyframes empCashoutDropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes empCashoutDropdownOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.99);
+    pointer-events: none;
+  }
+}
+
+.empCashoutDropdownSearch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--ec-border);
+  background: var(--ec-surface);
+  flex-shrink: 0;
+  transition: background var(--ec-duration) var(--ec-ease);
+}
+
+.empCashoutSearchIcon {
+  color: var(--ec-text-muted);
+  flex-shrink: 0;
+  transition: color var(--ec-duration) var(--ec-ease);
+}
+
+.empCashoutSearchInput {
+  flex: 1;
+  min-width: 0;
+  padding: 5px 8px;
+  border: none;
+  background: transparent;
+  color: var(--ec-text);
+  font-size: 12px;
+  outline: none;
+  transition: color var(--ec-duration) var(--ec-ease);
+}
+
+.empCashoutSearchInput::placeholder {
+  color: var(--ec-text-muted);
+}
+
+/* Scroll only inside the list; scrollbar stays inside dropdown */
+.empCashoutDropdownList {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  direction: ltr;
+  scroll-behavior: smooth;
+  transition: background var(--ec-duration) var(--ec-ease);
+}
+
+.empCashoutDropdownList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.empCashoutDropdownList::-webkit-scrollbar-track {
+  background: var(--ec-surface);
+  border-radius: 3px;
+  margin: 4px 0;
+}
+
+.empCashoutDropdownList::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.empCashoutDropdownList::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.empCashoutDropdownItem {
+  width: 100%;
+  padding: 6px 10px;
+  border: none;
+  background: transparent;
+  color: var(--ec-text);
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--ec-duration) var(--ec-ease), color var(--ec-duration) var(--ec-ease);
+}
+
+.empCashoutDropdownItem:hover {
+  background: var(--ec-surface-hover);
+}
+
+.empCashoutDropdownItem--muted {
+  color: var(--ec-text-muted);
+  cursor: default;
+  font-size: 12px;
+}
+
+/* Form body: staggered slide-in from left + fade */
+.empCashoutFormBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.empCashoutFormBody--exiting {
+  animation: empCashoutFormBodyOut 0.25s var(--ec-ease) forwards;
+}
+
+@keyframes empCashoutFormBodyOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.empCashoutFormBodyContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.empCashoutAnimateIn {
+  opacity: 0;
+  transform: translateX(-16px);
+  animation: empCashoutSlideIn 0.35s var(--ec-ease) forwards;
+}
+
+.empCashoutAnimateIn--0 { animation-delay: 0.02s; }
+.empCashoutAnimateIn--1 { animation-delay: 0.06s; }
+.empCashoutAnimateIn--2 { animation-delay: 0.1s; }
+.empCashoutAnimateIn--3 { animation-delay: 0.14s; }
+.empCashoutAnimateIn--4 { animation-delay: 0.18s; }
+.empCashoutAnimateIn--5 { animation-delay: 0.22s; }
+.empCashoutAnimateIn--6 { animation-delay: 0.26s; }
+.empCashoutAnimateIn--7 { animation-delay: 0.3s; }
+
+@keyframes empCashoutSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Violation row: slide-in when added */
+.empCashoutViolationRowIn {
+  opacity: 0;
+  transform: translateX(-16px);
+  animation: empCashoutSlideIn 0.35s var(--ec-ease) forwards;
+}
+
+.empCashoutViolationsList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.empCashoutViolationRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.empCashoutViolationAmountInput {
+  width: 100px;
+  flex: 0 0 auto;
+}
+
+.empCashoutViolationReasonInput {
+  flex: 1;
+  min-width: 120px;
+}
+
+.empCashoutViolationRow--exiting {
+  animation: empCashoutViolationRowOut 0.28s var(--ec-ease) forwards;
+  pointer-events: none;
+}
+
+@keyframes empCashoutViolationRowOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+}
+
+.empCashoutViolationRemoveBtn {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  min-height: 32px;
+  box-sizing: border-box;
+  border-radius: var(--ec-radius-sm);
+  border: 1px solid var(--ec-border);
+  background: var(--ec-surface);
+  color: var(--ec-text-muted);
+  cursor: pointer;
+  transition: border-color var(--ec-duration) var(--ec-ease), background var(--ec-duration) var(--ec-ease), color var(--ec-duration) var(--ec-ease);
+}
+
+.empCashoutViolationRemoveBtn:hover:not(:disabled) {
+  background: var(--ec-surface-hover);
+  color: var(--ec-text);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.empCashoutViolationRemoveBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Employee info block */
+.empCashoutEmployeeInfo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  padding: 8px 10px;
+  border-radius: var(--ec-radius-sm);
+  background: var(--ec-surface);
+  border: 1px solid var(--ec-border);
+  transition: border-color var(--ec-duration) var(--ec-ease), background var(--ec-duration) var(--ec-ease);
+}
+
+.empCashoutEmployeeRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.empCashoutEmployeeLabel {
+  color: var(--ec-text-muted);
+}
+
+.empCashoutEmployeeLabel--hint {
+  font-size: 11px;
+  color: var(--ec-text-muted);
+  font-weight: 400;
+}
+
+.empCashoutEmployeeValue {
+  font-weight: 500;
+  color: var(--ec-text);
+}
+
+/* Debts block */
+.empCashoutDebtsBlock {
+  padding: 10px 12px;
+  border-radius: var(--ec-radius);
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.08) 0%, rgba(251, 191, 36, 0.02) 100%);
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  transition: border-color var(--ec-duration) var(--ec-ease), box-shadow var(--ec-duration) var(--ec-ease);
+}
+
+.empCashoutDebtsHeader {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.empCashoutDebtsLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ec-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.empCashoutDebtsInfo {
+  color: var(--ec-text-muted);
+  opacity: 0.8;
+}
+
+.empCashoutDebtsValue {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ec-accent);
+}
+
+/* Row for date + amount */
+.empCashoutRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 480px) {
+  .empCashoutRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ——— Custom checkbox (role-create style with check animation) ——— */
+@keyframes empCashoutCheckboxCheck {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+.empCashoutCheckLabel--custom {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ec-text);
+  cursor: pointer;
+  user-select: none;
+}
+
+.empCashoutCheckboxWrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.empCashoutCheckboxInput {
+  position: absolute;
+  opacity: 0;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.empCashoutCheckboxBox {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 2px solid var(--ec-border);
+  background: var(--ec-surface);
+  transition: border-color var(--ec-duration) var(--ec-ease),
+    background var(--ec-duration) var(--ec-ease),
+    box-shadow var(--ec-duration) var(--ec-ease);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empCashoutCheckboxInput:hover + .empCashoutCheckboxBox {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.empCashoutCheckboxInput:focus-visible + .empCashoutCheckboxBox {
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.35);
+  border-color: var(--ec-accent);
+}
+
+.empCashoutCheckboxBox::after {
+  content: "";
+  width: 5px;
+  height: 9px;
+  border: solid var(--ec-bg);
+  border-width: 0 2px 2px 0;
+  transform: scale(0) rotate(45deg);
+  opacity: 0;
+  transition: transform 0.2s var(--ec-ease) 0.05s, opacity 0.15s var(--ec-ease);
+  position: absolute;
+  left: 5px;
+  top: 1px;
+}
+
+.empCashoutCheckboxInput:checked + .empCashoutCheckboxBox {
+  background: var(--ec-accent);
+  border-color: var(--ec-accent);
+  box-shadow: 0 0 0 1px var(--ec-accent);
+  animation: empCashoutCheckboxCheck 0.25s var(--ec-ease);
+}
+
+.empCashoutCheckboxInput:checked + .empCashoutCheckboxBox::after {
+  transform: scale(1) rotate(45deg);
+  opacity: 1;
+  border-color: var(--ec-bg);
+}
+
+.empCashoutCheckLabelText {
+  flex: 1;
+}
+
+.empCashoutCheckLabel--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.empCashoutCheckLabel--disabled .empCashoutCheckboxInput {
+  cursor: not-allowed;
+}
+
+/* Checkbox (fallback label class when not custom) */
+.empCashoutCheckLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ec-text);
+  cursor: pointer;
+}
+
+.empCashoutHint {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: var(--ec-text-muted);
+  line-height: 1.4;
+}
+
+/* Debt repayment amount: show/hide with same slide animation as other elements */
+.empCashoutDebtRepaymentInputWrap {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateX(-16px);
+}
+
+.empCashoutDebtRepaymentInputWrap--in {
+  animation: empCashoutSlideIn 0.35s var(--ec-ease) forwards;
+}
+
+.empCashoutDebtRepaymentInputWrap--exiting {
+  animation: empCashoutDebtRepaymentOut 0.25s var(--ec-ease) forwards;
+}
+
+@keyframes empCashoutDebtRepaymentOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+    max-height: 120px;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-16px);
+    max-height: 0;
+    margin-top: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    pointer-events: none;
+  }
+}
+
+/* Summary */
+.empCashoutSummary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  padding: 8px 12px;
+  border-radius: var(--ec-radius-sm);
+  background: var(--ec-surface);
+  border: 1px solid var(--ec-border);
+  transition: border-color var(--ec-duration) var(--ec-ease), background var(--ec-duration) var(--ec-ease);
+}
+
+.empCashoutSummaryRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.empCashoutSummaryLabel {
+  color: var(--ec-text-muted);
+}
+
+.empCashoutSummaryValue {
+  font-weight: 700;
+  color: var(--ec-text);
+}
+
+/* Actions — only visible when form is shown (employee selected) */
+.empCashoutActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 10px;
+  margin-top: 6px;
+  border-top: 1px solid var(--ec-border);
+  flex-shrink: 0;
+}
+
+.empCashoutBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--ec-radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--ec-duration) var(--ec-ease), border-color var(--ec-duration) var(--ec-ease), transform var(--ec-duration) var(--ec-ease), box-shadow var(--ec-duration) var(--ec-ease);
+}
+
+.empCashoutBtn--secondary {
+  border: 1px solid var(--ec-border);
+  background: var(--ec-surface);
+  color: var(--ec-text);
+}
+
+.empCashoutBtn--secondary:hover {
+  background: var(--ec-surface-hover);
+}
+
+.empCashoutBtn--primary {
+  border: none;
+  background: var(--ec-accent);
+  color: #09090b;
+}
+
+.empCashoutBtn--primary:hover {
+  background: #f59e0b;
+  box-shadow: 0 0 16px rgba(251, 191, 36, 0.25);
+}
+
+.empCashoutBtn:active {
+  transform: scale(0.98);
+}

@@ -1,0 +1,122 @@
+/* AnimatedList - smooth fade-in + subtle slide, optional gradients and scrollbar */
+
+@keyframes animatedList-item-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animatedList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 0;
+  outline: none;
+  overflow-y: auto;
+  max-height: 360px;
+}
+
+.animatedList--scrollbar {
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+}
+
+.animatedList--scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.animatedList--scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.animatedList--scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+}
+
+.animatedList--scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.animatedList--gradients {
+  background: linear-gradient(
+    180deg,
+    rgba(251, 191, 36, 0.06) 0%,
+    transparent 20%,
+    transparent 80%,
+    rgba(251, 191, 36, 0.04) 100%
+  );
+  border-radius: 10px;
+  padding: 12px 8px;
+}
+
+.animatedList-item {
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid transparent;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  animation: animatedList-item-in 0.2s ease-out both;
+  will-change: opacity;
+}
+
+.animatedList-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.animatedList-item--selected {
+  background: rgba(251, 191, 36, 0.12);
+  border-color: rgba(251, 191, 36, 0.35);
+  color: #fbbf24;
+}
+
+.animatedList-item:active {
+  transform: scale(0.99);
+}
+
+/* When used as DataTable body: no inner scroll, table grows with content; page scrolls */
+.animatedList.dt-body {
+  gap: 0;
+  padding: 0;
+  max-height: none;
+  overflow: visible;
+  overflow-y: visible;
+}
+
+.animatedList-item.dt-row {
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  /* Keep animation when used as table row */
+  animation: animatedList-item-in 0.2s ease-out both;
+}
+
+.animatedList-item.dt-row:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.animatedList-item.dt-row.animatedList-item--selected {
+  background: rgba(251, 191, 36, 0.08);
+}
+
+.animatedList-item.dt-row:last-child {
+  border-bottom: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animatedList-item,
+  .animatedList-item.dt-row {
+    animation: none !important;
+    transition: none;
+  }
+}

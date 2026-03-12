@@ -1,0 +1,211 @@
+/* styles/modals/confirmEmployeeActionModal.css */
+.eam-backdrop {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  z-index: 9999;
+  opacity: 0;
+  background: rgba(0, 0, 0, 0);
+  transition: opacity 180ms ease, background 180ms ease;
+}
+
+.eam-backdrop.is-open {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.65);
+}
+
+.eam-modal {
+  width: min(560px, 92vw);
+  border-radius: 18px;
+  padding: 16px 16px 14px;
+  background: #14161a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transform: translateY(10px) scale(0.985);
+  transition: transform 180ms ease, opacity 180ms ease;
+}
+
+.eam-modal.is-open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* header */
+.eam-head {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.eam-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.eam-badgeIcon {
+  opacity: 0.9;
+}
+
+.eam-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  transition: 0.15s ease;
+}
+.eam-close:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.16);
+  transform: translateY(-1px);
+}
+.eam-close:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+.eam-close:focus-visible {
+  outline: none;
+  border-color: rgba(248, 192, 40, 0.55);
+  box-shadow: 0 0 0 3px rgba(248, 192, 40, 0.12);
+}
+
+/* content */
+.eam-content {
+  padding: 8px 4px 0;
+}
+
+.eam-titleRow {
+  padding: 6px 4px 12px;
+}
+
+.eam-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.eam-sub {
+  margin-top: 4px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* inner card */
+.eam-card {
+  border-radius: 16px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.eam-cardTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.eam-check {
+  opacity: 0.9;
+}
+
+.eam-cardLabel {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.eam-cardName {
+  margin-top: 2px;
+  font-size: 15px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* summary rows */
+.eam-summary {
+  margin-top: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.eam-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.eam-k {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.eam-v {
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 600;
+  max-width: 70%;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.eam-hint {
+  margin-top: 12px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* actions */
+.eam-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 4px 2px;
+}
+
+.eam-btn {
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.eam-btn.ghost {
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.eam-btn.primary {
+  background: rgba(255, 255, 255, 0.92);
+  color: #0b0c0f;
+}
+
+.eam-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* optional subtle tone */
+.eam-modal.is-create .eam-badge {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.eam-modal.is-update .eam-badge {
+  background: rgba(255, 255, 255, 0.06);
+}/*# sourceMappingURL=confirmEmployeeActionModal.css.map */

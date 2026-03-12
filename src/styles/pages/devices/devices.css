@@ -1,0 +1,1313 @@
+/* Device Management & Login Attempts: full-bleed so header sticks to top like Audit/Roles */
+.content:has(.devicesPage) {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Action Heatmap & System Performance: full width, scrollbar at app edge (like Audit Logs) */
+.content:has(.devicesPage--full) {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.devicesPage {
+  --dv-bg: #09090b;
+  --dv-bg-elevated: #0f0f12;
+  --dv-surface: rgba(255, 255, 255, 0.03);
+  --dv-border: rgba(255, 255, 255, 0.06);
+  --dv-text: rgba(255, 255, 255, 0.92);
+  --dv-text-muted: rgba(255, 255, 255, 0.5);
+  --dv-accent: #fbbf24;
+  --dv-danger: #ef4444;
+  --dv-radius: 10px;
+  --dv-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+  color: var(--dv-text);
+  background: var(--dv-bg);
+  overflow: hidden;
+  position: relative;
+  opacity: 0;
+  animation: devicesPageIn 0.35s var(--dv-ease) forwards;
+}
+
+.devicesPage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 100% 50% at 0% 0%,
+    rgba(251, 191, 36, 0.04) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+}
+
+@keyframes devicesPageIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.devicesPage .devicesHeader{
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--dv-border);
+  flex-shrink: 0;
+  background: var(--dv-bg-elevated);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 1px 0 rgba(251, 191, 36, 0.06);
+}
+
+.devicesPage .devicesHeader:hover .devicesHeaderIcon{
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
+}
+
+.devicesPage .devicesHeaderIcon{
+  width: 40px;
+  height: 40px;
+  border-radius: var(--dv-radius);
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.18) 0%, rgba(251, 191, 36, 0.06) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dv-accent);
+  flex-shrink: 0;
+  transition: transform 0.25s var(--dv-ease), box-shadow 0.25s var(--dv-ease);
+}
+
+.devicesPage .devicesHeaderText{
+  flex: 1;
+  min-width: 0;
+}
+.devicesPage .devicesTitle{ margin: 0; font-size: 18px; font-weight: 600; color: var(--dv-text); }
+.devicesPage .devicesSubtitle{ margin: 4px 0 0 0; font-size: 12px; color: var(--dv-text-muted); line-height: 1.45; }
+
+.devicesPage .devicesViewToggle{
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+  padding: 4px;
+  border-radius: var(--dv-radius);
+  border: 1px solid var(--dv-border);
+  background: var(--dv-surface);
+}
+.devicesPage .devicesViewToggleBtn{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--dv-text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s var(--dv-ease), color 0.2s var(--dv-ease);
+}
+.devicesPage .devicesViewToggleBtn:hover{
+  color: var(--dv-text);
+  background: rgba(255, 255, 255, 0.04);
+}
+.devicesPage .devicesViewToggleBtn.active{
+  background: rgba(251, 191, 36, 0.15);
+  color: var(--dv-accent);
+}
+
+.devicesPage .devicesRefresh{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  margin-left: auto;
+  border-radius: var(--dv-radius);
+  border: 1px solid var(--dv-border);
+  background: var(--dv-surface);
+  color: var(--dv-text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s var(--dv-ease), border-color 0.2s var(--dv-ease);
+}
+.devicesPage .devicesRefresh:hover:not(:disabled){
+  background: rgba(251, 191, 36, 0.08);
+  border-color: rgba(251, 191, 36, 0.35);
+}
+.devicesPage .devicesRefresh:disabled{ opacity: 0.6; cursor: not-allowed; }
+.devicesPage .devicesRefresh .spin{ animation: devicesSpin 0.8s linear infinite; }
+
+.devicesPage .devicesFiltersRow{
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--dv-border);
+  flex-wrap: wrap;
+}
+.devicesPage .devicesFilterGroup{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.devicesPage .devicesFilterLabel{
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--dv-text-muted);
+}
+
+/* Login Attempts date filters: compact, same size as other pages (e.g. Audit Logs) */
+.devicesPage .devicesFiltersRow input[type="date"]{
+  height: 38px;
+  width: 130px;
+  min-width: 120px;
+  padding: 0 10px;
+  font-size: 13px;
+  border-radius: var(--dv-radius);
+  border: 1px solid var(--dv-border);
+  background: var(--dv-surface);
+  color: var(--dv-text);
+  outline: none;
+  transition: border-color 0.2s var(--dv-ease), box-shadow 0.2s var(--dv-ease);
+  color-scheme: dark;
+}
+.devicesPage .devicesFiltersRow input[type="date"]:hover{
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.devicesPage .devicesFiltersRow input[type="date"]:focus{
+  border-color: rgba(251, 191, 36, 0.45);
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.12);
+}
+
+/* Skeleton theme for devices page */
+.devicesPage .skeleton {
+  --skeleton-bg: rgba(255, 255, 255, 0.06);
+  --skeleton-shimmer: rgba(255, 255, 255, 0.12);
+}
+
+.devicesPage .devicesList--skeleton .devicesCard--skeleton {
+  pointer-events: none;
+}
+
+/* Login Attempts chart */
+.devicesPage .loginAttemptsChart{
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+.devicesPage .loginAttemptsLoading{
+  color: var(--dv-text-muted);
+  font-size: 14px;
+  margin: 24px 0;
+}
+.devicesPage .loginAttemptsEmpty{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 32px 24px;
+  min-height: 200px;
+  color: var(--dv-text-muted);
+}
+.devicesPage .loginAttemptsEmpty .devicesEmptyIllustration{
+  flex-shrink: 0;
+}
+.devicesPage .loginAttemptsEmptyText{
+  margin: 0;
+  font-size: 14px;
+  text-align: center;
+}
+.devicesPage .loginAttemptsBars{
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 800px;
+}
+.devicesPage .loginAttemptsRow{
+  display: grid;
+  grid-template-columns: 200px 1fr 80px;
+  align-items: center;
+  gap: 16px;
+}
+.devicesPage .loginAttemptsEmail{
+  font-size: 13px;
+  color: var(--dv-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.devicesPage .loginAttemptsBarWrap{
+  display: flex;
+  gap: 2px;
+  height: 24px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+}
+.devicesPage .loginAttemptsBar{
+  height: 100%;
+  min-width: 0;
+  transition: width 0.35s var(--dv-ease);
+}
+.devicesPage .loginAttemptsBar--success{
+  background: linear-gradient(90deg, rgba(34, 197, 94, 0.5), #22c55e);
+}
+.devicesPage .loginAttemptsBar--fail{
+  background: linear-gradient(90deg, rgba(239, 68, 68, 0.5), var(--dv-danger));
+}
+.devicesPage .loginAttemptsCounts{
+  display: flex;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.devicesPage .loginAttemptsSuccess{ color: #22c55e; }
+.devicesPage .loginAttemptsFail{ color: var(--dv-danger); }
+@media (max-width: 640px) {
+  .loginAttemptsRow {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .devicesPage .loginAttemptsEmail{ margin-bottom: 0; }
+  .devicesPage .devicesFiltersRow input[type="date"]{
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+.devicesLoading,
+.devicesPage .devicesEmpty{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 220px;
+  padding: 32px 24px;
+  color: var(--dv-text-muted);
+  font-size: 14px;
+}
+.devicesPage .devicesEmptyIllustration{
+  width: min(320px, 75vw);
+  height: auto;
+  max-height: 280px;
+  object-fit: contain;
+  opacity: 0.9;
+}
+.devicesPage .devicesEmpty p{
+  margin: 0;
+  text-align: center;
+}
+
+.devicesPage .devicesMain{
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 24px;
+}
+
+.devicesPage .devicesSpinner{
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--dv-border);
+  border-top-color: var(--dv-accent);
+  border-radius: 50%;
+  animation: devicesSpin 0.8s linear infinite;
+}
+
+@keyframes devicesSpin {
+  to { transform: rotate(360deg); }
+}
+
+.devicesPage .devicesList{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+  max-width: 720px;
+}
+
+.devicesPage .devicesCard{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 20px;
+  border-radius: 12px;
+  border: 1px solid var(--dv-border);
+  background: var(--dv-surface);
+  transition: border-color 0.2s var(--dv-ease), background 0.2s var(--dv-ease), box-shadow 0.2s var(--dv-ease);
+}
+
+.devicesPage .devicesCard:hover{
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+}
+
+.devicesPage .devicesCard--revoked{
+  opacity: 0.72;
+}
+
+.devicesPage .devicesCardLeft{
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  min-width: 0;
+}
+
+.devicesPage .devicesCardIcon{
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dv-text-muted);
+  flex-shrink: 0;
+  transition: color 0.2s var(--dv-ease), background 0.2s var(--dv-ease);
+}
+
+.devicesPage .devicesCard:hover .devicesCardIcon{
+  background: rgba(251, 191, 36, 0.1);
+  color: var(--dv-accent);
+}
+
+.devicesPage .devicesCardBody{
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.devicesPage .devicesCardUser{
+  margin-bottom: 2px;
+}
+
+.devicesPage .devicesCardUserName{
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dv-text);
+  display: block;
+  line-height: 1.3;
+}
+
+.devicesPage .devicesCardUserEmail{
+  font-size: 11px;
+  color: var(--dv-text-muted);
+  display: block;
+  margin-top: 2px;
+}
+
+.devicesPage .devicesCardHead{
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+}
+
+.devicesPage .devicesCardName{
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--dv-text);
+  line-height: 1.3;
+}
+
+.devicesPage .devicesCardBadges{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.devicesPage .devicesBadge{
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 8px;
+  letter-spacing: 0.02em;
+}
+
+.devicesPage .devicesBadge--current{
+  background: rgba(251, 191, 36, 0.2);
+  color: var(--dv-accent);
+}
+
+.devicesPage .devicesBadge--revoked{
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--dv-text-muted);
+}
+
+.devicesPage .devicesBadge--connected{
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.devicesPage .devicesBadge--offline{
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--dv-text-muted);
+}
+
+.devicesPage .devicesCardMetaRow{
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  font-size: 12px;
+  color: var(--dv-text-muted);
+}
+
+.devicesPage .devicesCardMetaSep{
+  color: rgba(255, 255, 255, 0.25);
+  font-weight: 400;
+}
+
+.devicesPage .devicesCardMeta{
+  color: var(--dv-text-muted);
+}
+
+.devicesPage .devicesMetaActive{
+  color: var(--dv-accent);
+  font-weight: 600;
+}
+
+.devicesPage .devicesCardLocationRow{
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+  margin-top: 2px;
+}
+
+.devicesPage .devicesCardLocation{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--dv-text-muted);
+}
+
+.devicesPage .devicesCardLocation svg{
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.devicesPage .devicesLocationIp{
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.65);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  letter-spacing: 0.02em;
+}
+
+.devicesPage .devicesCardActions{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.devicesPage .devicesBtn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s var(--dv-ease), border-color 0.2s var(--dv-ease), color 0.2s var(--dv-ease);
+}
+
+.devicesPage .devicesBtnHistory{
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  background: rgba(251, 191, 36, 0.08);
+  color: var(--dv-accent);
+}
+
+.devicesPage .devicesBtnHistory:hover:not(:disabled){
+  background: rgba(251, 191, 36, 0.16);
+  border-color: rgba(251, 191, 36, 0.5);
+}
+
+.devicesPage .devicesBtnHistory:disabled{
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.devicesPage .devicesBtnLogout{
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  background: transparent;
+  color: #f87171;
+}
+
+.devicesPage .devicesBtnLogout:hover:not(:disabled){
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.55);
+  color: #fca5a5;
+}
+
+.devicesPage .devicesBtnLogout:disabled{
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.devicesPage .devicesBtnSpinner{
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: devicesSpin 0.7s linear infinite;
+}
+
+/* Modal */
+.devicesPage .devicesModalBackdrop{
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  z-index: 10000;
+  opacity: 0;
+  animation: devicesBackdropIn 0.2s var(--dv-ease) forwards;
+}
+
+@keyframes devicesBackdropIn {
+  to { opacity: 1; }
+}
+
+.devicesPage .devicesModal{
+  width: min(400px, 92vw);
+  padding: 24px;
+  border-radius: 14px;
+  background: var(--dv-bg-elevated);
+  border: 1px solid var(--dv-border);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transform: scale(0.96) translateY(8px);
+  animation: devicesModalIn 0.25s var(--dv-ease) forwards;
+}
+
+@keyframes devicesModalIn {
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.devicesPage .devicesModalTitle{
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--dv-text);
+}
+
+.devicesPage .devicesModalMessage{
+  margin: 0 0 20px 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--dv-text-muted);
+}
+
+.devicesPage .devicesModalActions{
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.devicesPage .devicesModalBtn{
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.devicesPage .devicesModalBtn--ghost{
+  border: 1px solid var(--dv-border);
+  background: transparent;
+  color: var(--dv-text);
+}
+
+.devicesPage .devicesModalBtn--ghost:hover{
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.devicesPage .devicesModalBtn--danger{
+  border: none;
+  background: var(--dv-danger);
+  color: #fff;
+}
+
+.devicesPage .devicesModalBtn--danger:hover:not(:disabled){
+  background: #dc2626;
+  opacity: 0.95;
+}
+
+.devicesPage .devicesModalBtn--danger:disabled{
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.devicesHistoryBackdrop{
+  --dv-bg-elevated: #0f0f12;
+  --dv-surface: rgba(255, 255, 255, 0.03);
+  --dv-border: rgba(255, 255, 255, 0.06);
+  --dv-text: rgba(255, 255, 255, 0.92);
+  --dv-text-muted: rgba(255, 255, 255, 0.5);
+  --dv-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  background: rgba(0, 0, 0, 0.62);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  animation: devicesBackdropIn 0.2s var(--dv-ease) forwards;
+}
+
+.devicesHistoryBackdrop--exiting{
+  animation: devicesBackdropOut 0.22s var(--dv-ease) forwards;
+}
+
+@keyframes devicesBackdropOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.devicesHistoryModal{
+  width: min(620px, 95vw);
+  max-height: min(82vh, 760px);
+  border-radius: 14px;
+  border: 1px solid var(--dv-border);
+  background: var(--dv-bg-elevated);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: translateY(8px) scale(0.98);
+  opacity: 0;
+  animation: devicesModalIn 0.24s var(--dv-ease) forwards;
+}
+
+.devicesHistoryModal--exiting{
+  animation: devicesModalOut 0.22s var(--dv-ease) forwards;
+}
+
+@keyframes devicesModalOut {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(12px) scale(0.96); }
+}
+
+.devicesHistoryHeader{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--dv-border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.devicesHistoryHeaderText{
+  min-width: 0;
+}
+
+.devicesHistoryTitle{
+  margin: 0;
+  font-size: 18px;
+  color: var(--dv-text);
+}
+
+.devicesHistorySubtitle{
+  margin: 6px 0 0 0;
+  font-size: 12px;
+  color: var(--dv-text-muted);
+}
+
+.devicesHistoryClose{
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--dv-border);
+  background: var(--dv-surface);
+  color: var(--dv-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.devicesHistoryClose:hover{
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.devicesHistoryBody{
+  padding: 18px 20px 22px;
+  overflow: auto;
+}
+
+.devicesHistoryLoading{
+  min-height: 120px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--dv-text-muted);
+}
+
+.devicesHistoryEmpty{
+  margin: 0;
+  color: var(--dv-text-muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.devicesHistoryTimeline{
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.devicesHistoryItem{
+  position: relative;
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  gap: 10px;
+}
+
+.devicesHistoryPoint{
+  width: 10px;
+  height: 10px;
+  margin-top: 4px;
+  border-radius: 50%;
+  border: 2px solid rgba(251, 191, 36, 0.6);
+  background: rgba(251, 191, 36, 0.22);
+  box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.08);
+}
+
+.devicesHistoryItem::after{
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 16px;
+  bottom: -16px;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(251, 191, 36, 0.32), rgba(255, 255, 255, 0.04));
+}
+
+.devicesHistoryItem:last-child::after{
+  display: none;
+}
+
+.devicesHistoryContent{
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--dv-border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.devicesHistoryWhen{
+  margin: 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.devicesHistoryWhere{
+  margin: 4px 0 0 0;
+  font-size: 14px;
+  color: var(--dv-text);
+}
+
+.devicesHistoryMeta{
+  margin: 6px 0 0 0;
+  display: inline-flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--dv-text-muted);
+}
+
+@media (max-width: 600px) {
+  .devicesPage .devicesCard{
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 16px;
+  }
+  .devicesPage .devicesCardActions{
+    width: 100%;
+    justify-content: flex-end;
+    padding-top: 4px;
+    border-top: 1px solid var(--dv-border);
+  }
+  .devicesPage .devicesBtn{
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+/* Action Heatmap */
+.devicesPage .heatmapToolbar{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.devicesPage .heatmapToolbarLabel{
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--dv-text-muted);
+}
+
+.devicesPage .heatmapPeriodGroup{
+  display: inline-flex;
+  gap: 0;
+  border-radius: var(--dv-radius);
+  border: 1px solid var(--dv-border);
+  background: var(--dv-surface);
+  padding: 2px;
+  transition: border-color 0.2s var(--dv-ease), box-shadow 0.2s var(--dv-ease);
+}
+
+.devicesPage .heatmapPeriodGroup:focus-within{
+  border-color: rgba(251, 191, 36, 0.4);
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.1);
+}
+
+.devicesPage .heatmapPeriodBtn{
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--dv-text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s var(--dv-ease), color 0.2s var(--dv-ease), transform 0.15s var(--dv-ease);
+}
+
+.devicesPage .heatmapPeriodBtn:hover:not(:disabled){
+  color: var(--dv-text);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.devicesPage .heatmapPeriodBtn.active{
+  background: rgba(251, 191, 36, 0.15);
+  color: var(--dv-accent);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.devicesPage .heatmapPeriodBtn:disabled{
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.devicesPage .heatmapRefresh{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: var(--dv-radius);
+  border: 1px solid var(--dv-border);
+  background: var(--dv-surface);
+  color: var(--dv-text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.25s var(--dv-ease), border-color 0.25s var(--dv-ease), color 0.2s var(--dv-ease);
+}
+
+.devicesPage .heatmapRefresh:hover:not(:disabled){
+  background: rgba(251, 191, 36, 0.08);
+  border-color: rgba(251, 191, 36, 0.35);
+  color: var(--dv-text);
+}
+
+.devicesPage .heatmapRefresh:disabled{
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.devicesPage .heatmapRefreshIconSpin{
+  animation: heatmapRefreshSpin 0.8s linear infinite;
+}
+
+@keyframes heatmapRefreshSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.devicesPage .heatmapList{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 720px;
+}
+
+.devicesPage .heatmapCard{
+  padding: 18px 20px;
+  border-radius: var(--dv-radius);
+  border: 1px solid var(--dv-border);
+  background: var(--dv-surface);
+  opacity: 0;
+  transform: translateY(10px);
+  animation: heatmapCardIn 0.4s var(--dv-ease) forwards;
+  transition: border-color 0.2s var(--dv-ease), background 0.2s var(--dv-ease), box-shadow 0.2s var(--dv-ease);
+}
+
+.devicesPage .heatmapCard:hover{
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes heatmapCardIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.devicesPage .heatmapCardHeader{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--dv-border);
+}
+
+.devicesPage .heatmapUserIcon{
+  color: var(--dv-text-muted);
+  flex-shrink: 0;
+  transition: color 0.2s var(--dv-ease);
+}
+
+.devicesPage .heatmapCard:hover .heatmapUserIcon{
+  color: var(--dv-accent);
+}
+
+.devicesPage .heatmapUserName{
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--dv-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.devicesPage .heatmapBadgeYou{
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(251, 191, 36, 0.2);
+  color: var(--dv-accent);
+  transition: background 0.2s var(--dv-ease), transform 0.15s var(--dv-ease);
+}
+
+.devicesPage .heatmapBadgeYou:hover{
+  background: rgba(251, 191, 36, 0.3);
+}
+
+.devicesPage .heatmapTotal{
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--dv-text-muted);
+}
+
+.devicesPage .heatmapFeatures{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.devicesPage .heatmapFeatureRow{
+  display: grid;
+  grid-template-columns: 1fr 2fr 44px;
+  align-items: center;
+  gap: 14px;
+  font-size: 13px;
+  opacity: 0;
+  transform: translateX(-6px);
+  animation: heatmapFeatureRowIn 0.35s var(--dv-ease) forwards;
+}
+
+@keyframes heatmapFeatureRowIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.devicesPage .heatmapFeatureName{
+  color: var(--dv-text);
+  min-width: 0;
+  transition: color 0.2s var(--dv-ease);
+}
+
+.devicesPage .heatmapFeatureRow:hover .heatmapFeatureName{
+  color: rgba(255, 255, 255, 0.98);
+}
+
+.devicesPage .heatmapFeatureBarWrap{
+  height: 10px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+  transition: background 0.2s var(--dv-ease);
+}
+
+.devicesPage .heatmapFeatureRow:hover .heatmapFeatureBarWrap{
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.devicesPage .heatmapFeatureBarOuter{
+  height: 100%;
+  border-radius: 5px;
+  overflow: hidden;
+  min-width: 0;
+  transition: width 0.5s var(--dv-ease);
+}
+
+.devicesPage .heatmapFeatureBar{
+  height: 100%;
+  width: 0;
+  border-radius: 5px;
+  background: linear-gradient(90deg, rgba(251, 191, 36, 0.45), var(--dv-accent));
+  box-shadow: 0 0 12px rgba(251, 191, 36, 0.25);
+  animation: heatmapBarFill 0.6s var(--dv-ease) forwards;
+}
+
+@keyframes heatmapBarFill {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.devicesPage .heatmapFeatureCount{
+  color: var(--dv-text-muted);
+  text-align: right;
+  font-weight: 500;
+  transition: color 0.2s var(--dv-ease);
+}
+
+.devicesPage .heatmapFeatureRow:hover .heatmapFeatureCount{
+  color: var(--dv-accent);
+}
+
+@media (max-width: 560px) {
+  .heatmapFeatureRow {
+    grid-template-columns: 1fr 1fr 36px;
+    gap: 8px;
+  }
+  .devicesPage .heatmapPeriodGroup{
+    width: 100%;
+  }
+  .devicesPage .heatmapPeriodBtn{
+    flex: 1;
+  }
+}
+
+/* System Performance */
+.devicesPage .perfRefresh{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  margin-bottom: 24px;
+  border-radius: var(--dv-radius);
+  border: 1px solid var(--dv-border);
+  background: var(--dv-surface);
+  color: var(--dv-text);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.25s var(--dv-ease), border-color 0.25s var(--dv-ease), color 0.2s var(--dv-ease), transform 0.15s var(--dv-ease);
+}
+
+.devicesPage .perfRefresh:hover:not(:disabled){
+  background: rgba(251, 191, 36, 0.1);
+  border-color: rgba(251, 191, 36, 0.4);
+  color: var(--dv-text);
+  transform: translateY(-1px);
+}
+
+.devicesPage .perfRefresh:disabled{
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.devicesPage .perfRefreshIconSpin{
+  animation: heatmapRefreshSpin 0.8s linear infinite;
+}
+
+.devicesPage .perfSection{
+  margin-bottom: 32px;
+}
+
+.devicesPage .perfSection--animate .perfSectionTitle{
+  opacity: 0;
+  transform: translateY(6px);
+  animation: perfSectionTitleIn 0.4s var(--dv-ease) forwards;
+}
+
+.devicesPage .perfSection--animate .perfCard{
+  opacity: 0;
+  transform: translateY(12px);
+  animation: perfCardIn 0.4s var(--dv-ease) forwards;
+}
+
+@keyframes perfSectionTitleIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes perfCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.devicesPage .perfSectionTitle{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 16px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--dv-text);
+}
+
+.devicesPage .perfSectionIcon{
+  width: 36px;
+  height: 36px;
+  border-radius: var(--dv-radius);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s var(--dv-ease), box-shadow 0.2s var(--dv-ease);
+}
+
+.devicesPage .perfSection:hover .perfSectionIcon{
+  transform: scale(1.05);
+}
+
+.devicesPage .perfSectionIcon--memory{
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(251, 191, 36, 0.06));
+  color: var(--dv-accent);
+}
+
+.devicesPage .perfSectionIcon--api{
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.06));
+  color: #22c55e;
+}
+
+.devicesPage .perfSectionIcon--mongo{
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.06));
+  color: #3b82f6;
+}
+
+.devicesPage .perfGrid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+  max-width: 760px;
+}
+
+.devicesPage .perfCard{
+  padding: 20px;
+  border-radius: var(--dv-radius);
+  border: 1px solid var(--dv-border);
+  background: var(--dv-surface);
+  transition: border-color 0.2s var(--dv-ease), background 0.2s var(--dv-ease), box-shadow 0.2s var(--dv-ease), transform 0.2s var(--dv-ease);
+}
+
+.devicesPage .perfCard:hover{
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.devicesPage .perfCardTitle{
+  margin: 0 0 6px 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dv-text-muted);
+  transition: color 0.2s var(--dv-ease);
+}
+
+.devicesPage .perfCard:hover .perfCardTitle{
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.devicesPage .perfCardValue{
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--dv-text);
+  letter-spacing: -0.02em;
+  transition: color 0.2s var(--dv-ease);
+}
+
+.devicesPage .perfCard:hover .perfCardValue{
+  color: var(--dv-accent);
+}
+
+.devicesPage .perfCardSub{
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--dv-text-muted);
+  transition: color 0.2s var(--dv-ease);
+}
+
+.devicesPage .perfCard:hover .perfCardSub{
+  color: rgba(255, 255, 255, 0.5);
+}

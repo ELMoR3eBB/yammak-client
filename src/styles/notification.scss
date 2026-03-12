@@ -1,0 +1,208 @@
+/* =========================================================
+   Toast notifications (ported style for home.js structure)
+   Host:  .toast-host
+   Item:  .toast-item .toast-item--{info|success|warn|danger}
+   Close: .is-hiding
+   Bar:   .toast-item__bar (shrinks over duration)
+   ========================================================= */
+
+.toast-host {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  z-index: 99999;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  pointer-events: none; // items enable pointer events
+}
+
+.toast-item {
+  pointer-events: auto;
+
+  width: min(420px, calc(100vw - 32px));
+  border-radius: 14px;
+
+  display: grid;
+  grid-template-columns: 40px 1fr 36px;
+  align-items: start;
+  gap: 10px;
+
+  padding: 12px 12px 10px 12px;
+
+  background: rgba(#141414, 0.92);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  transform: translateY(-10px);
+  opacity: 0;
+  animation: toast-in 220ms ease-out forwards;
+
+  position: relative;
+  overflow: hidden;
+
+  &.is-hiding {
+    animation: toast-out 220ms ease-in forwards;
+  }
+
+  .toast-item__icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+
+    display: grid;
+    place-items: center;
+
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    svg {
+      width: 22px;
+      height: 22px;
+      color: #e7eefc; // uses currentColor strokes
+      opacity: 0.95;
+    }
+  }
+
+  .toast-item__content {
+    padding-top: 1px;
+  }
+
+  .toast-item__title {
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 1.25;
+    color: rgba(255, 255, 255, 0.92);
+    margin-bottom: 4px;
+  }
+
+  .toast-item__msg {
+    font-size: 12.5px;
+    line-height: 1.35;
+    color: rgba(255, 255, 255, 0.78);
+    word-break: break-word;
+  }
+
+  .toast-item__close {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    padding: 6px;
+    margin: -2px -2px 0 0;
+
+    width: 34px;
+    height: 34px;
+
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    transition: 0.2s ease;
+
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.7);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .toast-item__closeIcon {
+      display: grid;
+      place-items: center;
+
+      svg {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+
+  .toast-item__bar {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 100%;
+
+    opacity: 0.9;
+    transform-origin: left center;
+    animation-name: toast-bar;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+  }
+
+  /* Type modifiers */
+  &--info {
+    .toast-item__bar {
+      background: linear-gradient(90deg, rgba(79, 158, 255, 0.95), rgba(79, 158, 255, 0.25));
+    }
+    .toast-item__icon {
+      border-color: rgba(79, 158, 255, 0.25);
+      background: rgba(79, 158, 255, 0.12);
+    }
+  }
+
+  &--success {
+    .toast-item__bar {
+      background: linear-gradient(90deg, rgba(30, 209, 122, 0.95), rgba(30, 209, 122, 0.25));
+    }
+    .toast-item__icon {
+      border-color: rgba(30, 209, 122, 0.25);
+      background: rgba(30, 209, 122, 0.12);
+    }
+  }
+
+  &--warn {
+    .toast-item__bar {
+      background: linear-gradient(90deg, rgba(244, 195, 0, 0.95), rgba(244, 195, 0, 0.25));
+    }
+    .toast-item__icon {
+      border-color: rgba(244, 195, 0, 0.25);
+      background: rgba(244, 195, 0, 0.12);
+    }
+  }
+
+  &--danger {
+    .toast-item__bar {
+      background: linear-gradient(90deg, rgba(242, 3, 70, 0.95), rgba(242, 3, 70, 0.25));
+    }
+    .toast-item__icon {
+      border-color: rgba(242, 3, 70, 0.25);
+      background: rgba(242, 3, 70, 0.12);
+    }
+  }
+}
+
+/* Animations */
+@keyframes toast-in {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}
+
+@keyframes toast-out {
+  from {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-8px);
+    opacity: 0;
+  }
+}
+
+@keyframes toast-bar {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}

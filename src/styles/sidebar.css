@@ -1,0 +1,561 @@
+/* ——— Modern Sidebar ——— */
+/* Inspired by Linear, Raycast, Vercel */
+
+.sidebar2 {
+  --sb-bg: #09090b;
+  --sb-surface: rgba(255, 255, 255, 0.03);
+  --sb-surface-hover: rgba(255, 255, 255, 0.06);
+  --sb-surface-active: rgba(251, 191, 36, 0.12);
+  --sb-border: rgba(255, 255, 255, 0.06);
+  --sb-text: rgba(255, 255, 255, 0.9);
+  --sb-text-muted: rgba(255, 255, 255, 0.5);
+  --sb-accent: #fbbf24;
+  --sb-accent-soft: rgba(251, 191, 36, 0.25);
+  --sb-radius: 10px;
+  --sb-radius-sm: 8px;
+
+  width: 260px;
+  min-width: 260px;
+  height: 100vh;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 12px;
+  background: var(--sb-bg);
+  border-right: 1px solid var(--sb-border);
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.sidebar2::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 80% 50% at 50% 0%,
+    rgba(251, 191, 36, 0.04) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+}
+
+/* ——— Brand ——— */
+.sidebar2 .sb2-top {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 8px;
+  flex-shrink: 0;
+}
+
+.sidebar2 .sb2-brand {
+  width: 100%;
+  border: none;
+  border-radius: var(--sb-radius);
+  background: var(--sb-surface);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.sidebar2 .sb2-brand:hover {
+  background: var(--sb-surface-hover);
+}
+
+.sidebar2 .sb2-brand:active {
+  transform: scale(0.99);
+}
+
+.sidebar2 .sb2-logo-bg {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--sb-radius-sm);
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+}
+
+.sidebar2 .sb2-logo-svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.sidebar2 .sb2-brandText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  text-align: left;
+}
+
+.sidebar2 .sb2-app {
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  color: var(--sb-text);
+  line-height: 1.2;
+}
+
+.sidebar2 .sb2-sub {
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--sb-text-muted);
+}
+
+.sidebar2 .sb2-divider {
+  height: 1px;
+  background: var(--sb-border);
+}
+
+/* ——— Nav (single scrollable region for all items + expanded groups) ——— */
+.sidebar2 .sb2-nav {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1 1 0%;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px;
+  margin-right: -4px;
+  padding-bottom: 10px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.sidebar2 .sb2-nav::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.sidebar2 .sb2-sectionTitle {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--sb-text-muted);
+  padding: 16px 12px 6px;
+  margin-top: 4px;
+}
+
+.sidebar2 .sb2-sectionTitle:first-child {
+  padding-top: 4px;
+}
+
+/* ——— Nav Items (unified with group buttons: same design and size) ——— */
+.sidebar2 .sb2-item {
+  border: none;
+  background: transparent;
+  color: var(--sb-text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  height: 48px;
+  min-height: 48px;
+  box-sizing: border-box;
+  border-radius: var(--sb-radius-sm);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  position: relative;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.2;
+  text-align: left;
+}
+
+.sidebar2 .sb2-item .sb2-ic {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  background: var(--sb-surface);
+  color: var(--sb-text-muted);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.sidebar2 .sb2-item .sb2-ic svg {
+  width: 18px;
+  height: 18px;
+}
+
+.sidebar2 .sb2-item .sb2-label {
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebar2 .sb2-item .sb2-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--sb-surface);
+  color: var(--sb-text-muted);
+}
+
+.sidebar2 .sb2-item .sb2-badge--circle {
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sb-accent);
+  color: var(--sb-bg, #09090b);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 0 0 2px var(--sb-bg, #09090b);
+  flex-shrink: 0;
+  transition: none;
+  transform-origin: center center;
+}
+
+.sidebar2 .sb2-item:hover .sb2-badge--circle,
+.sidebar2 .sb2-item.active .sb2-badge--circle {
+  background: var(--sb-accent);
+  color: var(--sb-bg, #09090b);
+}
+
+.sidebar2 .sb2-item:active .sb2-badge--circle {
+  transform: scale(1.0101);
+}
+
+.sidebar2 .sb2-item:hover {
+  background: var(--sb-surface-hover);
+}
+.sidebar2 .sb2-item:active {
+  transform: scale(0.99);
+}
+
+.sidebar2 .sb2-item:hover .sb2-ic {
+  background: var(--sb-surface-hover);
+  color: var(--sb-text);
+}
+
+.sidebar2 .sb2-item.active {
+  background: var(--sb-surface-active);
+  color: var(--sb-text);
+}
+
+.sidebar2 .sb2-item.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 22px;
+  border-radius: 0 4px 4px 0;
+  background: var(--sb-accent);
+}
+
+.sidebar2 .sb2-item.active .sb2-ic {
+  background: var(--sb-accent-soft);
+  color: var(--sb-accent);
+}
+
+.sidebar2 .sb2-item.indent {
+  padding-left: 20px;
+  margin-left: 12px;
+  border-left: 1px solid transparent;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.sidebar2 .sb2-group.open .sb2-groupBody .sb2-item.indent {
+  border-left-color: var(--sb-border);
+}
+
+.sidebar2 .sb2-item.indent .sb2-ic {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+}
+.sidebar2 .sb2-item.indent .sb2-ic svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ——— Accordion Groups (participate in nav scroll; no overflow clip) ——— */
+.sidebar2 .sb2-group {
+  border: none;
+  border-radius: var(--sb-radius-sm);
+  overflow: visible;
+  background: transparent;
+  flex-shrink: 0;
+}
+
+.sidebar2 .sb2-group .sb2-groupBtn {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: var(--sb-text);
+  cursor: pointer;
+  padding: 0 12px;
+  height: 48px;
+  min-height: 48px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.2;
+  transition: background 0.2s ease, transform 0.15s ease;
+  border-radius: var(--sb-radius-sm);
+}
+.sidebar2 .sb2-group .sb2-groupBtn:active {
+  transform: scale(0.99);
+}
+
+.sidebar2 .sb2-group .sb2-groupBtn:hover {
+  background: var(--sb-surface-hover);
+}
+
+.sidebar2 .sb2-group .sb2-groupBtn:hover .sb2-ic {
+  background: var(--sb-surface-hover);
+  color: var(--sb-text);
+}
+
+.sidebar2 .sb2-group .sb2-groupLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar2 .sb2-group .sb2-groupBtn .sb2-ic {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  background: var(--sb-surface);
+  color: var(--sb-text-muted);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.sidebar2 .sb2-group .sb2-groupBtn .sb2-ic svg {
+  width: 18px;
+  height: 18px;
+}
+
+.sidebar2 .sb2-group .sb2-groupLeft svg {
+  width: 18px;
+  height: 18px;
+  opacity: 0.9;
+}
+
+.sidebar2 .sb2-group .sb2-chev {
+  opacity: 0.6;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar2 .sb2-group .sb2-chev.open {
+  transform: rotate(180deg);
+}
+
+.sidebar2 .sb2-group .sb2-groupBody {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 0 0 12px;
+  margin-left: 12px;
+  border-left: 1px solid transparent;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease, padding 0.2s ease;
+  pointer-events: none;
+}
+
+/* Only expand direct child body so nested groups (e.g. Create Cashout) can collapse independently */
+.sidebar2 .sb2-group.open > .sb2-groupBody {
+  /* Large enough for all options; actual height = content. Nav scrolls the whole sidebar. */
+  border-left-color: var(--sb-border);
+  max-height: 50vh;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  pointer-events: auto;
+}
+
+.sidebar2 .sb2-group--nested .sb2-groupBody {
+  margin-left: 8px;
+  padding-left: 8px;
+}
+
+/* Nested group body: fixed max-height so parent group can contain it (4 items) */
+.sidebar2 .sb2-group.sb2-group--nested.open .sb2-groupBody {
+  max-height: 220px;
+}
+
+.sidebar2 .sb2-group--nested .sb2-groupBtn {
+  padding: 0 12px 0 12px;
+  font-size: 13px;
+  height: 48px;
+  min-height: 48px;
+}
+
+.sidebar2 .sb2-group--nested .sb2-groupBtn .sb2-ic {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+}
+
+.sidebar2 .sb2-group--nested .sb2-groupBtn .sb2-ic svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ——— Footer ——— */
+.sidebar2 .sb2-footer {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--sb-border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.sidebar2 .sb2-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--sb-radius-sm);
+  background: var(--sb-surface);
+  border: 1px solid transparent;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.sidebar2 .sb2-profile:hover {
+  background: var(--sb-surface-hover);
+}
+
+.sidebar2 .sb2-profile--clickable {
+  width: 100%;
+  border: none;
+  background: var(--sb-surface);
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+}
+
+.sidebar2 .sb2-profile--clickable:hover {
+  background: var(--sb-surface-hover);
+}
+
+.sidebar2 .sb2-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid var(--sb-border);
+  flex: 0 0 auto;
+}
+
+.sidebar2 .sb2-userText {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar2 .sb2-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sb-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar2 .sb2-role {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--sb-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar2 .sb2-logout {
+  width: 100%;
+  border-radius: var(--sb-radius-sm);
+  border: 1px solid var(--sb-border);
+  background: var(--sb-surface);
+  color: var(--sb-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.sidebar2 .sb2-logout:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #f87171;
+}
+
+.sidebar2 .sb2-logout:active {
+  transform: scale(0.98);
+}
+
+.sidebar2 .sb2-exit {
+  width: 100%;
+  border-radius: var(--sb-radius-sm);
+  border: 1px solid var(--sb-border);
+  background: var(--sb-surface);
+  color: var(--sb-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.sidebar2 .sb2-exit:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: var(--sb-text);
+}
+
+.sidebar2 .sb2-exit:active {
+  transform: scale(0.98);
+}
+
+/* Scrollbar hidden but nav remains scrollable (wheel/touch) — see .sb2-nav above */
+
+@media (max-width: 980px) {
+  .sidebar2 {
+    width: 240px;
+    min-width: 240px;
+  }
+}

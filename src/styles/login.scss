@@ -1,0 +1,319 @@
+@import 'variables';
+
+* {
+    scroll-behavior: smooth;
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    color: #ffffff;
+    margin: 0;
+    outline: none;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0b0f17;
+    height: 100%;
+
+    .panel {
+        width: 100%;
+        height: 100%;
+        max-height: 100%;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+        box-shadow: 0 18px 60px rgba(0, 0, 0, .55);
+        border-radius: 10px;
+        padding: 26px 26px 18px;
+        overflow: hidden; // ✅ prevent hard overflow
+        transform: translateY(10px);
+        opacity: 0;
+        animation: enter 0.6s ease forwards;
+        line-height: 1.5;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+
+        // ✅ scrollable inner content so signup won’t overflow window
+        .panel-body {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            padding-right: 6px;
+
+            /* nicer scrollbar */
+            &::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: rgba(255, 255, 255, .10);
+                border-radius: 10px;
+            }
+
+            &::-webkit-scrollbar-thumb:hover {
+                background: rgba(255, 255, 255, .16);
+            }
+        }
+
+        .card-title {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+
+            h3 {
+                margin: 0;
+                font-size: 18px;
+            }
+
+            p {
+                margin: 6px 0 0;
+                color: rgba(233, 238, 252, .72);
+                font-size: 13px;
+                line-height: 1.5;
+            }
+        }
+
+        /* ============================
+       ✅ (1) Smaller + more noticeable mode toggle
+       ============================ */
+        .auth-toggle {
+            display: flex;
+            gap: 6px;
+            padding: 6px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .10);
+            margin: 10px 0 14px;
+
+            .toggle-btn {
+                flex: 1;
+                height: 34px;
+                border-radius: 12px;
+                border: 1px solid transparent;
+                background: transparent;
+                color: rgba(233, 238, 252, .75);
+                font-weight: 750;
+                font-size: 12px;
+                letter-spacing: .2px;
+                cursor: pointer;
+                transition: background .18s ease, color .18s ease, transform .18s ease, border-color .18s ease;
+
+                &:hover {
+                    color: rgba(233, 238, 252, .95);
+                    transform: translateY(-1px);
+                }
+
+                &.active {
+                    background: rgba(0, 204, 255, .16);
+                    border-color: rgba(0, 204, 255, .45);
+                    color: #e9eefc;
+                    box-shadow: 0 12px 36px rgba(0, 204, 255, 0.12);
+                }
+
+                &:disabled {
+                    opacity: .55;
+                    cursor: not-allowed;
+                    transform: none;
+                }
+            }
+        }
+
+        form {
+            display: grid;
+            gap: 12px;
+            margin-top: 0;
+        }
+
+        .field {
+            display: grid;
+            gap: 6px;
+
+            label {
+                font-size: 12px;
+                color: rgba(233, 238, 252, .82);
+            }
+
+            .input {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 9px 12px;
+                background: rgba(255, 255, 255, .05);
+                border: 1px solid rgba(255, 255, 255, .12);
+                border-radius: 14px;
+                transition: border .15s ease, transform .15s ease, background .15s ease;
+
+                &:focus-within {
+                    border-color: rgba(0, 204, 255, .65);
+                    background: rgba(0, 204, 255, .10);
+                    transform: translateY(-1px);
+                }
+
+                i {
+                    color: rgba(233, 238, 252, .6);
+                }
+
+                input {
+                    width: 100%;
+                    background: transparent;
+                    border: none;
+                    outline: none;
+                    color: #e9eefc;
+                    font-size: 14px;
+
+                    &::placeholder {
+                        color: rgba(233, 238, 252, .38);
+                    }
+                }
+            }
+        }
+
+        /* ============================
+       ✅ (2) Mode transition (login <-> signup)
+       Requires a wrapper class toggle on your form area
+       ============================ */
+        .mode-wrap {
+            position: relative;
+        }
+
+        /* When signup is active, add .is-signup on .panel (or .main) */
+        &.is-signup {
+            .mode-panel {
+                transform: translateY(-4px);
+            }
+
+            /* animate username field appearance if you keep it in DOM */
+            .field.username-field {
+                max-height: 68px;
+                opacity: 1;
+                transform: translateY(0);
+                margin-top: 0;
+            }
+        }
+
+        /* default state (login) */
+        .field.username-field {
+            max-height: 0px;
+            opacity: 0;
+            transform: translateY(-6px);
+            overflow: hidden;
+            transition: max-height .22s ease, opacity .18s ease, transform .22s ease;
+            margin-top: -6px;
+        }
+
+        .btn {
+            border: none;
+            cursor: pointer;
+            border-radius: 14px;
+            padding: 12px 14px;
+            font-weight: 650;
+            font-size: 14px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            transition: transform .15s ease, filter .15s ease, background .15s ease;
+            user-select: none;
+            width: 100%;
+
+            &:active {
+                transform: scale(.99);
+            }
+
+            &.btn-primary {
+                color: #06101a;
+                background: #00CCFF;
+
+                &:hover {
+                    filter: brightness(1.05);
+                    transform: translateY(-1px);
+                }
+            }
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(233, 238, 252, .45);
+            font-size: 12px;
+            margin: 10px 0;
+
+            &::before,
+            &::after {
+                content: "";
+                height: 1px;
+                flex: 1;
+                background: rgba(255, 255, 255, .10);
+            }
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .12);
+            color: #e9eefc;
+            margin-top: 6px;
+
+            &:hover {
+                background: rgba(255, 255, 255, .08);
+                transform: translateY(-1px);
+            }
+        }
+
+        .meta {
+            color: rgba(233, 238, 252, .55);
+            font-size: 12px;
+            line-height: 1.5;
+            margin-top: 10px;
+        }
+
+        .shake {
+            animation: shake .35s ease;
+        }
+    }
+
+    @keyframes shake {
+
+        0%,
+        100% {
+            transform: translateX(0);
+        }
+
+        20% {
+            transform: translateX(-8px);
+        }
+
+        40% {
+            transform: translateX(6px);
+        }
+
+        60% {
+            transform: translateX(-5px);
+        }
+
+        80% {
+            transform: translateX(4px);
+        }
+    }
+
+    @keyframes enter {
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+}

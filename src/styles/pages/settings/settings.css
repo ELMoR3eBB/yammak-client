@@ -1,0 +1,708 @@
+@charset "UTF-8";
+/* ——— Settings Page ——— Discord-like layout */
+/* Left sidebar (categories + items), right content, global Save Changes */
+@keyframes settingsPageIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes settingsBgIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+/* ——— Sidebar (Discord-style left nav) ——— */
+@keyframes settingsSidebarIn {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+/* ——— Empty state ——— */
+@keyframes settingsEmptyIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* ——— Main content ——— */
+@keyframes settingsMainIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes settingsSectionIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* ——— Form ——— */
+/* Loading state */
+@keyframes settingsPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+/* ——— Save button (global, bottom of content) ——— */
+.settingsPage .content .page:has(.settingsPage){
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.settingsPage {
+  --st-bg: #09090b;
+  --st-bg-elevated: #0f0f12;
+  --st-surface: rgba(255, 255, 255, 0.03);
+  --st-surface-hover: rgba(255, 255, 255, 0.06);
+  --st-border: rgba(255, 255, 255, 0.06);
+  --st-text: rgba(255, 255, 255, 0.92);
+  --st-text-muted: rgba(255, 255, 255, 0.5);
+  --st-accent: #fbbf24;
+  --st-accent-soft: rgba(251, 191, 36, 0.18);
+  --st-accent-glow: rgba(251, 191, 36, 0.15);
+  --st-radius: 8px;
+  --st-radius-sm: 6px;
+  --st-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --st-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  flex: 1;
+  display: flex;
+  width: 100%;
+  min-height: 0;
+  color: var(--st-text);
+  background: var(--st-bg);
+  overflow: hidden;
+  animation: settingsPageIn 0.45s var(--st-ease) forwards;
+}
+.settingsPage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 100% 50% at 0% 0%, rgba(251, 191, 36, 0.04) 0%, transparent 50%);
+  pointer-events: none;
+  animation: settingsBgIn 0.6s var(--st-ease) 0.15s both;
+}
+
+.settingsPage .settingsSidebar{
+  position: relative;
+  width: 240px;
+  min-width: 240px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--st-bg-elevated);
+  border-right: 1px solid var(--st-border);
+  animation: settingsSidebarIn 0.4s var(--st-ease) 0.08s both;
+}
+
+.settingsPage .settingsHeader{
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px 16px;
+  border-bottom: 1px solid var(--st-border);
+}
+.settingsPage .settingsHeader:hover .settingsHeaderIcon{
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
+}
+
+.settingsPage .settingsHeaderIcon{
+  width: 40px;
+  height: 40px;
+  border-radius: var(--st-radius);
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(251, 191, 36, 0.06) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--st-accent);
+  flex-shrink: 0;
+  transition: transform 0.25s var(--st-ease), box-shadow 0.25s var(--st-ease);
+}
+
+.settingsPage .settingsTitle{
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--st-text);
+}
+
+.settingsPage .settingsSubtitle{
+  margin: 4px 0 0 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--st-text-muted);
+}
+
+.settingsPage .settingsNav{
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 8px;
+}
+
+.settingsPage .settingsNavGroup{
+  margin-bottom: 16px;
+}
+.settingsPage .settingsNavGroup:last-child{
+  margin-bottom: 0;
+}
+
+.settingsPage .settingsNavGroupTitle{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--st-text-muted);
+  text-transform: uppercase;
+  transition: color 0.2s var(--st-ease);
+}
+
+.settingsPage .settingsNavGroupIcon{
+  opacity: 0.7;
+  transition: opacity 0.2s var(--st-ease);
+}
+
+.settingsPage .settingsNavItem{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  margin: 2px 0;
+  border: none;
+  border-radius: var(--st-radius-sm);
+  background: transparent;
+  color: var(--st-text-muted);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s var(--st-ease), color 0.2s var(--st-ease), transform 0.2s var(--st-ease);
+  text-align: left;
+}
+.settingsPage .settingsNavItem:hover{
+  background: var(--st-surface-hover);
+  color: var(--st-text);
+  transform: translateX(2px);
+}
+
+.settingsPage .settingsNavItem.active{
+  background: var(--st-accent-soft);
+  color: var(--st-accent);
+  transform: translateX(2px);
+}
+.settingsPage .settingsNavItem.active .settingsNavItemChevron{
+  opacity: 0.9;
+  transform: translateX(2px);
+}
+
+.settingsPage .settingsNavItemIcon{
+  flex-shrink: 0;
+  opacity: 0.85;
+  transition: opacity 0.2s var(--st-ease);
+}
+
+.settingsPage .settingsNavItemChevron{
+  margin-left: auto;
+  opacity: 0.5;
+  transition: transform 0.2s var(--st-ease), opacity 0.2s var(--st-ease);
+}
+
+.settingsPage .settingsEmpty{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 32px 16px;
+  color: var(--st-text-muted);
+  animation: settingsEmptyIn 0.5s var(--st-ease) 0.2s both;
+}
+.settingsPage .settingsEmpty svg{
+  opacity: 0.35;
+  transition: opacity 0.3s var(--st-ease);
+}
+.settingsPage .settingsEmpty p{
+  margin: 0;
+  font-size: 14px;
+  text-align: center;
+}
+
+.settingsPage .settingsMain{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow-y: auto;
+  animation: settingsMainIn 0.4s var(--st-ease) 0.12s both;
+}
+
+.settingsPage .settingsContent{
+  flex: 1;
+  padding: 28px 32px 40px;
+}
+
+.settingsPage .settingsSection{
+  max-width: 640px;
+  animation: settingsSectionIn 0.35s var(--st-ease);
+}
+
+.settingsPage .settingsSectionHeader{
+  margin-bottom: 24px;
+}
+
+.settingsPage .settingsSectionTitle{
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--st-text);
+  transition: color 0.2s var(--st-ease);
+}
+
+.settingsPage .settingsSectionBody{
+  padding: 24px 0;
+  border-top: 1px solid var(--st-border);
+}
+
+.settingsPage .settingsForm{
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.settingsPage .settingsFormRow{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--st-border);
+  transition: border-color 0.2s var(--st-ease);
+}
+.settingsPage .settingsFormRow:last-of-type{
+  border-bottom: none;
+}
+
+.settingsPage .settingsFormRowSwitch{
+  align-items: center;
+}
+
+.settingsPage .settingsFormGroup{
+  flex: 1;
+  min-width: 0;
+}
+
+.settingsPage .settingsFormBlock{
+  padding: 16px 0 0;
+  transition: opacity 0.35s var(--st-ease);
+}
+
+.settingsPage .settingsFormBlock.disabled{
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.settingsPage .settingsBlockTitle{
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--st-text-muted);
+  letter-spacing: 0.03em;
+  margin: 0 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--st-border);
+}
+
+.settingsPage .settingsBlockTitle + .settingsFormBlock{
+  margin-top: 0;
+}
+
+.settingsPage .settingsFormBlock + .settingsFormBlock{
+  margin-top: 24px;
+}
+
+.settingsPage .settingsStaticPerm{
+  display: block;
+  margin-top: 6px;
+  font-family: var(--st-mono, ui-monospace, monospace);
+  font-size: 13px;
+  color: var(--st-text);
+}
+
+.settingsPage .settingsField{
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+.settingsPage .settingsField:last-child{
+  margin-bottom: 0;
+}
+
+.settingsPage .settingsLabel{
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--st-text);
+  margin-bottom: 8px;
+}
+
+.settingsPage .settingsHint{
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--st-text-muted);
+  line-height: 1.5;
+  margin-top: 6px;
+  transition: color 0.2s var(--st-ease);
+}
+
+.settingsPage .settingsFormRow.settingsLoading .settingsHint{
+  animation: settingsPulse 1.5s var(--st-ease) infinite;
+}
+
+.settingsPage .settingsInput{
+  width: 100%;
+  max-width: 360px;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: var(--st-radius-sm);
+  background: var(--st-surface);
+  border: 1px solid var(--st-border);
+  color: var(--st-text);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.25s var(--st-ease), background 0.25s var(--st-ease), box-shadow 0.25s var(--st-ease);
+}
+.settingsPage .settingsInput::-moz-placeholder{
+  color: var(--st-text-muted);
+  opacity: 0.7;
+}
+.settingsPage .settingsInput::placeholder{
+  color: var(--st-text-muted);
+  opacity: 0.7;
+}
+.settingsPage .settingsInput:hover:not(:disabled):not(:focus){
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+}
+.settingsPage .settingsInput:focus{
+  border-color: var(--st-accent);
+  background: rgba(251, 191, 36, 0.06);
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+.settingsPage .settingsInput:disabled{
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.settingsPage .settingsLanguageSelect.paginatorSelect {
+  width: 100%;
+  max-width: 360px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+.settingsPage .settingsLanguageSelect .paginatorSelectTrigger {
+  width: 100%;
+  min-width: 0;
+}
+
+.settingsPage .settingsActions{
+  padding-top: 28px;
+  margin-top: 8px;
+  border-top: 1px solid var(--st-border);
+}
+
+.settingsPage .settingsBtn{
+  padding: 10px 24px;
+  border-radius: var(--st-radius-sm);
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: var(--st-text);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.25s var(--st-ease), border-color 0.25s var(--st-ease), color 0.25s var(--st-ease), transform 0.2s var(--st-ease), box-shadow 0.25s var(--st-ease);
+}
+.settingsPage .settingsBtn:hover:not(:disabled){
+  background: var(--st-accent-soft);
+  border-color: rgba(251, 191, 36, 0.4);
+  color: var(--st-accent);
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.15);
+}
+.settingsPage .settingsBtn:active:not(:disabled){
+  transform: scale(0.97);
+}
+.settingsPage .settingsBtn:disabled{
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ——— Extra charges (cashout) ——— modern card list */
+.settingsPage .stExtraChargesBlock {
+  padding: 0;
+}
+
+.settingsPage .stExtraChargesDesc {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--st-text-muted);
+  margin: 0 0 16px 0;
+  max-width: 480px;
+}
+
+.settingsPage .stExtraChargesList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.settingsPage .stExtraChargesItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: var(--st-radius-sm);
+  background: var(--st-surface);
+  border: 1px solid var(--st-border);
+  transition: border-color 0.2s var(--st-ease), background 0.2s var(--st-ease), box-shadow 0.2s var(--st-ease);
+}
+
+.settingsPage .stExtraChargesItem--in {
+  opacity: 0;
+  transform: translateX(-12px);
+  animation: stExtraChargesItemIn 0.3s var(--st-ease) forwards;
+}
+
+@keyframes stExtraChargesItemIn {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.settingsPage .stExtraChargesItem--exiting {
+  animation: stExtraChargesItemOut 0.28s var(--st-ease) forwards;
+  pointer-events: none;
+}
+
+@keyframes stExtraChargesItemOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+}
+
+.settingsPage .stExtraChargesItem:hover {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.settingsPage .stExtraChargesItemIndex {
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--st-text-muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.settingsPage .stExtraChargesInput {
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 6px;
+  border: 1px solid var(--st-border);
+  background: var(--st-bg);
+  color: var(--st-text);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s var(--st-ease), box-shadow 0.2s var(--st-ease);
+}
+
+.settingsPage .stExtraChargesInput::placeholder {
+  color: var(--st-text-muted);
+  opacity: 0.6;
+}
+
+.settingsPage .stExtraChargesInput:hover:not(:disabled):not(:focus) {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.settingsPage .stExtraChargesInput:focus {
+  border-color: var(--st-accent);
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+.settingsPage .stExtraChargesInput:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.settingsPage .stExtraChargesInput--name {
+  flex: 1;
+  min-width: 0;
+}
+
+.settingsPage .stExtraChargesInput--amount {
+  width: 100px;
+  -moz-appearance: textfield;
+}
+
+.settingsPage .stExtraChargesInput--amount::-webkit-outer-spin-button,
+.settingsPage .stExtraChargesInput--amount::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.settingsPage .stExtraChargesAmountWrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.settingsPage .stExtraChargesCurrency {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--st-text-muted);
+  letter-spacing: 0.02em;
+  min-width: 28px;
+}
+
+.settingsPage .stExtraChargesRemove {
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--st-text-muted);
+  cursor: pointer;
+  transition: color 0.2s var(--st-ease), background 0.2s var(--st-ease);
+}
+
+.settingsPage .stExtraChargesRemove:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}
+
+.settingsPage .stExtraChargesRemove:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.settingsPage .stExtraChargesAdd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 44px;
+  padding: 0 16px;
+  border: 1px dashed var(--st-border);
+  border-radius: var(--st-radius-sm);
+  background: transparent;
+  color: var(--st-text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.25s var(--st-ease), color 0.25s var(--st-ease), background 0.25s var(--st-ease),
+    transform 0.25s var(--st-ease), box-shadow 0.25s var(--st-ease);
+}
+
+.settingsPage .stExtraChargesAdd:hover:not(:disabled) {
+  border-color: var(--st-accent);
+  color: var(--st-accent);
+  background: var(--st-accent-glow);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--st-accent-glow);
+}
+
+.settingsPage .stExtraChargesAdd:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px var(--st-accent-glow);
+}
+
+.settingsPage .stExtraChargesAdd:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Translations editor */
+.settingsPage .stTranslationsHint {
+  margin-bottom: 16px;
+}
+.settingsPage .stTranslationsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+.settingsPage .stTranslationsRow {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+.settingsPage .stTranslationsKey {
+  font-size: 12px;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+  word-break: break-all;
+}
+.settingsPage .stTranslationsInput {
+  min-width: 0;
+}
+@media (max-width: 640px) {
+  .settingsPage .stTranslationsRow {
+    grid-template-columns: 1fr;
+  }
+}

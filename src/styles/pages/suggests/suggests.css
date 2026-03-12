@@ -1,0 +1,724 @@
+/* Suggests: list page, new suggest page, detail modal — animations and transitions */
+
+.content:has(.suggestListPage),
+.content:has(.newSuggestPage) {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* —— Shared tokens —— */
+.suggestListPage,
+.newSuggestPage {
+  --st-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --st-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --st-ease-in: cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* —— Suggest list page: enter animation —— */
+.suggestListPage {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: suggestPageEnter 0.35s var(--st-ease) forwards;
+}
+
+@keyframes suggestPageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.suggestListPage .suggestListInput, .newSuggestPage .suggestListInput, .reportsListPage .suggestListInput{
+  transition: border-color 0.2s var(--st-ease), box-shadow 0.2s var(--st-ease), background-color 0.2s var(--st-ease);
+}
+
+.suggestListPage .suggestListTitleCell, .newSuggestPage .suggestListTitleCell, .reportsListPage .suggestListTitleCell{
+  font-weight: 500;
+}
+
+.suggestListPage .suggestListContentCell, .newSuggestPage .suggestListContentCell, .reportsListPage .suggestListContentCell{
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.suggestListPage .suggestListBtn, .newSuggestPage .suggestListBtn, .reportsListPage .suggestListBtn{
+  transition: background 0.2s var(--st-ease), border-color 0.2s var(--st-ease), transform 0.15s var(--st-ease), opacity 0.2s var(--st-ease);
+}
+
+.suggestListPage .suggestListBtn:hover, .newSuggestPage .suggestListBtn:hover, .reportsListPage .suggestListBtn:hover{
+  transform: translateY(-1px);
+}
+
+.suggestListPage .suggestListBtn:active, .newSuggestPage .suggestListBtn:active, .reportsListPage .suggestListBtn:active{
+  transform: translateY(0);
+}
+
+/* —— Detail modal: enter / leave —— */
+.suggestListPage .suggestDetailBackdrop, .newSuggestPage .suggestDetailBackdrop, .reportsListPage .suggestDetailBackdrop{
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+  backdrop-filter: blur(4px);
+}
+
+.suggestListPage .suggestDetailBackdrop--enter, .newSuggestPage .suggestDetailBackdrop--enter, .reportsListPage .suggestDetailBackdrop--enter{
+  animation: suggestDetailBackdropEnter 0.28s var(--st-ease) forwards;
+}
+
+.suggestListPage .suggestDetailBackdrop--leave, .newSuggestPage .suggestDetailBackdrop--leave, .reportsListPage .suggestDetailBackdrop--leave{
+  animation: suggestDetailBackdropLeave 0.28s var(--st-ease) forwards;
+}
+
+@keyframes suggestDetailBackdropEnter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes suggestDetailBackdropLeave {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.suggestListPage .suggestDetailModal, .newSuggestPage .suggestDetailModal, .reportsListPage .suggestDetailModal{
+  width: 100%;
+  max-width: 440px;
+  max-height: 85vh;
+  overflow: auto;
+  background: var(--st-bg-elevated, #0f0f12);
+  border: 1px solid var(--st-border);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+}
+
+.suggestListPage .suggestDetailModal--enter, .newSuggestPage .suggestDetailModal--enter, .reportsListPage .suggestDetailModal--enter{
+  animation: suggestDetailModalEnter 0.3s var(--st-ease) forwards;
+}
+
+.suggestListPage .suggestDetailModal--leave, .newSuggestPage .suggestDetailModal--leave, .reportsListPage .suggestDetailModal--leave{
+  animation: suggestDetailModalLeave 0.28s var(--st-ease) forwards;
+}
+
+@keyframes suggestDetailModalEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes suggestDetailModalLeave {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+}
+
+.suggestListPage .suggestDetailTitle, .newSuggestPage .suggestDetailTitle, .reportsListPage .suggestDetailTitle{
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--st-text);
+  line-height: 1.3;
+}
+
+.suggestListPage .suggestDetailMeta, .newSuggestPage .suggestDetailMeta, .reportsListPage .suggestDetailMeta{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--st-text-muted);
+}
+
+.suggestListPage .suggestDetailEmail, .newSuggestPage .suggestDetailEmail, .reportsListPage .suggestDetailEmail{
+  color: var(--st-text-muted);
+}
+
+.suggestListPage .suggestDetailDate, .newSuggestPage .suggestDetailDate, .reportsListPage .suggestDetailDate{
+  margin-left: auto;
+}
+
+.suggestListPage .suggestDetailContent, .newSuggestPage .suggestDetailContent, .reportsListPage .suggestDetailContent{
+  padding: 14px 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--st-text);
+  border-top: 1px solid var(--st-border);
+  border-bottom: 1px solid var(--st-border);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.suggestListPage .suggestDetailClose, .newSuggestPage .suggestDetailClose, .reportsListPage .suggestDetailClose{
+  margin-top: 20px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--st-border);
+  background: transparent;
+  color: var(--st-text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.suggestListPage .suggestDetailClose:hover, .newSuggestPage .suggestDetailClose:hover, .reportsListPage .suggestDetailClose:hover{
+  background: var(--st-surface-hover);
+  color: var(--st-text);
+}
+
+/* —— New suggest page: same design as Role list / Report submit (header, transitions) —— */
+.newSuggestPage {
+  --st-bg: #09090b;
+  --st-bg-elevated: #0f0f12;
+  --st-surface: rgba(255, 255, 255, 0.03);
+  --st-surface-hover: rgba(255, 255, 255, 0.06);
+  --st-border: rgba(255, 255, 255, 0.06);
+  --st-text: rgba(255, 255, 255, 0.92);
+  --st-text-muted: rgba(255, 255, 255, 0.5);
+  --st-accent: #fbbf24;
+  --st-accent-soft: rgba(251, 191, 36, 0.18);
+  --st-accent-glow: rgba(251, 191, 36, 0.15);
+  --st-radius: 8px;
+  --st-radius-sm: 6px;
+  --st-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --st-duration: 0.25s;
+
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+  color: var(--st-text);
+  background: var(--st-bg);
+  overflow: hidden;
+  position: relative;
+  opacity: 0;
+  animation: newSuggestPageIn 0.45s var(--st-ease) forwards;
+}
+
+.newSuggestPage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 100% 50% at 0% 0%,
+    rgba(251, 191, 36, 0.04) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+  animation: newSuggestBgIn 0.6s var(--st-ease) 0.15s both;
+}
+
+@keyframes newSuggestPageIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes newSuggestBgIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes newSuggestMainIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.suggestListPage .newSuggestHeader, .newSuggestPage .newSuggestHeader, .reportsListPage .newSuggestHeader{
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--st-border);
+  flex-shrink: 0;
+  background: var(--st-bg-elevated);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 1px 0 rgba(251, 191, 36, 0.06);
+  position: relative;
+  z-index: 1;
+}
+
+.suggestListPage .newSuggestHeader:hover .newSuggestHeaderIcon, .newSuggestPage .newSuggestHeader:hover .newSuggestHeaderIcon, .reportsListPage .newSuggestHeader:hover .newSuggestHeaderIcon{
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
+}
+
+.suggestListPage .newSuggestHeaderIcon, .newSuggestPage .newSuggestHeaderIcon, .reportsListPage .newSuggestHeaderIcon{
+  width: 40px;
+  height: 40px;
+  border-radius: var(--st-radius);
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(251, 191, 36, 0.06) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--st-accent);
+  flex-shrink: 0;
+  transition: transform var(--st-duration) var(--st-ease), box-shadow var(--st-duration) var(--st-ease);
+}
+
+.suggestListPage .newSuggestHeaderText, .newSuggestPage .newSuggestHeaderText, .reportsListPage .newSuggestHeaderText{
+  flex: 1;
+  min-width: 0;
+}
+
+.suggestListPage .newSuggestTitle, .newSuggestPage .newSuggestTitle, .reportsListPage .newSuggestTitle{
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--st-text);
+}
+
+.suggestListPage .newSuggestSubtitle, .newSuggestPage .newSuggestSubtitle, .reportsListPage .newSuggestSubtitle{
+  margin: 4px 0 0 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--st-text-muted);
+  line-height: 1.45;
+}
+
+.suggestListPage .newSuggestMain, .newSuggestPage .newSuggestMain, .reportsListPage .newSuggestMain{
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 28px 32px;
+  position: relative;
+  z-index: 1;
+  animation: newSuggestMainIn 0.4s var(--st-ease) 0.12s both;
+}
+
+.suggestListPage .newSuggestForm, .newSuggestPage .newSuggestForm, .reportsListPage .newSuggestForm{
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.suggestListPage .newSuggestNotice, .newSuggestPage .newSuggestNotice, .reportsListPage .newSuggestNotice{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  margin-bottom: 4px;
+  border-radius: var(--st-radius);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  background: rgba(251, 191, 36, 0.08);
+  color: var(--st-text);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.suggestListPage .newSuggestNoticeIcon, .newSuggestPage .newSuggestNoticeIcon, .reportsListPage .newSuggestNoticeIcon{
+  color: var(--st-accent);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.suggestListPage .newSuggestField, .newSuggestPage .newSuggestField, .reportsListPage .newSuggestField{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.suggestListPage .newSuggestLabel, .newSuggestPage .newSuggestLabel, .reportsListPage .newSuggestLabel{
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--st-text-muted);
+  transition: color 0.2s var(--st-ease);
+}
+
+.newSuggestInput,
+.suggestListPage .newSuggestTextarea, .newSuggestPage .newSuggestTextarea, .reportsListPage .newSuggestTextarea{
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--st-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--st-text);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s var(--st-ease), box-shadow 0.2s var(--st-ease), background-color 0.2s var(--st-ease);
+}
+
+.newSuggestInput:focus,
+.suggestListPage .newSuggestTextarea:focus, .newSuggestPage .newSuggestTextarea:focus, .reportsListPage .newSuggestTextarea:focus{
+  border-color: var(--st-accent);
+  box-shadow: 0 0 0 2px var(--st-accent-glow, rgba(251, 191, 36, 0.15));
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.newSuggestInput:hover:not(:focus),
+.suggestListPage .newSuggestTextarea:hover:not(:focus), .newSuggestPage .newSuggestTextarea:hover:not(:focus), .reportsListPage .newSuggestTextarea:hover:not(:focus){
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.newSuggestInput:disabled,
+.suggestListPage .newSuggestTextarea:disabled, .newSuggestPage .newSuggestTextarea:disabled, .reportsListPage .newSuggestTextarea:disabled{
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.suggestListPage .newSuggestTextarea, .newSuggestPage .newSuggestTextarea, .reportsListPage .newSuggestTextarea{
+  resize: vertical;
+  min-height: 140px;
+}
+
+.suggestListPage .newSuggestError, .newSuggestPage .newSuggestError, .reportsListPage .newSuggestError{
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.12);
+  border-radius: 8px;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  animation: suggestMessageIn 0.25s var(--st-ease);
+}
+
+.suggestListPage .newSuggestSuccess, .newSuggestPage .newSuggestSuccess, .reportsListPage .newSuggestSuccess{
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #86efac;
+  background: rgba(34, 197, 94, 0.12);
+  border-radius: 8px;
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  animation: suggestMessageIn 0.25s var(--st-ease);
+}
+
+@keyframes suggestMessageIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.suggestListPage .newSuggestActions, .newSuggestPage .newSuggestActions, .reportsListPage .newSuggestActions{
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.suggestListPage .newSuggestSubmit, .newSuggestPage .newSuggestSubmit, .reportsListPage .newSuggestSubmit{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: none;
+  background: var(--st-accent, #fbbf24);
+  color: #09090b;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s var(--st-ease), transform 0.15s var(--st-ease), opacity 0.2s var(--st-ease);
+}
+
+.suggestListPage .newSuggestSubmit:hover:not(:disabled), .newSuggestPage .newSuggestSubmit:hover:not(:disabled), .reportsListPage .newSuggestSubmit:hover:not(:disabled){
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.suggestListPage .newSuggestSubmit:active:not(:disabled), .newSuggestPage .newSuggestSubmit:active:not(:disabled), .reportsListPage .newSuggestSubmit:active:not(:disabled){
+  transform: translateY(0);
+}
+
+.suggestListPage .newSuggestSubmit:disabled, .newSuggestPage .newSuggestSubmit:disabled, .reportsListPage .newSuggestSubmit:disabled{
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* —— New suggest: confirmation modal (portaled to body = app-wide full viewport) —— */
+.suggestListPage .newSuggestConfirmPortal, .newSuggestPage .newSuggestConfirmPortal, .reportsListPage .newSuggestConfirmPortal{
+  /* Theme vars for portaled content (no .newSuggestPage parent) */
+  --st-bg-elevated: #0f0f12;
+  --st-border: rgba(255, 255, 255, 0.06);
+  --st-text: rgba(255, 255, 255, 0.92);
+  --st-text-muted: rgba(255, 255, 255, 0.5);
+  --st-surface: rgba(255, 255, 255, 0.03);
+  --st-surface-hover: rgba(255, 255, 255, 0.06);
+  --st-accent: #fbbf24;
+  --st-radius: 8px;
+  --st-radius-sm: 6px;
+  --st-ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.suggestListPage .newSuggestConfirmBackdrop, .newSuggestPage .newSuggestConfirmBackdrop, .reportsListPage .newSuggestConfirmBackdrop{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 24px;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(6px);
+  animation: newSuggestConfirmBackdropIn 0.28s var(--st-ease) forwards;
+}
+
+.suggestListPage .newSuggestConfirmBackdrop--exiting, .newSuggestPage .newSuggestConfirmBackdrop--exiting, .reportsListPage .newSuggestConfirmBackdrop--exiting{
+  animation: newSuggestConfirmBackdropOut 0.26s var(--st-ease) forwards;
+}
+
+@keyframes newSuggestConfirmBackdropIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes newSuggestConfirmBackdropOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.suggestListPage .newSuggestConfirmModal, .newSuggestPage .newSuggestConfirmModal, .reportsListPage .newSuggestConfirmModal{
+  width: 100%;
+  max-width: 400px;
+  background: var(--st-bg-elevated);
+  border: 1px solid var(--st-border);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+  animation: newSuggestConfirmModalIn 0.32s var(--st-ease) forwards;
+}
+
+.suggestListPage .newSuggestConfirmModal--exiting, .newSuggestPage .newSuggestConfirmModal--exiting, .reportsListPage .newSuggestConfirmModal--exiting{
+  animation: newSuggestConfirmModalOut 0.26s var(--st-ease) forwards;
+}
+
+@keyframes newSuggestConfirmModalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes newSuggestConfirmModalOut {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.96) translateY(12px);
+  }
+}
+
+.suggestListPage .newSuggestConfirmTitle, .newSuggestPage .newSuggestConfirmTitle, .reportsListPage .newSuggestConfirmTitle{
+  margin: 0 0 12px;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--st-text);
+}
+
+.suggestListPage .newSuggestConfirmMessage, .newSuggestPage .newSuggestConfirmMessage, .reportsListPage .newSuggestConfirmMessage{
+  margin: 0 0 20px;
+  font-size: 14px;
+  color: var(--st-text-muted);
+  line-height: 1.5;
+}
+
+.suggestListPage .newSuggestConfirmNote, .newSuggestPage .newSuggestConfirmNote, .reportsListPage .newSuggestConfirmNote{
+  margin: 0 0 20px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--st-text);
+  background: var(--st-surface);
+  border-radius: var(--st-radius-sm);
+  border: 1px solid var(--st-border);
+  line-height: 1.5;
+}
+
+.suggestListPage .newSuggestConfirmActions, .newSuggestPage .newSuggestConfirmActions, .reportsListPage .newSuggestConfirmActions{
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.suggestListPage .newSuggestConfirmBtn, .newSuggestPage .newSuggestConfirmBtn, .reportsListPage .newSuggestConfirmBtn{
+  padding: 10px 18px;
+  border-radius: var(--st-radius);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s var(--st-ease), border-color 0.2s var(--st-ease), opacity 0.2s;
+}
+
+.suggestListPage .newSuggestConfirmBtn--ghost, .newSuggestPage .newSuggestConfirmBtn--ghost, .reportsListPage .newSuggestConfirmBtn--ghost{
+  border: 1px solid var(--st-border);
+  background: transparent;
+  color: var(--st-text-muted);
+}
+
+.suggestListPage .newSuggestConfirmBtn--ghost:hover, .newSuggestPage .newSuggestConfirmBtn--ghost:hover, .reportsListPage .newSuggestConfirmBtn--ghost:hover{
+  background: var(--st-surface-hover);
+  color: var(--st-text);
+}
+
+.suggestListPage .newSuggestConfirmBtn--primary, .newSuggestPage .newSuggestConfirmBtn--primary, .reportsListPage .newSuggestConfirmBtn--primary{
+  border: none;
+  background: var(--st-accent);
+  color: #09090b;
+}
+
+.suggestListPage .newSuggestConfirmBtn--primary:hover:not(:disabled), .newSuggestPage .newSuggestConfirmBtn--primary:hover:not(:disabled), .reportsListPage .newSuggestConfirmBtn--primary:hover:not(:disabled){
+  filter: brightness(1.08);
+}
+
+.suggestListPage .newSuggestConfirmBtn--primary:disabled, .newSuggestPage .newSuggestConfirmBtn--primary:disabled, .reportsListPage .newSuggestConfirmBtn--primary:disabled{
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Portaled confirm modal (rendered in document.body — no page parent): apply same styles by targeting portal root */
+.newSuggestConfirmPortal.newSuggestConfirmBackdrop{
+  --st-bg-elevated: #0f0f12;
+  --st-border: rgba(255, 255, 255, 0.06);
+  --st-text: rgba(255, 255, 255, 0.92);
+  --st-text-muted: rgba(255, 255, 255, 0.5);
+  --st-surface: rgba(255, 255, 255, 0.03);
+  --st-surface-hover: rgba(255, 255, 255, 0.06);
+  --st-accent: #fbbf24;
+  --st-radius: 8px;
+  --st-radius-sm: 6px;
+  --st-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 24px;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(6px);
+  animation: newSuggestConfirmBackdropIn 0.28s var(--st-ease) forwards;
+}
+
+.newSuggestConfirmPortal.newSuggestConfirmBackdrop.newSuggestConfirmBackdrop--exiting{
+  animation: newSuggestConfirmBackdropOut 0.26s var(--st-ease) forwards;
+}
+
+.newSuggestConfirmPortal .newSuggestConfirmModal{
+  width: 100%;
+  max-width: 400px;
+  background: var(--st-bg-elevated);
+  border: 1px solid var(--st-border);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+  animation: newSuggestConfirmModalIn 0.32s var(--st-ease) forwards;
+}
+
+.newSuggestConfirmPortal .newSuggestConfirmModal.newSuggestConfirmModal--exiting{
+  animation: newSuggestConfirmModalOut 0.26s var(--st-ease) forwards;
+}
+
+.newSuggestConfirmPortal .newSuggestConfirmTitle{
+  margin: 0 0 12px;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--st-text);
+}
+
+.newSuggestConfirmPortal .newSuggestConfirmMessage{
+  margin: 0 0 20px;
+  font-size: 14px;
+  color: var(--st-text-muted);
+  line-height: 1.5;
+}
+
+.newSuggestConfirmPortal .newSuggestConfirmNote{
+  margin: 0 0 20px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--st-text);
+  background: var(--st-surface);
+  border-radius: var(--st-radius-sm);
+  border: 1px solid var(--st-border);
+  line-height: 1.5;
+}
+
+.newSuggestConfirmPortal .newSuggestConfirmActions{
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.newSuggestConfirmPortal .newSuggestConfirmBtn{
+  padding: 10px 18px;
+  border-radius: var(--st-radius);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s var(--st-ease), border-color 0.2s var(--st-ease), opacity 0.2s;
+}
+
+.newSuggestConfirmPortal .newSuggestConfirmBtn--ghost{
+  border: 1px solid var(--st-border);
+  background: transparent;
+  color: var(--st-text-muted);
+}
+
+.newSuggestConfirmPortal .newSuggestConfirmBtn--ghost:hover{
+  background: var(--st-surface-hover);
+  color: var(--st-text);
+}
+
+.newSuggestConfirmPortal .newSuggestConfirmBtn--primary{
+  border: none;
+  background: var(--st-accent);
+  color: #09090b;
+}
+
+.newSuggestConfirmPortal .newSuggestConfirmBtn--primary:hover:not(:disabled){
+  filter: brightness(1.08);
+}
+
+.newSuggestConfirmPortal .newSuggestConfirmBtn--primary:disabled{
+  opacity: 0.7;
+  cursor: not-allowed;
+}

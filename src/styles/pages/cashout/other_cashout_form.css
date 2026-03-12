@@ -1,0 +1,175 @@
+/* Other Cashout Form */
+.othCashoutForm {
+  --oc-bg: #0f0f12;
+  --oc-surface: rgba(255, 255, 255, 0.03);
+  --oc-surface-hover: rgba(255, 255, 255, 0.06);
+  --oc-border: rgba(255, 255, 255, 0.06);
+  --oc-text: rgba(255, 255, 255, 0.92);
+  --oc-text-muted: rgba(255, 255, 255, 0.5);
+  --oc-accent: #fbbf24;
+  --oc-radius: 8px;
+  --oc-radius-sm: 6px;
+  --oc-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --oc-duration: 0.2s;
+
+  min-height: min-content;
+  overflow: visible;
+  color: var(--oc-text);
+  transition: opacity var(--oc-duration) var(--oc-ease);
+  direction: ltr;
+}
+
+.othCashoutFormInner {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 2px 2px 2px 12px;
+  min-height: min-content;
+}
+
+.othCashoutField {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.othCashoutField--full {
+  width: 100%;
+}
+
+.othCashoutLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--oc-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.othCashoutInputWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.othCashoutInputIcon {
+  color: var(--oc-text-muted);
+  flex-shrink: 0;
+}
+
+.othCashoutDateWrap,
+.othCashoutDateInput {
+  color-scheme: dark;
+}
+
+.othCashoutInput,
+.othCashoutTextarea {
+  flex: 1;
+  min-width: 100px;
+  padding: 6px 10px;
+  border-radius: var(--oc-radius-sm);
+  border: 1px solid var(--oc-border);
+  background: var(--oc-surface);
+  color: var(--oc-text);
+  font-size: 13px;
+  transition: border-color var(--oc-duration) var(--oc-ease), background var(--oc-duration) var(--oc-ease);
+}
+
+.othCashoutInput::placeholder,
+.othCashoutTextarea::placeholder {
+  color: var(--oc-text-muted);
+}
+
+.othCashoutInput:hover,
+.othCashoutTextarea:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.othCashoutInput:focus,
+.othCashoutTextarea:focus {
+  outline: none;
+  border-color: var(--oc-accent);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.othCashoutReadOnlyWrap {
+  min-height: 32px;
+  align-items: center;
+}
+
+.othCashoutReadOnly {
+  display: block;
+  padding: 6px 10px;
+  border-radius: var(--oc-radius-sm);
+  border: 1px solid var(--oc-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--oc-text);
+  font-size: 13px;
+  cursor: default;
+  user-select: none;
+}
+
+.othCashoutTextarea {
+  resize: vertical;
+  min-height: 56px;
+}
+
+.othCashoutRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 480px) {
+  .othCashoutRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.othCashoutActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 10px;
+  margin-top: 6px;
+  border-top: 1px solid var(--oc-border);
+  flex-shrink: 0;
+}
+
+.othCashoutBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--oc-radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--oc-duration) var(--oc-ease), border-color var(--oc-duration) var(--oc-ease), transform var(--oc-duration) var(--oc-ease), box-shadow var(--oc-duration) var(--oc-ease);
+}
+
+.othCashoutBtn--primary {
+  border: none;
+  background: var(--oc-accent);
+  color: #09090b;
+}
+
+.othCashoutBtn--primary:hover {
+  background: #f59e0b;
+  box-shadow: 0 0 16px rgba(251, 191, 36, 0.25);
+}
+
+.othCashoutBtn--secondary {
+  border: 1px solid var(--oc-border);
+  background: var(--oc-surface);
+  color: var(--oc-text-muted);
+}
+
+.othCashoutBtn--secondary:hover {
+  background: var(--oc-surface-hover);
+  color: var(--oc-text);
+}
+
+.othCashoutBtn:active {
+  transform: scale(0.98);
+}

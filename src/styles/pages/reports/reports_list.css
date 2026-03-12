@@ -1,0 +1,114 @@
+/* Reports list — same layout as Suggest list (auditLogsPage + DataTable + detail modal) */
+
+.content:has(.reportsListPage) {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.reportsListPage {
+  --st-ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reportsListPage .reportsListPage--enter{
+  opacity: 0;
+  transform: translateY(8px);
+  animation: reportsListPageEnter 0.35s var(--st-ease) forwards;
+}
+
+@keyframes reportsListPageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Empty / error state (when load failed or no data) */
+.reportsListPage .reportsListEmpty{
+  padding: 56px 32px;
+  text-align: center;
+  border-radius: var(--st-radius, 8px);
+  border: 1px dashed var(--st-border, rgba(255, 255, 255, 0.06));
+  background: var(--st-surface, rgba(255, 255, 255, 0.03));
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.reportsListPage .reportsListEmptyIconWrap{
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  background: rgba(251, 191, 36, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reportsListPage .reportsListEmptyIcon{
+  color: var(--st-accent, #fbbf24);
+  opacity: 0.8;
+}
+
+.reportsListPage .reportsListEmptyText{
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--st-text, rgba(255, 255, 255, 0.92));
+}
+
+.reportsListPage .reportsListEmptySub{
+  margin: 10px 0 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+}
+
+.reportsListPage .reportsListRetry{
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #09090b;
+  background: var(--st-accent, #fbbf24);
+  border: none;
+  border-radius: var(--st-radius, 8px);
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+.reportsListPage .reportsListRetry:hover{
+  opacity: 0.95;
+  transform: translateY(-1px);
+}
+
+/* Category cell in table — same size/design as holiday status badge (holidaysStatusBadge) */
+.reportsListPage .reportsListCategoryCell{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  width: fit-content;
+  color: var(--st-accent, #fbbf24);
+  background: rgba(251, 191, 36, 0.18);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+/* Detail modal: category in meta line */
+.reportsListPage .reportsListDetailCategory{
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--st-accent, #fbbf24);
+  margin-right: 8px;
+}

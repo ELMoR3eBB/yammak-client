@@ -1,0 +1,452 @@
+/* Create Cashout page: category tabs + embedded list / Other card + modal */
+
+/* ——— Create Cashout modal (opened from sidebar) ——— */
+.createCashoutModalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+  backdrop-filter: blur(6px);
+  animation: cashoutBackdropIn 0.2s ease-out forwards;
+}
+
+.createCashoutModal {
+  background: #0f0f12;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  min-width: 320px;
+  max-width: 95vw;
+  width: 900px;
+  min-height: 420px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  animation: cashoutModalIn 0.25s ease-out forwards;
+  transition: min-height 0.25s ease;
+}
+
+.createCashoutModalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.createCashoutModalTitle {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.createCashoutModalTitle svg {
+  color: #fbbf24;
+}
+
+.createCashoutModalClose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.createCashoutModalClose:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.createCashoutModalBody {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 24px 24px;
+  /* Scrollbar fixed to modal right edge */
+  direction: ltr;
+}
+
+.createCashoutModalBody::-webkit-scrollbar {
+  width: 8px;
+}
+
+.createCashoutModalBody::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 4px;
+  margin: 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.createCashoutModalBody::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  min-height: 40px;
+}
+
+.createCashoutModalBody::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.createCashoutModalBody::-webkit-scrollbar-thumb:active {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.createCashoutModalEmpty {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  padding: 12px 0;
+}
+
+.createCashoutPage--modal .createCashoutModalMain {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.createCashoutPage--modal .createCashoutModalContent {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+.createCashoutPage--modal .createCashoutSection {
+  flex: 1;
+  min-height: 0;
+}
+
+@keyframes cashoutBackdropIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes cashoutModalIn {
+  from { opacity: 0; transform: scale(0.98) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.createCashoutModalBackdrop--exiting {
+  animation: cashoutBackdropOut 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes cashoutBackdropOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.createCashoutModal--exiting {
+  animation: cashoutModalOut 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes cashoutModalOut {
+  from { opacity: 1; transform: scale(1) translateY(0); }
+  to { opacity: 0; transform: scale(0.98) translateY(8px); }
+}
+
+/* Ensure content area gets proper flex so main can scroll */
+.createCashoutPage.auditLogsPage .auditLogsMain {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.createCashoutPage .auditLogsContent {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+}
+
+.createCashoutPage .auditLogsSection.createCashoutSection {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* ——— Category tabs (header buttons) ——— */
+.createCashoutTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  flex-shrink: 0;
+  margin-bottom: 24px;
+}
+
+.createCashoutTab {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.06));
+  background: var(--st-surface, rgba(255, 255, 255, 0.03));
+  color: var(--st-text, rgba(255, 255, 255, 0.92));
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  text-align: left;
+  min-width: 200px;
+  width: calc(25% - 9px);
+  max-width: 280px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 900px) {
+  .createCashoutTab {
+    width: calc(50% - 6px);
+  }
+}
+
+@media (max-width: 500px) {
+  .createCashoutTab {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.createCashoutTab:hover:not(.createCashoutTab--disabled):not(.createCashoutTab--active) {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.createCashoutTab--active {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(251, 191, 36, 0.25);
+  box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.15);
+}
+
+.createCashoutTab--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.createCashoutTabIcon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+}
+
+.createCashoutTab--active .createCashoutTabIcon {
+  color: var(--st-accent, #fbbf24);
+}
+
+.createCashoutTabText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.createCashoutTabLabel {
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.25;
+  color: inherit;
+}
+
+.createCashoutTabSub {
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+}
+
+/* ——— Content area (embedded list or card) ——— */
+.createCashoutContent {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.createCashoutPanel {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+/* Embedded lists: hide their page header and fix layout */
+.createCashoutPanel .employeesPage .employeesHeader,
+.createCashoutPanel .driversPage .auditLogsHeader {
+  display: none !important;
+}
+
+/* Store tab: list + create store cashout button */
+.createCashoutStorePanel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+  min-height: 0;
+}
+
+.createCashoutStorePanel .auditLogsHeader,
+.createCashoutStorePanel .driversPage .auditLogsHeader {
+  display: none !important;
+}
+
+.createCashoutStoreAction {
+  flex-shrink: 0;
+  padding: 0 4px 8px;
+}
+
+.createCashoutStoreCashoutBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: none;
+  background: #5431a7;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.createCashoutStoreCashoutBtn:hover {
+  background: #6b3dc7;
+  transform: translateY(-1px);
+}
+
+.createCashoutPanel .employeesPage,
+.createCashoutPanel .driversPage {
+  padding: 0 !important;
+  min-height: 0 !important;
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+/* Single scroll container: only .createCashoutPanel scrolls; inner list content must not */
+.createCashoutPanel .employeesPage .employeesMain,
+.createCashoutPanel .driversPage .auditLogsMain {
+  flex: 1 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.createCashoutPanel .employeesPage .employeesContent,
+.createCashoutPanel .driversPage .auditLogsContent {
+  flex: 1 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.createCashoutPanel--disabled {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  min-height: 200px;
+}
+
+.createCashoutDisabledText {
+  margin: 0;
+  font-size: 15px;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.6));
+  text-align: center;
+  max-width: 420px;
+}
+
+/* ——— Other: card (dark theme, badge, title, description, button) ——— */
+.createCashoutPanel:not(.createCashoutPanel--disabled) .createCashoutOtherCard {
+  flex-shrink: 0;
+}
+
+.createCashoutOtherCard {
+  padding: 24px 28px;
+  border-radius: 12px;
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.06));
+  background: var(--st-bg-elevated, #0f0f12);
+  max-width: 480px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+}
+
+.createCashoutOtherBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.8));
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.createCashoutOtherTitle {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--st-text, rgba(255, 255, 255, 0.95));
+  line-height: 1.3;
+}
+
+.createCashoutOtherDesc {
+  margin: 0 0 20px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.6));
+}
+
+.createCashoutOtherBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: none;
+  background: #5431a7;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.createCashoutOtherBtn:hover {
+  background: #6b3dc7;
+  transform: translateY(-1px);
+}
+
+.createCashoutOtherBtn:active {
+  transform: translateY(0);
+}

@@ -1,0 +1,165 @@
+/* paginator_select.css — same design as Create_Employee ec-select-custom (dark, arrow transition) */
+
+.paginatorSelect {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.paginatorSelectLabel {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--st-text-muted);
+}
+
+.paginatorSelectTrigger {
+  height: 38px;
+  min-width: 100px;
+  padding: 0 2.25rem 0 12px;
+  border-radius: var(--st-radius-sm);
+  background: var(--st-surface);
+  border: 1px solid var(--st-border);
+  color: var(--st-text);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  text-align: left;
+  outline: none;
+  transition: border-color var(--st-duration) var(--st-ease),
+    background var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration-fast) var(--st-ease);
+}
+
+.paginatorSelectTrigger:hover {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.paginatorSelectTrigger:focus-visible {
+  border-color: var(--st-accent);
+  background: rgba(251, 191, 36, 0.06);
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+.paginatorSelectValue {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.paginatorSelectArrow {
+  flex-shrink: 0;
+  color: var(--st-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--st-duration) var(--st-ease);
+}
+
+.paginatorSelect--open .paginatorSelectArrow {
+  transform: rotate(180deg);
+}
+
+.paginatorSelectDrop {
+  position: absolute;
+  left: 0;
+  min-width: 100%;
+  top: calc(100% + 6px);
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity var(--st-duration) var(--st-ease),
+    visibility var(--st-duration) var(--st-ease),
+    transform var(--st-duration) var(--st-ease);
+}
+
+.paginatorSelect--open .paginatorSelectDrop {
+  pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Portaled dropdown: fixed position; animate in when mounted */
+.paginatorSelectDrop--portal {
+  pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+.paginatorSelectDrop--portal .paginatorSelectDropInner {
+  animation: paginatorSelectDropIn 0.22s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  opacity: 0;
+  transform: translateY(-6px);
+}
+@keyframes paginatorSelectDropIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Theme for portaled dropdown (inherits from page when inline; needed when rendered in body) */
+.paginatorSelectDropPortal {
+  --st-bg-elevated: #0f0f12;
+  --st-border: rgba(255, 255, 255, 0.06);
+  --st-text: rgba(255, 255, 255, 0.92);
+  --st-text-muted: rgba(255, 255, 255, 0.5);
+  --st-surface-hover: rgba(255, 255, 255, 0.06);
+  --st-accent: #fbbf24;
+  --st-accent-soft: rgba(251, 191, 36, 0.18);
+  --st-radius-sm: 6px;
+  --st-duration-fast: 0.15s;
+  --st-ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.paginatorSelectDropInner {
+  background: var(--st-bg-elevated);
+  border: 1px solid var(--st-border);
+  border-radius: var(--st-radius-sm);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  padding: 6px;
+}
+
+.paginatorSelectOption {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--st-text);
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--st-duration-fast) var(--st-ease);
+}
+
+.paginatorSelectOption:hover {
+  background: var(--st-surface-hover);
+}
+
+.paginatorSelectOption--selected,
+.paginatorSelectOption:focus-visible {
+  background: var(--st-accent-soft);
+  color: var(--st-accent);
+}
+
+.paginatorSelectOption:focus-visible {
+  outline: none;
+}

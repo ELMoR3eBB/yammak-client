@@ -1,0 +1,900 @@
+/* create_employee.css — Settings/Employees theme, same card/flex sizes and role selector behavior */
+
+.content:has(.createEmployeePage) {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.createEmployeePage {
+  --st-bg: #09090b;
+  --st-bg-elevated: #0f0f12;
+  --st-surface: rgba(255, 255, 255, 0.03);
+  --st-surface-hover: rgba(255, 255, 255, 0.06);
+  --st-border: rgba(255, 255, 255, 0.06);
+  --st-text: rgba(255, 255, 255, 0.92);
+  --st-text-muted: rgba(255, 255, 255, 0.5);
+  --st-accent: #fbbf24;
+  --st-accent-soft: rgba(251, 191, 36, 0.18);
+  --st-accent-glow: rgba(251, 191, 36, 0.15);
+  --st-radius: 8px;
+  --st-radius-sm: 6px;
+  --st-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --st-duration: 0.25s;
+  --st-duration-fast: 0.15s;
+
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+  color: var(--st-text);
+  background: var(--st-bg);
+  overflow: hidden;
+  animation: createEmployeePageIn 0.45s var(--st-ease) forwards;
+  position: relative;
+}
+
+.createEmployeePage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 100% 50% at 0% 0%,
+    rgba(251, 191, 36, 0.04) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+  animation: createEmployeeBgIn 0.6s var(--st-ease) 0.15s both;
+}
+
+@keyframes createEmployeePageIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes createEmployeeBgIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes createEmployeeMainIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ——— Header ——— */
+.createEmployeeHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--st-border);
+  flex-shrink: 0;
+  background: var(--st-bg-elevated);
+  transition: border-color var(--st-duration) var(--st-ease);
+}
+
+.createEmployeeHeader:hover .createEmployeeHeaderIcon {
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
+}
+
+.createEmployeeHeaderIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--st-radius);
+  background: linear-gradient(
+    135deg,
+    rgba(251, 191, 36, 0.2) 0%,
+    rgba(251, 191, 36, 0.06) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--st-accent);
+  flex-shrink: 0;
+  transition: transform var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration) var(--st-ease);
+}
+
+.createEmployeeHeaderText {
+  flex: 1;
+  min-width: 0;
+}
+
+.createEmployeeTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--st-text);
+  transition: color var(--st-duration-fast) var(--st-ease);
+}
+
+.createEmployeeSubtitle {
+  margin: 4px 0 0 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--st-text-muted);
+  transition: color var(--st-duration-fast) var(--st-ease);
+}
+
+/* ——— Main (same content padding as Employees) ——— */
+.createEmployeeMain {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  animation: createEmployeeMainIn 0.4s var(--st-ease) 0.12s both;
+}
+
+.createEmployeeContent {
+  flex: 1;
+  padding: 28px 32px 40px;
+}
+
+/* ——— Form: keep same layout and sizes ——— */
+.createEmployeePage .ec-body {
+  margin: 0;
+  align-items: start;
+  animation: none;
+  transform: none;
+  opacity: 1;
+}
+
+/* Card: original padding 18px, gap 30px, radius 12px */
+.createEmployeePage .ec-body .ec-card {
+  background: var(--st-bg-elevated);
+  border: 1px solid var(--st-border);
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  transition: border-color var(--st-duration) var(--st-ease),
+    background var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration) var(--st-ease);
+}
+
+.createEmployeePage .ec-body .ec-card:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Spacing: original margin 5px 0, span 85% */
+.createEmployeePage .ec-body .ec-card .spacing {
+  height: 1px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  border: 0;
+  margin: 5px 0;
+}
+
+.createEmployeePage .ec-body .ec-card .spacing span {
+  width: 85%;
+  height: 100%;
+  background: var(--st-border);
+  transition: background var(--st-duration-fast) var(--st-ease);
+}
+
+/* Sub cards: original flex row, gap 50px; warping 100px */
+.createEmployeePage .ec-body .ec-card .ec-sub_card {
+  display: flex;
+  flex-direction: row;
+  gap: 45px;
+}
+
+.createEmployeePage .ec-body .ec-card .ec-sub_card .ec-third-card {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.createEmployeePage .ec-body .ec-card .ec-sub_card.warping-sub_card {
+  gap: 95px;
+}
+
+/* Blocks: original gap 10px, space-around; warping-block gap 25px; row-block row gap 100px */
+.createEmployeePage .ec-body .ec-card .ec-sub_card .ec-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: space-around;
+}
+
+.createEmployeePage .ec-body .ec-card .ec-sub_card .ec-block.warping-block {
+  justify-content: flex-start;
+  gap: 25px;
+}
+
+.createEmployeePage .ec-body .ec-card .ec-sub_card .ec-salary-rating-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  justify-content: flex-start;
+}
+
+.createEmployeePage .ec-body .ec-card .ec-sub_card .ec-block.row-block {
+  flex-direction: row;
+  gap: 95px;
+  justify-content: flex-start;
+}
+
+.createEmployeePage .ec-body .ec-card .ec-block .partblock {
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+}
+
+/* ——— Labels ——— */
+.createEmployeePage .ec-body label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: var(--st-text);
+  transition: color var(--st-duration-fast) var(--st-ease);
+}
+
+.createEmployeePage .ec-body label span {
+  color: #ef4444;
+}
+
+/* ——— Inputs: original height 42px and widths ——— */
+.createEmployeePage .ec-body .ec-input {
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 8px;
+  background: var(--st-surface);
+  border: 1px solid var(--st-border);
+  color: var(--st-text);
+  font-size: 14px;
+  outline: none;
+  transition: border-color var(--st-duration) var(--st-ease),
+    background var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration-fast) var(--st-ease);
+  color-scheme: dark;
+}
+
+.createEmployeePage .ec-body .ec-input::placeholder {
+  color: var(--st-text-muted);
+  opacity: 0.7;
+}
+
+.createEmployeePage .ec-body .ec-input:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.createEmployeePage .ec-body .ec-input:focus {
+  border-color: var(--st-accent);
+  background: rgba(251, 191, 36, 0.06);
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+.createEmployeePage .ec-body .ec-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Original fixed widths */
+.createEmployeePage .ec-body .ec-input.fullName {
+  width: 300px;
+}
+.createEmployeePage .ec-body .ec-input.phoneNumber {
+  width: 250px;
+}
+.createEmployeePage .ec-body .ec-input.personalEmail {
+  width: 300px;
+}
+.createEmployeePage .ec-body .ec-input.dateOfBirth,
+.createEmployeePage .ec-body .ec-input.startDate {
+  width: 250px;
+}
+.createEmployeePage .ec-body .ec-input.address {
+  width: 300px;
+}
+.createEmployeePage .ec-body .ec-input.salary {
+  width: 200px;
+}
+.createEmployeePage .ec-body .ec-input.workEmail {
+  width: 300px;
+}
+.createEmployeePage .ec-body .ec-input.notes {
+  min-height: 150px;
+  min-width: 600px;
+}
+
+.createEmployeePage .ec-body textarea.ec-input {
+  height: auto;
+  padding: 10px 12px;
+  resize: vertical;
+}
+
+/* ——— Custom select (Employment Type / Salary Type): themed dropdown + arrow transition ——— */
+.createEmployeePage .ec-select-custom {
+  position: relative;
+  width: 200px;
+  min-width: 0;
+  padding: 0px !important;
+}
+
+.createEmployeePage .ec-select-custom.salaryType {
+  width: 210px;
+}
+
+.createEmployeePage .ec-select-custom.ratingSelect {
+  width: 120px;
+}
+
+.createEmployeePage .ec-select-custom__trigger {
+  width: 100%;
+  height: 42px;
+  padding: 0 0.6rem 0 12px;
+  border-radius: 8px;
+  background: var(--st-surface);
+  border: 1px solid var(--st-border);
+  color: var(--st-text);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  text-align: left;
+  outline: none;
+  transition: border-color var(--st-duration) var(--st-ease),
+    background var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration-fast) var(--st-ease);
+}
+
+.createEmployeePage .ec-select-custom__trigger:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.createEmployeePage .ec-select-custom__trigger:focus-visible {
+  border-color: var(--st-accent);
+  background: rgba(251, 191, 36, 0.06);
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+.createEmployeePage .ec-select-custom__trigger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.createEmployeePage .ec-select-custom__value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.createEmployeePage .ec-select-custom__arrow {
+  flex-shrink: 0;
+  color: var(--st-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--st-duration) var(--st-ease),
+    color var(--st-duration-fast) var(--st-ease);
+}
+
+.createEmployeePage .ec-select-custom--open .ec-select-custom__arrow {
+  transform: rotate(180deg);
+}
+
+.createEmployeePage .ec-select-custom__drop {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity var(--st-duration) var(--st-ease),
+    visibility var(--st-duration) var(--st-ease),
+    transform var(--st-duration) var(--st-ease);
+}
+
+.createEmployeePage .ec-select-custom--open .ec-select-custom__drop {
+  pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.createEmployeePage .ec-select-custom__drop-inner {
+  background: var(--st-bg-elevated);
+  border: 1px solid var(--st-border);
+  border-radius: 8px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.createEmployeePage .ec-select-custom.ratingSelect .ec-select-custom__drop-inner {
+  max-height: 200px;
+  overflow-y: auto;
+  gap: 2px;
+}
+
+.createEmployeePage .ec-select-custom__option {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--st-text);
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--st-duration-fast) var(--st-ease),
+    color var(--st-duration-fast) var(--st-ease);
+}
+
+.createEmployeePage .ec-select-custom__option:hover {
+  background: var(--st-surface-hover);
+}
+
+.createEmployeePage .ec-select-custom__option--selected,
+.createEmployeePage .ec-select-custom__option:focus-visible {
+  background: var(--st-accent-soft);
+  color: var(--st-accent);
+}
+
+.createEmployeePage .ec-select-custom__option:focus-visible {
+  outline: none;
+}
+
+/* Create employee dropdown: always dark themed (no light-mode override) */
+
+/* ——— Phone container: original height 42px ——— */
+.createEmployeePage .ec-body .ec-phone-container {
+  display: flex;
+  align-items: center;
+  background: var(--st-surface);
+  border: 1px solid var(--st-border);
+  border-radius: 8px;
+  overflow: hidden;
+  height: 42px;
+  transition: border-color var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration-fast) var(--st-ease);
+}
+
+.createEmployeePage .ec-body .ec-phone-container:focus-within {
+  border-color: var(--st-accent);
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+.createEmployeePage .ec-body .ec-phone-container input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 10px;
+  color: var(--st-text);
+  font-size: 14px;
+  outline: none;
+}
+
+.createEmployeePage .ec-body .ec-phone-container input::placeholder {
+  color: var(--st-text-muted);
+  opacity: 0.7;
+}
+
+.createEmployeePage .ec-body .ec-phone-container .ec-prefix {
+  padding: 10px 12px;
+  background: rgba(251, 191, 36, 0.1);
+  border-right: 1px solid var(--st-border);
+  color: var(--st-accent);
+  font-weight: 700;
+  transition: background var(--st-duration-fast) var(--st-ease);
+}
+
+/* ——— Upload blocks: original gap 8px; drop 213×134, square 210, wide 110 ——— */
+.createEmployeePage .ec-body .ec-upload-block {
+  display: grid;
+  gap: 8px;
+}
+
+.createEmployeePage .ec-body .ec-upload-title {
+  font-size: 13px;
+  color: var(--st-text-muted);
+  transition: color var(--st-duration-fast) var(--st-ease);
+}
+
+.createEmployeePage .ec-body .ec-drop {
+  border: 1px dashed var(--st-border);
+  background: var(--st-surface);
+  border-radius: 12px;
+  width: 213px;
+  height: 134px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color var(--st-duration) var(--st-ease),
+    background var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration-fast) var(--st-ease);
+}
+
+.createEmployeePage .ec-body .ec-drop:hover {
+  border-color: rgba(251, 191, 36, 0.4);
+  background: rgba(251, 191, 36, 0.06);
+  box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.12);
+}
+
+.createEmployeePage .ec-body .ec-drop--square {
+  height: 210px;
+}
+
+.createEmployeePage .ec-body .ec-drop--wide {
+  height: 110px;
+}
+
+.createEmployeePage .ec-body .ec-drop-empty {
+  text-align: center;
+  color: var(--st-text-muted);
+  display: grid;
+  gap: 6px;
+}
+
+.createEmployeePage .ec-body .ec-plus {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 26px;
+  background: var(--st-accent-soft);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  color: var(--st-accent);
+  margin: 0 auto;
+  transition: background var(--st-duration) var(--st-ease),
+    border-color var(--st-duration) var(--st-ease),
+    transform var(--st-duration-fast) var(--st-ease);
+}
+
+.createEmployeePage .ec-body .ec-drop:hover .ec-plus {
+  background: rgba(251, 191, 36, 0.22);
+  border-color: rgba(251, 191, 36, 0.45);
+  transform: scale(1.03);
+}
+
+.createEmployeePage .ec-body .ec-plus .icon {
+  width: 14px;
+  height: 15px;
+}
+
+.createEmployeePage .ec-body .ec-drop-hint {
+  font-size: 13px;
+}
+
+.createEmployeePage .ec-body .ec-drop-sub {
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+.createEmployeePage .ec-body .ec-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ——— Actions: original gap 10px, padding-top 4px ——— */
+.createEmployeePage .ec-body .ec-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  align-items: center;
+  padding-top: 4px;
+  transition: border-color var(--st-duration) var(--st-ease);
+}
+
+/* ——— Buttons: original ec-btn--sm padding 9px 14px, font-size 13px ——— */
+.createEmployeePage .ec-body .ec-btn {
+  border-radius: 10px;
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: var(--st-text);
+  font-weight: 700;
+  letter-spacing: 0.15px;
+  cursor: pointer;
+  transition: background var(--st-duration) var(--st-ease),
+    border-color var(--st-duration) var(--st-ease),
+    color var(--st-duration) var(--st-ease),
+    transform var(--st-duration-fast) var(--st-ease),
+    box-shadow var(--st-duration) var(--st-ease);
+}
+
+.createEmployeePage .ec-body .ec-btn:hover:not(:disabled) {
+  background: var(--st-accent-soft);
+  border-color: rgba(251, 191, 36, 0.4);
+  color: var(--st-accent);
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.15);
+  transform: translateY(-1px);
+}
+
+.createEmployeePage .ec-body .ec-btn:active:not(:disabled) {
+  transform: translateY(0) scale(0.97);
+}
+
+.createEmployeePage .ec-body .ec-btn:focus-visible {
+  outline: none;
+  border-color: var(--st-accent);
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+.createEmployeePage .ec-body .ec-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.createEmployeePage .ec-body .ec-btn--sm {
+  padding: 9px 14px;
+  font-size: 13px;
+  border-radius: 9px;
+}
+
+.createEmployeePage .ec-body .ec-btn--ghost {
+  background: var(--st-surface);
+  border-color: var(--st-border);
+}
+
+.createEmployeePage .ec-body .ec-btn--ghost:hover:not(:disabled) {
+  background: var(--st-surface-hover);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: var(--st-text);
+  box-shadow: none;
+}
+
+/* ——— Role selector (Chosen): same sizes 42px height, 300px width, 44px arrow ——— */
+.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container {
+  width: 300px !important;
+  font-size: inherit;
+}
+
+.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-single {
+  position: relative;
+  height: 42px;
+  border-radius: 8px;
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: var(--st-text);
+  display: flex;
+  align-items: center;
+  padding: 0 44px 0 12px;
+  transition: border-color var(--st-duration) var(--st-ease),
+    background var(--st-duration) var(--st-ease);
+  box-shadow: none;
+  line-height: 42px;
+}
+
+.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-single span {
+  color: var(--st-text);
+  line-height: 42px;
+  margin-right: 0;
+  padding: 0;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-single div {
+  width: 42px;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid var(--st-border);
+  background: rgba(251, 191, 36, 0.08);
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  transition: background var(--st-duration) var(--st-ease);
+}
+
+.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-single div b {
+  background: none !important;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 7px solid var(--st-accent);
+  opacity: 0.95;
+  transform: translateY(1px);
+}
+
+.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single:hover .chosen-single {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single:hover .chosen-single div {
+  background: rgba(251, 191, 36, 0.12);
+  border-left-color: rgba(251, 191, 36, 0.25);
+}
+
+.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single.chosen-container-active:not(.chosen-with-drop) .chosen-single,
+.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single.chosen-with-drop .chosen-single {
+  border-color: var(--st-accent);
+  background: rgba(251, 191, 36, 0.06);
+}
+
+.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single.chosen-with-drop .chosen-single {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-color: transparent;
+}
+
+.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single.chosen-with-drop .chosen-single div {
+  border-bottom-right-radius: 0;
+  background: rgba(251, 191, 36, 0.08);
+}
+
+.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single.chosen-with-drop .chosen-single div b {
+  border-top: 0;
+  border-bottom: 7px solid var(--st-accent);
+  transform: translateY(-1px);
+}
+
+.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-drop {
+  background: var(--st-bg-elevated);
+  border: 1px solid var(--st-border);
+  border-top: none;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+}
+
+.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-search {
+  padding: 10px 10px 8px;
+}
+
+.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-search input[type="text"] {
+  width: 100%;
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 8px;
+  background: var(--st-surface);
+  border: 1px solid var(--st-border);
+  color: var(--st-text);
+  outline: none;
+  transition: border-color var(--st-duration) var(--st-ease);
+}
+
+.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-search input[type="text"]:focus {
+  border-color: var(--st-accent);
+}
+
+.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container .chosen-results {
+  margin: 0;
+  padding: 6px;
+  max-height: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container .chosen-results li {
+  color: var(--st-text);
+  padding: 10px 10px;
+  border-radius: 8px;
+  transition: background var(--st-duration-fast) var(--st-ease);
+}
+
+.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container .chosen-results li.active-result:hover {
+  background: var(--st-surface-hover);
+}
+
+.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container .chosen-results li.highlighted,
+.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container .chosen-results li.result-selected {
+  background: var(--st-accent-soft);
+  color: var(--st-accent);
+}
+
+.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container .chosen-results li.disabled-result {
+  opacity: 0.45;
+}
+
+.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container .chosen-results li.no-results {
+  background: var(--st-surface) !important;
+  color: var(--st-text-muted) !important;
+  border: 1px solid var(--st-border);
+  border-radius: 10px;
+  padding: 10px 12px !important;
+  margin: 6px !important;
+}
+
+.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container .chosen-results li.no-results span {
+  color: var(--st-accent) !important;
+  font-weight: 700;
+}
+
+/* ——— Password field: same width 250px, height 42px ——— */
+.createEmployeePage .password-field {
+  width: 250px;
+}
+
+.createEmployeePage .password-field input {
+  background: var(--st-surface);
+  border: 1px solid var(--st-border);
+  border-radius: 8px;
+  padding: 0 44px 0 12px;
+  height: 42px;
+  color: var(--st-text);
+  transition: border-color var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration-fast) var(--st-ease);
+}
+
+.createEmployeePage .password-field input:focus {
+  border-color: var(--st-accent);
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+.createEmployeePage .password-field button.eye {
+  border-radius: 10px;
+  border: 1px solid var(--st-border);
+  background: rgba(251, 191, 36, 0.08);
+  color: var(--st-accent);
+  transition: background var(--st-duration) var(--st-ease),
+    border-color var(--st-duration) var(--st-ease),
+    transform var(--st-duration-fast) var(--st-ease);
+}
+
+.createEmployeePage .password-field button.eye:hover {
+  background: var(--st-accent-soft);
+  border-color: rgba(251, 191, 36, 0.3);
+}
+
+/* ——— Responsive: same breakpoint and behavior ——— */
+@media (max-width: 980px) {
+  .createEmployeePage .ec-body .ec-card .ec-sub_card {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .createEmployeePage .ec-body .ec-card .ec-sub_card.warping-sub_card {
+    gap: 32px;
+  }
+  .createEmployeePage .ec-body .ec-card .ec-sub_card .ec-block.row-block {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .createEmployeePage .ec-body .ec-card .ec-sub_card .ec-block .partblock {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .createEmployeePage .ec-body .ec-drop--square {
+    height: 190px;
+  }
+  .createEmployeePage .ec-body .ec-actions {
+    justify-content: stretch;
+    gap: 10px;
+  }
+  .createEmployeePage .ec-body .ec-actions .ec-btn--sm {
+    width: 100%;
+  }
+}
+
+@keyframes cuEyePopOn {
+  from { opacity: 0.55; transform: scale(0.88) rotate(-6deg); }
+  to { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes cuEyePopOff {
+  from { opacity: 0.55; transform: scale(0.88) rotate(6deg); }
+  to { opacity: 1; transform: scale(1) rotate(0deg); }
+}

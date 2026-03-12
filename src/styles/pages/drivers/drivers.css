@@ -1,0 +1,1163 @@
+/* Drivers page: empty state and number alignment */
+
+.content:has(.driversPage) {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.driversPage {
+  --st-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  transform: translateY(8px);
+  animation: driversPageEnter 0.35s var(--st-ease) forwards;
+}
+
+@keyframes driversPageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.driversPage .driversEmpty{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+  padding: 32px;
+  text-align: center;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+  font-size: 14px;
+}
+
+.driversPage .driversSpinner{
+  width: 40px;
+  height: 40px;
+  margin-bottom: 16px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--st-accent, #fbbf24);
+  border-radius: 50%;
+  animation: driversSpin 0.8s linear infinite;
+}
+
+@keyframes driversSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.driversPage .driversEmptyIll{
+  width: 300px;
+  height: auto;
+  margin-bottom: 20px;
+  opacity: 0.85;
+}
+
+.driversPage .driversEmpty p{
+  margin: 0;
+  font-size: 14px;
+}
+
+.driversPage .driversNum{
+  font-variant-numeric: tabular-nums;
+}
+
+/* Table: no inner scrollbar; table grows with content, page scrolls (Stores + Drivers list) */
+.auditLogsPage.driversPage .auditLogsTableWrap .dt {
+  min-height: 0;
+  overflow: visible;
+}
+.auditLogsPage.driversPage .auditLogsTableWrap .dt-body {
+  max-height: none;
+  overflow-y: visible;
+  overflow-x: visible;
+}
+.auditLogsPage.driversPage .auditLogsTableWrap {
+  overflow-x: auto;
+  overflow-y: visible;
+}
+
+
+/* KPI row above search — total money in hand, earnings, withdrawal */
+.driversPage .driversKpiRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.driversPage .driversKpiCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--st-bg-elevated, #0f0f12);
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.06));
+  border-radius: var(--st-radius, 8px);
+}
+
+.driversPage .driversKpiIcon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(251, 191, 36, 0.18);
+  color: var(--st-accent, #fbbf24);
+  flex-shrink: 0;
+}
+
+.driversPage .driversKpiContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.driversPage .driversKpiValue {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--st-text, rgba(255, 255, 255, 0.92));
+  font-variant-numeric: tabular-nums;
+}
+
+.driversPage .driversKpiLabel {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+}
+
+/* Toolbar (search + rows) — match employee/role list */
+.driversPage .driversToolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.driversPage .driversToolbar .si-input {
+  background: var(--st-surface, rgba(255, 255, 255, 0.03));
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.06));
+  color: var(--st-text, rgba(255, 255, 255, 0.92));
+  border-radius: var(--st-radius-sm, 6px);
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+  max-width: 400px;
+}
+
+.driversPage .driversToolbar .si-input::placeholder {
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+  opacity: 0.7;
+}
+
+.driversPage .driversToolbar .si-input:hover {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.driversPage .driversToolbar .si-input:focus {
+  border-color: var(--st-accent, #fbbf24);
+  background: rgba(251, 191, 36, 0.06);
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.15);
+}
+
+.driversPage .driversToolbar .si-icon {
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+}
+
+.driversPage .driversToolbar .si-clear {
+  background: var(--st-surface, rgba(255, 255, 255, 0.06));
+  border-color: var(--st-border, rgba(255, 255, 255, 0.1));
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.7));
+}
+
+.driversPage .driversToolbar .si-clear:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: var(--st-text, rgba(255, 255, 255, 0.95));
+}
+
+.driversPage .driversRepairBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: var(--st-radius-sm, 6px);
+  border: 1px solid var(--st-accent, #fbbf24);
+  background: rgba(251, 191, 36, 0.12);
+  color: var(--st-accent, #fbbf24);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+
+.driversPage .driversRepairBtn:hover:not(:disabled) {
+  background: rgba(251, 191, 36, 0.2);
+  border-color: rgba(251, 191, 36, 0.6);
+}
+
+.driversPage .driversRepairBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.driversPage .driversRepairBtnSpinner {
+  animation: driversRepairSpin 0.8s linear infinite;
+}
+
+@keyframes driversRepairSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Repair confirmation modal */
+.driversPage .driversRepairModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+.driversPage .driversRepairModal {
+  background: var(--st-bg-elevated, #0f0f12);
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.06));
+  border-radius: var(--st-radius, 12px);
+  padding: 24px 28px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+.driversPage .driversRepairModalTitle {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--st-text, rgba(255, 255, 255, 0.92));
+}
+.driversPage .driversRepairModalText {
+  margin: 0 0 24px;
+  font-size: 14px;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.6));
+  line-height: 1.5;
+}
+.driversPage .driversRepairModalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+.driversPage .driversRepairModalBtn {
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.driversPage .driversRepairModalBtnCancel {
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.1));
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.7));
+}
+.driversPage .driversRepairModalBtnCancel:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+.driversPage .driversRepairModalBtnConfirm {
+  border: 1px solid var(--st-accent, #fbbf24);
+  background: rgba(251, 191, 36, 0.15);
+  color: var(--st-accent, #fbbf24);
+}
+.driversPage .driversRepairModalBtnConfirm:hover:not(:disabled) {
+  background: rgba(251, 191, 36, 0.25);
+  border-color: rgba(251, 191, 36, 0.5);
+}
+.driversPage .driversRepairModalBtnConfirm:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.driversPage .driversToolbarRows {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Footer (paginator) — same design as Role_List */
+.driversPage .driversFooter {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 20px;
+  background: linear-gradient(180deg, var(--st-bg-elevated, #0f0f12) 0%, rgba(15, 15, 18, 0.98) 100%);
+}
+
+.driversPage .driversMuted {
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.driversFooterLeft,
+.driversFooterMid,
+.driversPage .driversFooterRight {
+  display: flex;
+  align-items: center;
+}
+
+.driversPage .driversFooterLeft {
+  justify-content: flex-start;
+}
+
+.driversPage .driversFooterMid {
+  justify-content: center;
+  gap: 12px;
+}
+
+.driversPage .driversFooterRight {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.driversPage .driversPerPage {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.driversPage .driversPerPage .driversMuted {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.driversPage .driversPagerBtn {
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 8px;
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.06));
+  background: var(--st-surface, rgba(255, 255, 255, 0.03));
+  color: var(--st-text, rgba(255, 255, 255, 0.92));
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.driversPage .driversPagerBtn:hover:not(:disabled) {
+  background: rgba(251, 191, 36, 0.1);
+  border-color: rgba(251, 191, 36, 0.4);
+  color: var(--st-accent, #fbbf24);
+}
+
+.driversPage .driversPagerBtn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.driversPage .driversPagerBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.driversPage .driversPages {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.driversPage .driversPagesDots {
+  padding: 0 6px;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+  font-weight: 500;
+}
+
+.driversPage .driversPageBtn {
+  min-width: 38px;
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.06));
+  background: var(--st-surface, rgba(255, 255, 255, 0.03));
+  color: var(--st-text, rgba(255, 255, 255, 0.92));
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.driversPage .driversPageBtn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.driversPage .driversPageBtn.active {
+  background: rgba(251, 191, 36, 0.12);
+  border-color: rgba(251, 191, 36, 0.45);
+  color: var(--st-accent, #fbbf24);
+}
+
+.driversPage .driversPageBtn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+@media (max-width: 860px) {
+  .driversPage .driversFooter {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+  .driversPage .driversFooterLeft,
+  .driversPage .driversFooterMid,
+  .driversPage .driversFooterRight {
+    justify-content: center;
+  }
+}
+
+/* Name + phone in same cell */
+.driverListNameCell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.driverListPhone {
+  font-size: 12px;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+  font-weight: 400;
+}
+
+/* Driver profile page — back button in flex flow so it doesn’t overlap icon */
+.driverProfilePage .auditLogsHeader {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 24px;
+}
+
+.driverProfilePage .driverProfileBack {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+}
+
+.driverProfilePage .driverProfileBack:hover {
+  background: rgba(251, 191, 36, 0.12);
+  border-color: rgba(251, 191, 36, 0.3);
+  color: #fcd34d;
+  transform: translateX(-2px);
+  box-shadow: 0 2px 12px rgba(251, 191, 36, 0.15);
+}
+
+.driverProfilePage .driverProfileBack:active {
+  transform: translateX(0) scale(0.98);
+}
+
+.driverProfileEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+}
+
+.driverProfileBackBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: var(--st-text);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.driverProfileBackBtn:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.driverProfileGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.driverProfileCard {
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.06));
+  background: var(--st-surface, rgba(255, 255, 255, 0.03));
+}
+
+.driverProfileCard--main {
+  grid-column: 1 / -1;
+  max-width: 400px;
+}
+
+.driverProfileCardIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(251, 191, 36, 0.12);
+  color: var(--st-accent, #fbbf24);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.driverProfileCardIcon--money {
+  background: rgba(34, 197, 94, 0.12);
+  color: #4ade80;
+}
+
+.driverProfileCardIcon--orders {
+  background: rgba(59, 130, 246, 0.12);
+  color: #60a5fa;
+}
+
+.driverProfileCardTitle {
+  margin: 0 0 14px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+}
+
+.driverProfileDl {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.driverProfileRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.driverProfileRow dt {
+  margin: 0;
+  font-size: 13px;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+  font-weight: 500;
+}
+
+.driverProfileRow dd {
+  margin: 0;
+  font-size: 14px;
+  color: var(--st-text, rgba(255, 255, 255, 0.92));
+  font-variant-numeric: tabular-nums;
+}
+
+.driverProfileNum {
+  text-align: right;
+}
+
+.driverProfileInlineIcon {
+  vertical-align: middle;
+  margin-right: 4px;
+  opacity: 0.8;
+}
+
+.driverProfileCard--meta .driverProfileCardTitle {
+  margin-bottom: 0;
+}
+
+/* Driver profile content: full width of page with padding */
+.driverProfilePage .auditLogsContent {
+  padding: 32px 36px 48px;
+  max-width: none;
+  width: 100%;
+  margin: 0;
+}
+
+.driverProfilePage .auditLogsSection {
+  max-width: none;
+  width: 100%;
+}
+
+@keyframes driverProfileSectionIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.driverProfilePersonaSection {
+  animation: driverProfileSectionIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.driverProfileFilterSection {
+  animation: driverProfileSectionIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.06s both;
+}
+
+.driverProfileKpiSection {
+  animation: driverProfileSectionIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both;
+}
+
+.driverProfileChartSection {
+  animation: driverProfileSectionIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.14s both;
+}
+
+.driverProfileOrdersSection {
+  animation: driverProfileSectionIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.18s both;
+}
+
+/* Driver persona (above KPI) — Last updated on the right */
+.driverProfilePersonaSection {
+  margin-bottom: 32px;
+}
+
+.driverProfilePersona {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px 28px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  transition: border-color 0.25s var(--st-ease, ease), box-shadow 0.25s var(--st-ease, ease), transform 0.2s var(--st-ease, ease);
+}
+
+.driverProfilePersona:hover {
+  border-color: rgba(251, 191, 36, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(251, 191, 36, 0.06);
+}
+
+.driverProfilePersonaLeft {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  min-width: 0;
+}
+
+.driverProfilePersonaAvatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(251, 191, 36, 0.2);
+  flex-shrink: 0;
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+
+.driverProfilePersona:hover .driverProfilePersonaAvatar {
+  border-color: rgba(251, 191, 36, 0.35);
+  transform: scale(1.02);
+}
+
+.driverProfilePersonaInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.driverProfilePersonaName {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.98);
+  line-height: 1.25;
+  transition: color 0.2s ease;
+}
+
+.driverProfilePersonaPhone {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.55);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.2s ease;
+}
+
+.driverProfilePersona:hover .driverProfilePersonaPhone {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.driverProfilePersonaPhoneIcon {
+  flex-shrink: 0;
+  opacity: 0.85;
+  color: rgba(251, 191, 36, 0.7);
+}
+
+.driverProfilePersonaPhoneLink {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(251, 191, 36, 0.4);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.driverProfilePersonaPhoneLink:hover {
+  color: rgba(251, 191, 36, 0.95);
+  border-bottom-color: rgba(251, 191, 36, 0.7);
+}
+
+.driverProfilePersonaType {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  width: fit-content;
+  font-size: 13px;
+  font-weight: 600;
+  color: #93c5fd;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.driverProfilePersonaType:hover {
+  background: rgba(59, 130, 246, 0.18);
+  border-color: rgba(59, 130, 246, 0.35);
+  transform: translateY(-1px);
+}
+
+.driverProfilePersonaTypeIcon {
+  flex-shrink: 0;
+  opacity: 0.95;
+}
+
+/* Last updated — right side of persona card */
+.driverProfilePersonaRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+  padding-left: 20px;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  margin-left: auto;
+}
+
+.driverProfilePersonaLastUpdatedLabel {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.driverProfilePersonaLastUpdatedTime {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s ease;
+}
+
+.driverProfilePersona:hover .driverProfilePersonaLastUpdatedTime {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.driverProfilePersonaClockIcon {
+  flex-shrink: 0;
+  opacity: 0.75;
+  color: rgba(251, 191, 36, 0.8);
+}
+
+@media (max-width: 640px) {
+  .driverProfilePersona {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .driverProfilePersonaRight {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin-left: 0;
+    padding-left: 0;
+    padding-top: 16px;
+    margin-top: 16px;
+    align-items: flex-start;
+  }
+}
+
+/* KPI filter row */
+.driverProfileFilterSection {
+  margin-bottom: 28px;
+}
+
+.driverProfileFilterNote {
+  margin: 0 0 14px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.45;
+  max-width: 520px;
+}
+
+.driverProfileFilterRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.driverProfileFilterRow:focus-within {
+  border-color: rgba(251, 191, 36, 0.25);
+  background: rgba(251, 191, 36, 0.03);
+}
+
+.driverProfileFilterIcon {
+  color: rgba(251, 191, 36, 0.7);
+  flex-shrink: 0;
+  transition: color 0.2s ease;
+}
+
+.driverProfileFilterLabel {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: rgba(255, 255, 255, 0.55);
+  min-width: 52px;
+}
+
+.driverProfileFilterPresets {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.driverProfileFilterBtn {
+  padding: 9px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.22s ease, border-color 0.22s ease, color 0.22s ease, transform 0.18s ease, box-shadow 0.22s ease;
+}
+
+.driverProfileFilterBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.98);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.driverProfileFilterBtn:active {
+  transform: translateY(0);
+}
+
+.driverProfileFilterBtn.active {
+  background: rgba(251, 191, 36, 0.14);
+  border-color: rgba(251, 191, 36, 0.45);
+  color: #fcd34d;
+  box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.15);
+}
+
+.driverProfileFilterBtn.active:hover {
+  background: rgba(251, 191, 36, 0.18);
+  border-color: rgba(251, 191, 36, 0.55);
+}
+
+.driverProfileFilterCustom {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.driverProfileFilterCustom .driverProfileDateRangePicker {
+  width: 230px;
+}
+
+.driverProfileFilterCustom .driverProfileDateRangePicker .dateRangePickerTrigger {
+  width: 100%;
+  height: 38px;
+  border-radius: 10px;
+}
+
+.driverProfileFilterInput {
+  padding: 9px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 13px;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  color-scheme: dark;
+}
+
+.driverProfileFilterInput:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.driverProfileFilterInput:focus {
+  outline: none;
+  border-color: rgba(251, 191, 36, 0.4);
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.12);
+}
+
+.driverProfileFilterTo {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* KPI cards */
+.driverProfileKpiSection {
+  margin-bottom: 36px;
+}
+
+.driverProfileKpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.driverProfileKpiCard {
+  padding: 22px 24px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+  transition: border-color 0.28s ease, box-shadow 0.28s ease, transform 0.22s ease, background 0.28s ease;
+}
+
+.driverProfileKpiCard:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.03) 100%);
+}
+
+.driverProfileKpiCard:active {
+  transform: translateY(0);
+}
+
+.driverProfileKpiCardIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.driverProfileKpiCard:hover .driverProfileKpiCardIcon {
+  transform: scale(1.05);
+}
+
+.driverProfileKpiCard--earnings .driverProfileKpiCardIcon {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(251, 191, 36, 0.1) 100%);
+  color: #fcd34d;
+  border: 1px solid rgba(251, 191, 36, 0.25);
+}
+
+.driverProfileKpiCard--orders .driverProfileKpiCardIcon {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0.1) 100%);
+  color: #93c5fd;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+.driverProfileKpiCard--balance .driverProfileKpiCardIcon {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(34, 197, 94, 0.1) 100%);
+  color: #86efac;
+  border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+.driverProfileKpiCard--bonuses .driverProfileKpiCardIcon {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(168, 85, 247, 0.1) 100%);
+  color: #c4b5fd;
+  border: 1px solid rgba(168, 85, 247, 0.25);
+}
+
+.driverProfileKpiLabel {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.3;
+}
+
+.driverProfileKpiValue {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.98);
+  font-variant-numeric: tabular-nums;
+  transition: color 0.2s ease;
+}
+
+.driverProfileKpiCard:hover .driverProfileKpiValue {
+  color: #fff;
+}
+
+.driverProfileKpiSkeleton {
+  opacity: 0.5;
+  font-size: 22px;
+}
+
+/* Chart section */
+.driverProfileSectionTitle {
+  margin: 0 0 8px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.driverProfileChartNote {
+  margin: 0 0 18px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.5;
+}
+
+.driverProfileChartSection {
+  margin-bottom: 36px;
+}
+
+.driverProfileChartSection--spaced {
+  margin-top: 36px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.driverProfileChartWrap {
+  min-height: 300px;
+  padding: 24px 28px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.driverProfileChartWrap:hover {
+  border-color: rgba(251, 191, 36, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.driverProfileChartLoading,
+.driverProfileChartEmpty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 14px;
+  transition: color 0.2s ease;
+}
+
+/* Orders table (DataTable + empty state) */
+.driverProfileOrdersSection {
+  margin-bottom: 40px;
+  margin-top: 8px;
+}
+
+.driverProfileOrdersNote {
+  margin: 0 0 14px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.5;
+}
+
+.driverProfileOrdersTableWrap {
+  margin: 20px 0 0;
+  padding: 0;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+  overflow: hidden;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.driverProfileOrdersTableWrap .dt {
+  border: none;
+  background: transparent;
+}
+
+.driverProfileOrdersTableWrap .dt-head {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.driverProfileOrdersTableWrap .dt-empty {
+  padding: 0;
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.driverProfileOrdersEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+  padding: 40px 32px;
+  text-align: center;
+  transition: background 0.2s ease;
+}
+
+.driverProfileOrdersEmptyIll {
+  width: 300px;
+  height: auto;
+  margin-bottom: 20px;
+  opacity: 0.75;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+
+.driverProfileOrdersEmptyText {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.45);
+  transition: color 0.2s ease;
+}
