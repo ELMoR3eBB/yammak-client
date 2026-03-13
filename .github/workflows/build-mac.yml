@@ -18,10 +18,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Rebuild native modules for x64
+        run: npx electron-builder install-app-deps --arch=x64
+
       - name: Build React
         run: CI=false npm run build
 
-      - name: Build Electron (Intel x86)
+      - name: Build Electron (Intel)
         run: npx electron-builder --mac --x64 --publish never
 
       - name: Upload Artifact
