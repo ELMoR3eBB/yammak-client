@@ -606,6 +606,38 @@ function createWindow({ mode }) {
     }
   });
 
+  // Block developer tools/reload shortcuts in production hard.
+  // This prevents end users from opening DevTools with common key combos.
+  if (!isDev()) {
+    win.webContents.on("before-input-event", (event, input) => {
+      const key = String(input?.key || "").toLowerCase();
+      const ctrlOrCmd = !!input?.control || !!input?.meta;
+      const shift = !!input?.shift;
+      const blockedReload =
+        key === "f5" ||
+        (ctrlOrCmd && key === "r") ||
+        (ctrlOrCmd && shift && key === "r");
+      const blockedDevtools =
+        key === "f12" ||
+        (ctrlOrCmd && shift && key === "i") ||
+        (ctrlOrCmd && shift && key === "j") ||
+        (ctrlOrCmd && shift && key === "c");
+
+      if (blockedReload || blockedDevtools) {
+        event.preventDefault();
+      }
+    });
+
+    // Extra guard if anything attempts to open DevTools programmatically.
+    win.webContents.on("devtools-opened", () => {
+      try {
+        win.webContents.closeDevTools();
+      } catch {
+        // ignore
+      }
+    });
+  }
+
   win.loadURL(getStartUrl());
 
   win.webContents.once("did-finish-load", () => {
@@ -892,6 +924,10 @@ function closeWs() {
 
 // ---------- App lifecycle ----------
 app.whenReady().then(async () => {
+  if (!isDev() && process.platform === "win32") {
+    // Ensure Windows toasts are attributed to app identity in production.
+    app.setAppUserModelId("com.yammak.client");
+  }
   try {
     session.defaultSession.setPermissionRequestHandler((wc, permission, callback) => {
       callback(permission === "geolocation");
@@ -1119,6 +1155,7 @@ ipcMain.handle("desktop:notify", async (event, payload = {}) => {
       body,
       silent: false,
       urgency: "normal",
+      icon: getIconPath(),
     });
 
     n.show();

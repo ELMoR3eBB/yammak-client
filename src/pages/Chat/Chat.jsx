@@ -720,6 +720,24 @@ export default function Chat({ account, navigationIntent, onConsumeIntent, onNav
     return ids.map((id) => byId.get(id)?.name || tr("chat.employeeFallback", "Employee")).slice(0, 3);
   }, [activeConversationId, typingByConversation, users, myUserId, tr]);
 
+  const typingPreviewByConversation = useMemo(() => {
+    const byId = new Map((users || []).map((u) => [idStr(u._id), u]));
+    const out = {};
+    for (const [convId, membersMap] of Object.entries(typingByConversation || {})) {
+      const ids = Object.keys(membersMap || {}).filter((id) => id && id !== myUserId);
+      if (!ids.length) continue;
+      const names = ids
+        .map((id) => byId.get(id)?.name || tr("chat.employeeFallback", "Employee"))
+        .filter(Boolean);
+      if (!names.length) continue;
+      out[convId] =
+        names.length === 1
+          ? `${names[0]} ${tr("chat.typing", "is typing…")}`
+          : tr("chat.multipleTyping", "Typing…");
+    }
+    return out;
+  }, [typingByConversation, users, myUserId, tr]);
+
   const myLastMessageSeen = useMemo(() => {
     if (!activeConversation || !messages.length) return false;
     const lastMine = [...messages].reverse().find((m) => idStr(m.sender?._id) === myUserId);
@@ -730,6 +748,25 @@ export default function Chat({ account, navigationIntent, onConsumeIntent, onNav
     if (!others.length) return false;
     return others.every((m) => (m.lastReadAt ? new Date(m.lastReadAt).getTime() >= t : false));
   }, [activeConversation, messages, myUserId]);
+
+  useEffect(() => {
+    const onWindowBlur = () => {
+      const convId = idStr(activeConversationId);
+      if (!convId || !composerTypingRef.current.isTyping) return;
+      if (composerTypingRef.current.stopTimer) {
+        clearTimeout(composerTypingRef.current.stopTimer);
+        composerTypingRef.current.stopTimer = null;
+      }
+      composerTypingRef.current.isTyping = false;
+      sendTyping(convId, false);
+    };
+    window.addEventListener("blur", onWindowBlur);
+    document.addEventListener("visibilitychange", onWindowBlur);
+    return () => {
+      window.removeEventListener("blur", onWindowBlur);
+      document.removeEventListener("visibilitychange", onWindowBlur);
+    };
+  }, [activeConversationId, sendTyping]);
 
   useEffect(() => {
     const api = window.api;
@@ -2546,6 +2583,7 @@ export default function Chat({ account, navigationIntent, onConsumeIntent, onNav
                 const isDepartment = conversation.kind === "department";
                 const title = conversation.title || tr("chat.conversationFallback", "Conversation");
                 const preview = conversation.lastMessagePreview || tr("chat.startConversation", "Start the conversation");
+                const typingPreview = typingPreviewByConversation[idStr(conversation._id)] || "";
                 const isActive = idStr(conversation._id) === idStr(activeConversationId);
                 const unread = Number(conversation.unreadCount || 0);
 
@@ -2606,8 +2644,10 @@ export default function Chat({ account, navigationIntent, onConsumeIntent, onNav
                       </div>
 
                       <div className="chatConversationBottom">
-                        <span className={`chatConversationPreview ${preview === tr("chat.removedMessage", "Removed Message") ? "is-removed" : ""}`}>
-                          {preview}
+                        <span
+                          className={`chatConversationPreview ${typingPreview ? "is-typing" : ""} ${preview === tr("chat.removedMessage", "Removed Message") ? "is-removed" : ""}`}
+                        >
+                          {typingPreview || preview}
                         </span>
                         <span className="chatConversationTail">
                           {archiveView && conversation.kind === "direct" && (
@@ -3336,7 +3376,10 @@ export default function Chat({ account, navigationIntent, onConsumeIntent, onNav
                     ref={composerInputRef}
                     className="chatComposerInput"
                     contentEditable={!isGlobalChatLockedForMe}
-                    onInput={() => {
+                    onInput={(event) => {
+                      if (!event?.isTrusted) return;
+                      if (!document.hasFocus()) return;
+                      if (document.activeElement !== composerInputRef.current) return;
                       syncComposerFromDOM();
                       updateMentionMenuFromDOM();
                       
@@ -3862,9 +3905,33 @@ export default function Chat({ account, navigationIntent, onConsumeIntent, onNav
                       type="button"
                       className="chatMessageContextItem"
                       onClick={() => {
+                        const target = messages.find((m) => idStr(m._id) === messageContextMenu.messageId);
+                        const originalText = String(
+                          target?.rawText ??
+                          target?.text ??
+                          messageContextMenu.rawText ??
+                          messageContextMenu.text ??
+                          ""
+                        );
                         setEditingMessageId(messageContextMenu.messageId);
                         setReplyingTo(null);
-                        setComposer(messageContextMenu.text || "");
+                        setComposer(originalText);
+                        requestAnimationFrame(() => {
+                          const node = composerInputRef.current;
+                          if (!node) return;
+                          node.innerHTML = "";
+                          node.focus();
+                          if (originalText) {
+                            let inserted = false;
+                            try {
+                              inserted = !!document.execCommand("insertText", false, originalText);
+                            } catch {
+                              inserted = false;
+                            }
+                            if (!inserted) node.textContent = originalText;
+                          }
+                          syncComposerFromDOM();
+                        });
                         setMessageContextMenu(null);
                       }}
                     >
