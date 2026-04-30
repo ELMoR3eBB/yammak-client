@@ -3,7 +3,7 @@ const { contextBridge, ipcRenderer } = require("electron");
 contextBridge.exposeInMainWorld("api", {
   // Auth
   authBootstrap: () => ipcRenderer.invoke("auth:bootstrap"),
-  authLogin: (email, password) => ipcRenderer.invoke("auth:login", { email, password }),
+  authLogin: (email, password, geo) => ipcRenderer.invoke("auth:login", { email, password, geo }),
   authLogout: () => ipcRenderer.invoke("auth:logout"),
   authImpersonateStart: (targetEmployeeId) => ipcRenderer.invoke("auth:impersonateStart", { targetEmployeeId }),
   authImpersonateStop: () => ipcRenderer.invoke("auth:impersonateStop"),
@@ -45,8 +45,11 @@ contextBridge.exposeInMainWorld("api", {
   onAccountUpdated: (cb) => ipcRenderer.on("account:updated", (_, user) => cb(user)),
 
   pickImage: () => ipcRenderer.invoke("dialog:pickImage"),
+  pickImages: () => ipcRenderer.invoke("dialog:pickImages"),
   fileToDataUrl: (filePath) => ipcRenderer.invoke("files:toDataUrl", filePath),
   uploadEmployeeFiles: (files) => ipcRenderer.invoke("uploads:employees", files),
+  uploadChatImage: (filePath) => ipcRenderer.invoke("uploads:chatImage", { filePath }),
+  uploadChatImageFromBuffer: (opts) => ipcRenderer.invoke("uploads:chatImageFromBuffer", opts),
 
   pickPdf: () => ipcRenderer.invoke("dialog:pickPdf"),
   documentsList: () => ipcRenderer.invoke("documents:list"),
@@ -63,7 +66,31 @@ contextBridge.exposeInMainWorld("api", {
   storageAdjust: (opts) => ipcRenderer.invoke("storage:adjust", opts),
   storageDelete: (id) => ipcRenderer.invoke("storage:delete", id),
 
+  vaultsList: () => ipcRenderer.invoke("vaults:list"),
+  vaultCreateCategory: (opts) => ipcRenderer.invoke("vaults:createCategory", opts),
+  vaultCreate: (opts) => ipcRenderer.invoke("vaults:create", opts),
+  vaultUpdate: (opts) => ipcRenderer.invoke("vaults:update", opts),
+  vaultDelete: (id) => ipcRenderer.invoke("vaults:delete", id),
+  vaultReorder: (itemIds) => ipcRenderer.invoke("vaults:reorder", itemIds),
+
+  callsList: (params) => ipcRenderer.invoke("calls:list", params),
+  callsGetAnalytics: (params) => ipcRenderer.invoke("calls:analytics", params),
+  callsGetAudio: (uniqueid) => ipcRenderer.invoke("calls:getAudio", uniqueid),
+  callsDelete: (uniqueid) => ipcRenderer.invoke("calls:delete", uniqueid),
+  openExternal: (url) => ipcRenderer.invoke("shell:openExternal", url),
+
   focusWindow: () => ipcRenderer.invoke("window:focus"),
+  desktopNotify: (title, body) => ipcRenderer.invoke("desktop:notify", { title, body }),
+  updaterGetState: () => ipcRenderer.invoke("updater:getState"),
+  updaterCheck: () => ipcRenderer.invoke("updater:check"),
+  updaterDownload: () => ipcRenderer.invoke("updater:download"),
+  updaterRestartNow: () => ipcRenderer.invoke("updater:restartNow"),
+  onUpdaterState: (cb) => {
+    const handler = (_, state) => cb(state);
+    ipcRenderer.on("updater:state", handler);
+    return () => ipcRenderer.removeListener("updater:state", handler);
+  },
+  copyImageToClipboard: (url) => ipcRenderer.invoke("clipboard:copyImage", { url }),
   setWindowMode: (mode) => ipcRenderer.invoke("window:setMode", { mode }),
   exitApp: () => ipcRenderer.invoke("app:quit"),
 });

@@ -517,6 +517,7 @@ export default function EmployeesList({ account, onNavigate, onCurrentUserEmploy
                                       return;
                                     }
                                     notify?.success?.(`Now viewing as ${e?.name || "selected employee"}.`, "Impersonation");
+                                    onNavigate?.("dashboard");
                                   } catch {
                                     notify?.error?.("Failed to start impersonation", "Impersonation");
                                   } finally {
@@ -604,6 +605,7 @@ export default function EmployeesList({ account, onNavigate, onCurrentUserEmploy
                             value: n,
                             label: `${n} / page`,
                           }))}
+                          openAbove
                         />
                       </div>
                     </div>

@@ -11,8 +11,8 @@
 }
 
 .login-wrap {
-  --login-bg: #09090b;
-  --login-surface: rgba(255, 255, 255, 0.04);
+  --login-bg: #0a0b0f;
+  --login-surface: rgba(255, 255, 255, 0.05);
   --login-border: rgba(255, 255, 255, 0.08);
   --login-text: rgba(255, 255, 255, 0.94);
   --login-text-muted: rgba(255, 255, 255, 0.52);
@@ -26,9 +26,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--login-bg);
+  background:
+    radial-gradient(1200px 520px at 50% -20%, rgba(251, 191, 36, 0.08), transparent 58%),
+    linear-gradient(180deg, #0c0d12 0%, var(--login-bg) 100%);
   overflow: hidden;
   box-sizing: border-box;
+  padding: 18px;
 }
 
 .login-wrap::before {
@@ -37,7 +40,7 @@
   inset: 0;
   background: radial-gradient(
     ellipse 85% 60% at 50% 0%,
-    rgba(251, 191, 36, 0.07) 0%,
+    rgba(251, 191, 36, 0.06) 0%,
     transparent 50%
   );
   pointer-events: none;
@@ -46,17 +49,21 @@
 .login-card {
   position: relative;
   width: 100%;
-  max-width: 360px;
-  margin: 0 20px;
-  padding: 24px 22px;
+  height: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
   background: var(--login-surface);
-  border: 1px solid var(--login-border);
-  border-radius: var(--login-radius);
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.03);
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
   transform: translateY(10px);
   opacity: 0;
   animation: login-enter 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .login-card.exiting {
@@ -68,12 +75,19 @@
   content: "";
   position: absolute;
   top: 0;
-  left: 24px;
-  right: 24px;
+  left: 0;
+  right: 0;
   height: 2px;
   border-radius: 2px;
   background: linear-gradient(90deg, transparent, var(--login-accent), transparent);
   opacity: 0.6;
+}
+
+.login-card-inner {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 24px 22px;
 }
 
 .login-brand {
@@ -301,6 +315,16 @@
   background: rgba(248, 113, 113, 0.1);
   border-radius: var(--login-radius-sm);
   border: 1px solid rgba(248, 113, 113, 0.2);
+}
+
+.login-card .location-warning-badge {
+  margin-top: 0;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #fcd34d;
+  background: rgba(251, 191, 36, 0.12);
+  border-radius: var(--login-radius-sm);
+  border: 1px solid rgba(251, 191, 36, 0.28);
 }
 
 .login-card .btn {

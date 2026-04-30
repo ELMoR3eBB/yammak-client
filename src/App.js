@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState, lazy, Suspense } from "react";
 import { NotificationProvider, useNotification } from "./components/NotificationProvider";
-import { LanguageProvider } from "./contexts/LanguageContext";
+import { LanguageProvider, useLanguage } from "./contexts/LanguageContext";
 import HolidayStatusModal from "./components/modals/HolidayStatusModal";
 import AppLoader from "./components/AppLoader";
 import { getAssetUrl } from "./utils/publicUrl";
+import { applyAppTheme, applyThemeFromSettings, getStoredTheme } from "./utils/theme";
 
 // Lazy-load pages
 const Login = lazy(() => import("./components/pages/Login"));
-const Home = lazy(() => import("./components/pages/Home"));
+const Home = lazy(() => import("./components/layout/Home"));
 
 // Stable fallback for Suspense so the loader always shows while chunks load (avoids white screen)
 const SUSPENSE_FALLBACK = (
@@ -48,6 +49,23 @@ const LOST_PERMISSION_MODAL_EXIT_MS = 280;
 const NO_CONNECTION_MODAL_EXIT_MS = 280;
 /** Only show "Connection lost" after disconnected this long (avoids modal on window unfocus / brief drops). */
 const NO_CONNECTION_MODAL_DELAY_MS = 2500;
+const UPDATE_MODAL_EXIT_MS = 220;
+
+/** Set to false for normal updater behavior. While true: modal shows on app open with mock data for layout/CSS editing. */
+const FORCE_UPDATE_MODAL_EDIT_PREVIEW = false;
+
+/** Mock updater payload used only when FORCE_UPDATE_MODAL_EDIT_PREVIEW is true. Toggle `phase` to `available` | `downloading` | `downloaded` | `error` while styling. */
+const EDIT_PREVIEW_UPDATER_STATE = {
+  phase: "downloading",
+  policyRequired: false,
+  required: false,
+  currentVersion: "0.1.5",
+  targetVersion: "1.0.0",
+  progress: 52,
+  etaSeconds: 48,
+  message: null,
+  error: null,
+};
 
 /** Backend sends allowedPages; fallback only if backend did not (e.g. old API). */
 const PAGE_REQUIRED_PERMISSIONS_FALLBACK = {
@@ -61,7 +79,7 @@ const PAGE_REQUIRED_PERMISSIONS_FALLBACK = {
   "employees:create": ["employees.create"],
   "employees:edit": ["employees.view", "employees.edit"],
   "employees:profile": ["employees.view", "employees.create"],
-  "settings:home": ["settings.*"],
+  "settings:home": [],
   "audit:list": ["audit.view"],
   "holidays:ask": ["holiday.request"],
   "holidays:list": ["holiday.manage"],
@@ -77,10 +95,14 @@ const PAGE_REQUIRED_PERMISSIONS_FALLBACK = {
   drivers: ["drivers.view"],
   "drivers:profile": ["drivers.view"],
   sync: ["sync.request"],
+  "dataentry:list": ["dataentry.view", "dataentry.create", "dataentry.manage"],
+  "dataentry:create": ["dataentry.create", "dataentry.manage"],
   "cashout:list": ["cashout.request", "cashout.viewAll", "cashout.manage", "transactions.view", "transactions.reject"],
   "cashout:pending": ["cashout.viewPending", "transactions.reject"],
   transactions: ["transactions.view", "transactions.reject", "cashout.viewAll", "cashout.manage"],
   documents: ["documents.create", "documents.use"],
+  recordings: ["calls.recordings"],
+  vaults: [],
 };
 
 function canAccessPage(user, pageId) {
@@ -101,6 +123,12 @@ function AppContent() {
   const [lostPermissionModalExiting, setLostPermissionModalExiting] = useState(false);
   const [wsDisconnected, setWsDisconnected] = useState(false);
   const [noConnectionModalExiting, setNoConnectionModalExiting] = useState(false);
+  const [updaterState, setUpdaterState] = useState(null);
+  const [updateModalDismissed, setUpdateModalDismissed] = useState(false);
+  const [updateModalExiting, setUpdateModalExiting] = useState(false);
+  const [updateActionBusy, setUpdateActionBusy] = useState(false);
+  const [editPreviewDismissed, setEditPreviewDismissed] = useState(false);
+  const updateCheckRequestedRef = useRef(false);
   const wsDisconnectedRef = useRef(false);
   const currentPageRef = useRef("dashboard");
   const [holidayStatus, setHolidayStatus] = useState({ open: false, status: null, payload: null });
@@ -114,8 +142,29 @@ function AppContent() {
   const homeLoaderExitTimeoutRef = useRef(null);
   const showHomeLoaderOverlayRef = useRef(true);
   const pendingWelcomeBackRef = useRef(null);
+  const themeRequestIdRef = useRef(null);
+  const [homeViewKey, setHomeViewKey] = useState("home-anon");
+  const lastPrincipalKeyRef = useRef("");
 
   const notify = useNotification();
+  const { setLanguage } = useLanguage();
+
+  useEffect(() => {
+    // Apply persisted theme immediately before any server sync.
+    applyAppTheme(getStoredTheme());
+  }, []);
+
+  const requestTheme = useCallback(async () => {
+    if (!window.api?.wsSend || !window.api?.wsConnect) return;
+    try {
+      await window.api.wsConnect();
+      const requestId = rid();
+      themeRequestIdRef.current = requestId;
+      await window.api.wsSend({ type: "settings:theme:get", requestId });
+    } catch {
+      // Keep local persisted theme on failure.
+    }
+  }, []);
 
   const transitionToHome = useCallback((user) => {
     transitionToHomeRef.current = user;
@@ -123,11 +172,13 @@ function AppContent() {
     setLoginExiting(true);
     setTimeout(() => {
       setAccount(transitionToHomeRef.current ?? null);
+      const nextLang = transitionToHomeRef.current?.preferences?.language;
+      if (nextLang === "en" || nextLang === "ar") setLanguage(nextLang);
       setPage("home");
       setLoginExiting(false);
       window.api?.focusWindow?.();
     }, LOGIN_EXIT_MS);
-  }, []);
+  }, [setLanguage]);
 
   const onHomeReady = useCallback(() => {
     if (homeLoaderTimeoutRef.current) clearTimeout(homeLoaderTimeoutRef.current);
@@ -249,6 +300,7 @@ function AppContent() {
     // Listen for login (e.g. from main process after auth:login)
     api.onLoggedIn((user) => {
       transitionToHome(user || null);
+      requestTheme();
     });
 
     // Listen for logout — resize to login window then show login
@@ -262,16 +314,132 @@ function AppContent() {
     api.authBootstrap().then((result) => {
       if (result?.status === "OK") {
         transitionToHome(result.user || null);
+        requestTheme();
       } else {
         setAccount(null);
         setPage("login");
       }
     });
-  }, [transitionToHome]);
+  }, [transitionToHome, requestTheme]);
 
   useEffect(() => {
     wsDisconnectedRef.current = wsDisconnected;
   }, [wsDisconnected]);
+
+  useEffect(() => {
+    const api = window.api;
+    if (!api?.onUpdaterState || !api?.updaterGetState) return;
+    const unsub = api.onUpdaterState((state) => {
+      if (!state || typeof state !== "object") return;
+      setUpdaterState(state);
+      const phase = String(state.phase || "");
+      if (phase === "available" || phase === "downloading" || phase === "downloaded" || phase === "error") {
+        setUpdateModalDismissed(false);
+      }
+    });
+    api.updaterGetState().then((state) => {
+      if (state && typeof state === "object") setUpdaterState(state);
+    }).catch(() => {});
+    return () => unsub?.();
+  }, []);
+
+  useEffect(() => {
+    if (page === "login") {
+      updateCheckRequestedRef.current = false;
+      setUpdateModalDismissed(false);
+    }
+  }, [page]);
+
+  useEffect(() => {
+    if (FORCE_UPDATE_MODAL_EDIT_PREVIEW) return;
+    const api = window.api;
+    if (!api?.updaterCheck || page !== "home" || showHomeLoaderOverlay) return;
+    if (updateCheckRequestedRef.current) return;
+    updateCheckRequestedRef.current = true;
+    api.updaterCheck().catch(() => {});
+  }, [page, showHomeLoaderOverlay]);
+
+  const closeOptionalUpdateModal = useCallback(() => {
+    if (FORCE_UPDATE_MODAL_EDIT_PREVIEW) {
+      setEditPreviewDismissed(true);
+      return;
+    }
+    setUpdateModalExiting(true);
+    setTimeout(() => {
+      setUpdateModalDismissed(true);
+      setUpdateModalExiting(false);
+    }, UPDATE_MODAL_EXIT_MS);
+  }, []);
+
+  const startUpdateDownload = useCallback(async () => {
+    if (FORCE_UPDATE_MODAL_EDIT_PREVIEW) return;
+    if (!window.api?.updaterDownload) return;
+    setUpdateActionBusy(true);
+    try {
+      await window.api.updaterDownload();
+    } finally {
+      setUpdateActionBusy(false);
+    }
+  }, []);
+
+  const restartForUpdate = useCallback(async () => {
+    if (FORCE_UPDATE_MODAL_EDIT_PREVIEW) return;
+    if (!window.api?.updaterRestartNow) return;
+    setUpdateActionBusy(true);
+    try {
+      await window.api.updaterRestartNow();
+    } finally {
+      setUpdateActionBusy(false);
+    }
+  }, []);
+
+  const effectiveUpdaterState = FORCE_UPDATE_MODAL_EDIT_PREVIEW
+    ? EDIT_PREVIEW_UPDATER_STATE
+    : updaterState;
+  const updaterPhase = String(effectiveUpdaterState?.phase || "");
+  const updateRequired = !!effectiveUpdaterState?.required;
+  const updateProgress = Number.isFinite(Number(effectiveUpdaterState?.progress))
+    ? Math.max(0, Math.min(100, Number(effectiveUpdaterState?.progress)))
+    : 0;
+  const updateEtaSeconds = Number.isFinite(Number(effectiveUpdaterState?.etaSeconds))
+    ? Math.max(0, Number(effectiveUpdaterState?.etaSeconds))
+    : null;
+  const estimatedLabel = updateEtaSeconds == null
+    ? "Estimating time..."
+    : (updateEtaSeconds <= 0
+      ? "Finishing..."
+      : `Estimated time: ${Math.ceil(updateEtaSeconds / 60)} min left`);
+  const isUpdating = updaterPhase === "downloading";
+  const isDownloaded = updaterPhase === "downloaded";
+  const modalTitle = isUpdating
+    ? "Updating in Background"
+    : (updateRequired ? "Update Required" : "Update Available");
+  const modalText = isUpdating
+    ? "Your new version is being downloaded. Please keep the app open while we finalize the update."
+    : (effectiveUpdaterState?.message || "A new version of the app is available. To continue enjoying new features and security fixes, please update now.");
+  const showUpdateModal =
+    (FORCE_UPDATE_MODAL_EDIT_PREVIEW && !editPreviewDismissed) ||
+    (page === "home" &&
+      !showHomeLoaderOverlay &&
+      (updaterPhase === "available" || updaterPhase === "downloading" || updaterPhase === "downloaded" || updaterPhase === "error") &&
+      (updateRequired || !updateModalDismissed));
+
+  useEffect(() => {
+    const principalKey = account
+      ? [
+          String(account.id || account._id || ""),
+          account?.impersonation?.active ? "imp" : "self",
+          String(account?.impersonation?.actor?.id || ""),
+          String(account?.impersonation?.startedAt || ""),
+        ].join("|")
+      : "home-anon";
+    if (lastPrincipalKeyRef.current && lastPrincipalKeyRef.current !== principalKey) {
+      setHomeViewKey(`home-${principalKey}`);
+    } else if (!lastPrincipalKeyRef.current) {
+      setHomeViewKey(`home-${principalKey}`);
+    }
+    lastPrincipalKeyRef.current = principalKey;
+  }, [account]);
 
   const noConnectionDelayRef = useRef(null);
 
@@ -332,6 +500,17 @@ function AppContent() {
     };
 
     const unsubscribe = api.onWsMessage((msg) => {
+      if (msg?.type === "settings:theme:get:result" && msg?.requestId === themeRequestIdRef.current && msg?.ok) {
+        applyThemeFromSettings({ appearance: msg.appearance || {} });
+        return;
+      }
+      if (msg?.type === "theme:changed") {
+        // Don't override a user-level theme override.
+        const userTheme = account?.preferences?.theme;
+        const canUserTheme = (account?.role?.permissions || []).includes("*") || (account?.role?.permissions || []).includes("settings.user.appearance");
+        if (!canUserTheme || !userTheme) applyAppTheme(msg.theme);
+        return;
+      }
       // 1) Welcome back — always defer to pending; only show when loader is hidden (effect below)
       if (msg?.type === "notify" && msg?.event === "welcome_back") {
         pendingWelcomeBackRef.current = { message: msg.message, title: "Hello there!" };
@@ -365,11 +544,18 @@ function AppContent() {
 
       // 4) Role permissions updated or profile updated — refresh account so UI has latest
       if (msg?.type === "account:roleUpdated" || msg?.type === "account:refresh") {
+        // During active impersonation, ignore generic account refresh pushes to avoid
+        // swapping back to actor context unless impersonation is explicitly stopped.
+        if (account?.impersonation?.active && msg?.type === "account:refresh") return;
         api.authMe?.().then((res) => {
           if (!res?.user) return;
           const newUser = res.user;
           const currentPage = currentPageRef.current;
           setAccount(newUser);
+          // Apply user language override (if any) after account refresh.
+          if (newUser?.preferences?.language === "en" || newUser?.preferences?.language === "ar") {
+            setLanguage(newUser.preferences.language);
+          }
           if (msg?.type === "account:roleUpdated" && !canAccessPage(newUser, currentPage) && currentPage && currentPage !== "dashboard") {
             setLostPermissionModalOpen(true);
             if (api?.wsSend) {
@@ -427,12 +613,16 @@ function AppContent() {
     });
 
     return () => unsubscribe?.();
-  }, [account, holidayStatus.open, showNextHolidayNotification]);
+  }, [account, holidayStatus.open, setLanguage, showNextHolidayNotification]);
+
+  useEffect(() => {
+    if (page !== "home") return;
+    requestTheme();
+  }, [page, requestTheme]);
 
   return (
     <AppErrorBoundary>
-      <LanguageProvider>
-        <Suspense fallback={SUSPENSE_FALLBACK}>
+      <Suspense fallback={SUSPENSE_FALLBACK}>
         {page === "login" ? (
         <Login
           exiting={loginExiting}
@@ -447,6 +637,7 @@ function AppContent() {
           )}
           <div className="app-home-enter">
             <Home
+              key={homeViewKey}
               account={account}
               onActivePageChange={(p) => { currentPageRef.current = p; }}
               lostPermissionRouted={lostPermissionModalOpen}
@@ -518,8 +709,84 @@ function AppContent() {
           </div>
         </div>
       )}
-        </Suspense>
-      </LanguageProvider>
+      {showUpdateModal && (
+        <div
+          className={`appUpdateModal-backdrop ${updateModalExiting ? "appUpdateModal-backdrop--exiting" : ""}`}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="app-update-modal-title"
+        >
+          <div className={`appUpdateModal ${updateModalExiting ? "appUpdateModal--exiting" : ""}`} onClick={(e) => e.stopPropagation()}>
+            <img
+              src={getAssetUrl("assets/undraw/update.svg")}
+              alt=""
+              className={`appUpdateModal-illustration ${isUpdating ? "is-updating" : ""} ${updateRequired ? "is-required" : ""}`}
+              aria-hidden
+            />
+            <h2 className="appUpdateModal-title" id="app-update-modal-title">
+              {modalTitle}
+            </h2>
+            <p className="appUpdateModal-message">{modalText}</p>
+
+            {(isUpdating || isDownloaded) && (
+              <div className="appUpdateModal-progressWrap">
+                <div className="appUpdateModal-progressHeader">
+                  <span>Downloading assets...</span>
+                  <span>{Math.round(updateProgress)}%</span>
+                </div>
+                <div className="appUpdateModal-progressBar" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(updateProgress)}>
+                  <span style={{ width: `${updateProgress}%` }} />
+                </div>
+                <div className="appUpdateModal-progressText">
+                  {isDownloaded
+                    ? "Update downloaded. Restart now to apply."
+                    : (
+                      <>
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="var(--st-accent, #d97706)"
+                          strokeWidth="2"
+                          aria-hidden
+                        >
+                          <circle cx="12" cy="12" r="10" />
+                          <polyline points="12 6 12 12 16 14" />
+                        </svg>
+                        {`${estimatedLabel} - ${Math.round(updateProgress)}% complete`}
+                      </>
+                    )}
+                </div>
+              </div>
+            )}
+
+            {updaterPhase === "error" && (
+              <p className="appUpdateModal-error">
+                {String(effectiveUpdaterState?.error || "Update failed. Please try again.")}
+              </p>
+            )}
+
+            <div className="appUpdateModal-actions">
+              {isDownloaded ? (
+                <button type="button" className="appUpdateModal-primary" onClick={restartForUpdate} disabled={updateActionBusy}>
+                  Restart now
+                </button>
+              ) : (
+                <button type="button" className="appUpdateModal-primary" onClick={startUpdateDownload} disabled={updateActionBusy || updaterPhase === "downloading"}>
+                  {isUpdating ? "Downloading..." : "Update now"}
+                </button>
+              )}
+              {!updateRequired && !isUpdating && !isDownloaded && (
+                <button type="button" className="appUpdateModal-secondary" onClick={closeOptionalUpdateModal} disabled={updateActionBusy}>
+                  Later
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+      </Suspense>
     </AppErrorBoundary>
   );
 }
@@ -527,7 +794,9 @@ function AppContent() {
 export default function App() {
   return (
     <NotificationProvider>
-      <AppContent />
+      <LanguageProvider>
+        <AppContent />
+      </LanguageProvider>
     </NotificationProvider>
   );
 }

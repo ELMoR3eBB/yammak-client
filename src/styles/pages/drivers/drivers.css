@@ -142,6 +142,83 @@
   gap: 16px;
   margin-bottom: 20px;
   flex-wrap: wrap;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(251, 191, 36, 0.22);
+  background:
+    radial-gradient(1200px 400px at -5% -20%, rgba(251, 191, 36, 0.08), transparent 45%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02));
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.driversPage .driversToolbar--stack {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.driversPage .driversToolbarRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.driversPage .driversDateRange {
+  min-width: 240px;
+}
+
+.driversPage .driversDateRange .dateRangePickerTrigger {
+  min-width: 240px;
+  height: 40px;
+}
+
+.driversPage .driversFilterField {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.driversPage .driversFilterLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+  font-weight: 600;
+}
+
+.driversPage .driversFilterInput {
+  height: 38px;
+  min-width: 120px;
+  border-radius: 8px;
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.08));
+  background: var(--st-bg-elevated, #0f0f12);
+  color: var(--st-text, rgba(255, 255, 255, 0.92));
+  padding: 0 10px;
+}
+
+.driversPage .driversFilterInput:focus {
+  outline: none;
+  border-color: var(--st-accent, #fbbf24);
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.14);
+}
+
+/* Hide native number spinners for cleaner filter inputs */
+.driversPage .driversFilterInput[type="number"]::-webkit-outer-spin-button,
+.driversPage .driversFilterInput[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.driversPage .driversFilterInput[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.driversPage .driversFilterMeta {
+  font-size: 12px;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.55));
+  font-weight: 500;
 }
 
 .driversPage .driversToolbar .si-input {
@@ -198,6 +275,162 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+
+.driversPage .driversRepairBtn--ghost {
+  border-color: var(--st-border, rgba(255, 255, 255, 0.1));
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--st-text, rgba(255, 255, 255, 0.9));
+}
+
+.driversPage .driversRepairBtn--ghost:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.driversPage .driversInsightsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.driversPage .driversInsightCard {
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.08));
+  border-radius: 10px;
+  background: var(--st-bg-elevated, #0f0f12);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.driversPage .driversInsightCard--orders { border-color: rgba(59, 130, 246, 0.3); }
+.driversPage .driversInsightCard--balance { border-color: rgba(34, 197, 94, 0.3); }
+.driversPage .driversInsightLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
+}
+
+.driversPage .driversInsightName {
+  font-size: 15px;
+  color: var(--st-text, rgba(255, 255, 255, 0.95));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.driversPage .driversInsightValue {
+  font-size: 13px;
+  color: var(--st-accent, #fbbf24);
+  font-variant-numeric: tabular-nums;
+}
+
+.driversPage .driversTopSections {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.driversPage .driversTopCard {
+  border: 1px solid var(--st-border, rgba(255, 255, 255, 0.08));
+  border-radius: 10px;
+  background: var(--st-bg-elevated, #0f0f12);
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.16);
+}
+
+.driversPage .driversSearchBarWrap {
+  margin-bottom: 14px;
+}
+
+.driversPage .driversSearchBarRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.driversPage .driversSearchBarRow .si-input {
+  max-width: 520px;
+  background: var(--st-bg-elevated, #0f0f12);
+  border-color: var(--st-border, rgba(255, 255, 255, 0.08));
+}
+
+.driversPage .driversDebugPanel {
+  margin: 0;
+  width: 100%;
+  max-height: 220px;
+  overflow: auto;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(8, 10, 14, 0.72);
+  color: #9de0ff;
+  font-size: 11px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.driversPage .driversTopTitle {
+  margin: 0;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--st-border, rgba(255, 255, 255, 0.08));
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.55));
+}
+
+.driversPage .driversTopList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.driversPage .driversTopItem {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.driversPage .driversTopItem:last-child {
+  border-bottom: 0;
+}
+
+.driversPage .driversTopRank {
+  font-size: 12px;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.55));
+}
+
+.driversPage .driversTopName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--st-text, rgba(255, 255, 255, 0.92));
+  font-size: 13px;
+}
+
+.driversPage .driversTopMetric {
+  font-variant-numeric: tabular-nums;
+  color: var(--st-accent, #fbbf24);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.driversPage .driversTopEmpty {
+  padding: 18px 14px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
 }
 
 .driversPage .driversRepairBtn:hover:not(:disabled) {
@@ -415,6 +648,11 @@
 }
 
 @media (max-width: 860px) {
+  .driversPage .driversInsightsGrid,
+  .driversPage .driversTopSections {
+    grid-template-columns: 1fr;
+  }
+
   .driversPage .driversFooter {
     grid-template-columns: 1fr;
     justify-items: center;

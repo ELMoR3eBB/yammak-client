@@ -492,13 +492,15 @@ label span.required {
 }
 
 .hotSendModalBtn--confirm {
-  border: none;
+  border: 1px solid rgba(251, 191, 36, 0.45);
   background: var(--st-accent);
   color: #09090b;
 }
 
 .hotSendModalBtn--confirm:hover:not(:disabled) {
-  opacity: 0.95;
+  background: #f59e0b;
+  border-color: rgba(251, 191, 36, 0.62);
+  opacity: 1;
   transform: translateY(-1px);
 }
 

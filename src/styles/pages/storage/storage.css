@@ -36,21 +36,29 @@
 .storagePage::-webkit-scrollbar {
   width: 10px;
 }
+
 .storagePage::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.04);
   border-radius: 5px;
 }
+
 .storagePage::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.2);
   border-radius: 5px;
 }
+
 .storagePage::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
 }
 
 @keyframes storagePageIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 /* Header */
@@ -121,6 +129,7 @@
 .storageModal input[type="number"] {
   -moz-appearance: textfield;
 }
+
 .storagePage input[type="number"]::-webkit-outer-spin-button,
 .storagePage input[type="number"]::-webkit-inner-spin-button,
 .storageModal input[type="number"]::-webkit-outer-spin-button,
@@ -229,6 +238,7 @@
   text-align: center;
   color: var(--st-text-muted, rgba(255, 255, 255, 0.5));
   font-size: 14px;
+  margin-top: 25px;
 }
 
 .storageSpinner {
@@ -242,7 +252,9 @@
 }
 
 @keyframes storageSpin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .storageEmptyIcon {
@@ -403,6 +415,15 @@
   gap: 8px;
   min-width: 0;
   flex: 1;
+}
+
+.StorageEmptyStateIllustration {
+  width: min(300px, 55vw);
+  height: auto;
+  max-height: 400px;
+  object-fit: contain;
+  opacity: 0.92;
+  margin-bottom: 20px;
 }
 
 .storageCardName {
@@ -649,6 +670,7 @@
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease;
 }
+
 .storageModalClose:hover {
   background: rgba(255, 255, 255, 0.1);
   color: var(--st-text, rgba(255, 255, 255, 0.9));
@@ -669,8 +691,8 @@
   color: var(--st-text-muted, rgba(255, 255, 255, 0.6));
 }
 
-.storageModalLabel + .storageModalInput,
-.storageModalLabel + .storageModalBody > .storageDeleteMessage {
+.storageModalLabel+.storageModalInput,
+.storageModalLabel+.storageModalBody>.storageDeleteMessage {
   margin-top: 0;
 }
 
@@ -687,9 +709,11 @@
   box-sizing: border-box;
   transition: border-color 0.2s ease;
 }
+
 .storageModalInput::placeholder {
   color: var(--st-text-muted, rgba(255, 255, 255, 0.4));
 }
+
 .storageModalInput:focus {
   outline: none;
   border-color: var(--st-accent, #fbbf24);
@@ -716,29 +740,35 @@
   cursor: pointer;
   transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
+
 .storageModalBtn:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.15);
 }
+
 .storageModalBtn--primary {
   background: rgba(251, 191, 36, 0.2);
   border-color: var(--st-accent, #fbbf24);
   color: var(--st-accent, #fbbf24);
 }
+
 .storageModalBtn--primary:hover:not(:disabled) {
   background: rgba(251, 191, 36, 0.3);
   border-color: rgba(251, 191, 36, 0.6);
 }
+
 .storageModalBtn--danger {
   background: rgba(239, 68, 68, 0.15);
   border-color: rgba(239, 68, 68, 0.4);
   color: #fca5a5;
 }
+
 .storageModalBtn--danger:hover:not(:disabled) {
   background: rgba(239, 68, 68, 0.25);
   border-color: rgba(239, 68, 68, 0.6);
   color: #fecaca;
 }
+
 .storageModalBtn:disabled {
   opacity: 0.6;
   cursor: not-allowed;

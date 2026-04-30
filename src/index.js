@@ -4,6 +4,7 @@ import ReactDOM from "react-dom/client";
 import "primereact/resources/themes/lara-light-indigo/theme.css"; // theme
 import "primereact/resources/primereact.min.css";                // core styles
 import "primeicons/primeicons.css";                              // icons
+import "./styles/theme.css";
 
 import { PrimeReactProvider } from "primereact/api";
 import App from "./App";

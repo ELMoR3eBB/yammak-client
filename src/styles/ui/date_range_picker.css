@@ -184,6 +184,36 @@
   gap: 2px;
 }
 
+.dateRangePickerDropGrid--prev {
+  animation: dateRangePickerMonthPrev 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dateRangePickerDropGrid--next {
+  animation: dateRangePickerMonthNext 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes dateRangePickerMonthPrev {
+  from {
+    opacity: 0;
+    transform: translateX(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes dateRangePickerMonthNext {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .dateRangePickerDropDay {
   width: 36px;
   height: 36px;

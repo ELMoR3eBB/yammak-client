@@ -335,35 +335,8 @@
   pointer-events: none;
 }
 
-.settingsBlockTitle {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--st-text-muted);
-  letter-spacing: 0.03em;
-  margin: 0 0 12px 0;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--st-border);
-}
-
-.settingsBlockTitle + .settingsFormBlock {
-  margin-top: 0;
-}
-
-.settingsFormBlock + .settingsFormBlock {
-  margin-top: 24px;
-}
-
-.settingsStaticPerm {
-  display: block;
-  margin-top: 6px;
-  font-family: var(--st-mono, ui-monospace, monospace);
-  font-size: 13px;
-  color: var(--st-text);
-}
-
 .settingsField {
   margin-bottom: 20px;
-  margin-top: 10px;
 }
 .settingsField:last-child {
   margin-bottom: 0;

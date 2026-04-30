@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, screen } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog, screen, session, shell, Notification, clipboard, nativeImage } = require("electron");
 const path = require("path");
 const fs = require("fs");
 const os = require("os");
@@ -7,6 +7,20 @@ const WebSocket = require("ws");
 const FormData = require("form-data");
 const keytar = require("keytar");
 const { machineIdSync } = require("node-machine-id");
+const { autoUpdater } = require("electron-updater");
+const semver = require("semver");
+
+// Load .env from project root so API_BASE is set (no extra dependency)
+try {
+  const envPath = path.join(__dirname, "..", ".env");
+  if (fs.existsSync(envPath)) {
+    const raw = fs.readFileSync(envPath, "utf8");
+    for (const line of raw.split("\n")) {
+      const m = line.match(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$/);
+      if (m) process.env[m[1]] = m[2].replace(/^["']|["']$/g, "").trim();
+    }
+  }
+} catch (_) {}
 
 let win = null;
 let account = null;
@@ -17,11 +31,17 @@ let wsClient = null;
 let rolesCache = [];
 let wsIntentionalClose = false;
 let reconnectTimer = null;
+let wsKeepAliveTimer = null;
+let wsPongTimeoutTimer = null;
 
 // WS request waiters (requestId -> resolve)
 const wsPending = new Map();
+const WS_PING_INTERVAL_MS = 20000;
+const WS_PONG_TIMEOUT_MS = 12000;
 
-const API_BASE = process.env.API_BASE || "http://217.76.50.221:3000";
+const API_BASE = process.env.API_BASE || "https://accounts.yammak.shop";
+const UPDATES_FEED_URL = `${API_BASE.replace(/\/$/, "")}/updates/desktop`;
+const API_BASE_CLEAN = API_BASE.replace(/\/$/, "");
 
 // keytar + file storage
 const SERVICE = "yammak";
@@ -36,14 +56,211 @@ function logError(scope, error) {
   console.error(`[${scope}]`, error?.response?.data || error?.message || error);
 }
 
+function isInvalidTokenError(error) {
+  const status = error?.response?.status;
+  const msg = String(error?.response?.data?.error || error?.message || "").toLowerCase();
+  return status === 401 || msg.includes("invalid token") || msg.includes("jwt expired");
+}
+
 function isDev() {
   return !app.isPackaged;
 }
 
 function getStartUrl() {
-  return isDev()
-    ? "http://localhost:3000"
-    : `file://${path.join(__dirname, "../build/index.html")}`;
+  // In dev we must load the React dev server (never the API domain).
+  // Allow overriding via ELECTRON_START_URL (used by npm script).
+  if (isDev()) {
+    const fromEnv = String(process.env.ELECTRON_START_URL || "").trim();
+    if (fromEnv) return fromEnv;
+    return "http://localhost:3000";
+  }
+  return `file://${path.join(__dirname, "../build/index.html")}`;
+}
+
+// ---------- Auto update ----------
+let updatePolicy = { required: false, minVersion: null, message: null };
+let updateChecking = false;
+let updateDownloaded = false;
+let updateInfoLatest = null;
+let updateState = {
+  phase: "idle", // idle | checking | available | downloading | downloaded | not_available | error
+  required: false,
+  policyRequired: false,
+  currentVersion: app.getVersion(),
+  targetVersion: null,
+  progress: 0,
+  etaSeconds: null,
+  message: null,
+  error: null,
+};
+
+function isVersionLowerThan(current, target) {
+  const c = semver.coerce(String(current || ""));
+  const t = semver.coerce(String(target || ""));
+  if (!c || !t) return false;
+  return semver.lt(c, t);
+}
+
+function computeMustUpdate(policy, targetVersion = null) {
+  if (!policy?.required) return false;
+  const current = app.getVersion();
+  if (policy.minVersion) return isBelowMinVersion(current, policy.minVersion);
+  if (targetVersion) return isVersionLowerThan(current, targetVersion);
+  // If backend marks required but provides no version hints, stay strict.
+  return true;
+}
+
+function publishUpdaterState(patch = {}) {
+  const policyMessage =
+    typeof updatePolicy?.message === "string" && updatePolicy.message.trim()
+      ? updatePolicy.message.trim()
+      : null;
+  updateState = {
+    ...updateState,
+    ...patch,
+    policyRequired: !!updatePolicy?.required,
+    required: computeMustUpdate(updatePolicy, patch?.targetVersion ?? updateState?.targetVersion ?? null),
+    currentVersion: app.getVersion(),
+    message: patch?.message !== undefined ? patch.message : (updateState.message ?? policyMessage),
+  };
+  if (win && !win.isDestroyed()) {
+    win.webContents.send("updater:state", updateState);
+  }
+}
+
+async function fetchUpdatePolicy() {
+  try {
+    const res = await axios.get(`${API_BASE_CLEAN}/api/updates/desktop`, { timeout: 8000 });
+    if (!res?.data?.ok) return updatePolicy;
+    updatePolicy = {
+      required: !!res.data.required,
+      minVersion: typeof res.data.minVersion === "string" ? res.data.minVersion.trim() : null,
+      message: typeof res.data.message === "string" ? res.data.message : null,
+    };
+    return updatePolicy;
+  } catch {
+    return updatePolicy;
+  }
+}
+
+function isBelowMinVersion(current, minVersion) {
+  if (!minVersion) return false;
+  const c = semver.coerce(String(current || ""));
+  const m = semver.coerce(String(minVersion || ""));
+  if (!c || !m) return false;
+  return semver.lt(c, m);
+}
+
+async function ensureUpdaterConfigured() {
+  if (isDev()) return;
+  autoUpdater.setFeedURL({ provider: "generic", url: UPDATES_FEED_URL });
+  // Download only when the user clicks "Update now".
+  autoUpdater.autoDownload = false;
+  // Apply explicitly from "Restart now" (not silently on any quit).
+  autoUpdater.autoInstallOnAppQuit = false;
+}
+
+async function checkForUpdatesWithPolicy({ silent = false } = {}) {
+  if (isDev()) return;
+  if (updateChecking) return;
+  updateChecking = true;
+  try {
+    await ensureUpdaterConfigured();
+    await fetchUpdatePolicy();
+    publishUpdaterState({
+      phase: "checking",
+      error: null,
+      progress: 0,
+      targetVersion: null,
+      message: null,
+    });
+    await autoUpdater.checkForUpdates();
+  } catch (err) {
+    if (!silent) {
+      publishUpdaterState({
+        phase: "error",
+        error: String(err?.message || err || "Update check failed"),
+      });
+    }
+  } finally {
+    updateChecking = false;
+  }
+}
+
+function wireAutoUpdaterEvents() {
+  if (isDev()) return;
+  autoUpdater.on("checking-for-update", () => {
+    publishUpdaterState({
+      phase: "checking",
+      error: null,
+      progress: 0,
+      targetVersion: null,
+    });
+  });
+
+  autoUpdater.on("update-available", (info) => {
+    updateInfoLatest = info || null;
+    updateDownloaded = false;
+    publishUpdaterState({
+      phase: "available",
+      targetVersion: info?.version ? String(info.version) : null,
+      progress: 0,
+      error: null,
+      message: updatePolicy?.message || null,
+    });
+  });
+
+  autoUpdater.on("update-not-available", () => {
+    updateInfoLatest = null;
+    updateDownloaded = false;
+    publishUpdaterState({
+      phase: "not_available",
+      targetVersion: null,
+      progress: 0,
+      error: null,
+    });
+  });
+
+  autoUpdater.on("download-progress", (progressObj) => {
+    const pct = Number(progressObj?.percent);
+    const total = Number(progressObj?.total);
+    const transferred = Number(progressObj?.transferred);
+    const bps = Number(progressObj?.bytesPerSecond);
+    const etaSeconds =
+      Number.isFinite(total) &&
+      Number.isFinite(transferred) &&
+      Number.isFinite(bps) &&
+      bps > 0 &&
+      total >= transferred
+        ? Math.ceil((total - transferred) / bps)
+        : null;
+    publishUpdaterState({
+      phase: "downloading",
+      progress: Number.isFinite(pct) ? Math.max(0, Math.min(100, pct)) : 0,
+      etaSeconds: Number.isFinite(etaSeconds) ? etaSeconds : null,
+      error: null,
+    });
+  });
+
+  autoUpdater.on("update-downloaded", async (info) => {
+    updateDownloaded = true;
+    updateInfoLatest = info || updateInfoLatest;
+    publishUpdaterState({
+      phase: "downloaded",
+      progress: 100,
+      etaSeconds: 0,
+      targetVersion:
+        info?.version ? String(info.version) : (updateInfoLatest?.version ? String(updateInfoLatest.version) : null),
+      error: null,
+    });
+  });
+
+  autoUpdater.on("error", async (err) => {
+    publishUpdaterState({
+      phase: "error",
+      error: String(err?.message || err || "Updater error"),
+    });
+  });
 }
 
 function getAuthFilePath() {
@@ -399,6 +616,7 @@ function createWindow({ mode }) {
     if (bootResult) {
       win.webContents.send("auth:bootstrap:result", bootResult);
     }
+    win.webContents.send("updater:state", updateState);
 
     if (mode === "APP") {
       setWindowToWorkArea();
@@ -410,7 +628,7 @@ function createWindow({ mode }) {
 
 // ---------- WS ----------
 function getWsUrl(accessToken) {
-  const base = API_BASE.replace(/^http/, "ws");
+  const base = API_BASE.replace(/^https/, "wss");
   return `${base}/ws?token=${encodeURIComponent(accessToken)}`;
 }
 
@@ -420,8 +638,50 @@ function forwardToRenderer(msg) {
   }
 }
 
+function emitWsDisconnected() {
+  if (win && !win.isDestroyed()) {
+    win.webContents.send("ws:disconnected");
+  }
+}
+
+function emitWsConnected() {
+  if (win && !win.isDestroyed()) {
+    win.webContents.send("ws:connected");
+  }
+}
+
 function rid() {
   return Math.random().toString(36).slice(2) + Date.now().toString(36);
+}
+
+function stopWsKeepAlive() {
+  if (wsKeepAliveTimer) {
+    clearInterval(wsKeepAliveTimer);
+    wsKeepAliveTimer = null;
+  }
+  if (wsPongTimeoutTimer) {
+    clearTimeout(wsPongTimeoutTimer);
+    wsPongTimeoutTimer = null;
+  }
+}
+
+function startWsKeepAlive(socket) {
+  stopWsKeepAlive();
+  wsKeepAliveTimer = setInterval(() => {
+    if (!socket || socket.readyState !== WebSocket.OPEN) return;
+    try {
+      socket.ping();
+      if (wsPongTimeoutTimer) clearTimeout(wsPongTimeoutTimer);
+      wsPongTimeoutTimer = setTimeout(() => {
+        wsPongTimeoutTimer = null;
+        try {
+          socket.terminate();
+        } catch (_) {}
+      }, WS_PONG_TIMEOUT_MS);
+    } catch (error) {
+      logError("ws:keepalive:ping", error);
+    }
+  }, WS_PING_INTERVAL_MS);
 }
 
 function ensureWsConnected() {
@@ -451,17 +711,16 @@ function ensureWsConnected() {
 
         const socket = new WebSocket(getWsUrl(local.accessToken));
         wsClient = socket;
+        let disconnectHandled = false;
 
         const onOpen = () => {
           cleanup();
+          startWsKeepAlive(socket);
+          emitWsConnected();
 
           if (reconnectTimer) {
             clearInterval(reconnectTimer);
             reconnectTimer = null;
-
-            if (win && !win.isDestroyed()) {
-              win.webContents.send("ws:connected");
-            }
           }
 
           try {
@@ -474,12 +733,22 @@ function ensureWsConnected() {
         };
 
         const onError = (error) => {
+          stopWsKeepAlive();
+          if (wsClient === socket) {
+            wsClient = null;
+          }
+          if (!disconnectHandled) {
+            disconnectHandled = true;
+            emitWsDisconnected();
+            scheduleReconnect();
+          }
           cleanup();
           reject(error || new Error("WebSocket connection failed"));
         };
 
         const onClose = () => {
           const wasIntentional = wsIntentionalClose;
+          stopWsKeepAlive();
 
           if (wsClient === socket) {
             wsClient = null;
@@ -490,11 +759,11 @@ function ensureWsConnected() {
             return;
           }
 
-          if (win && !win.isDestroyed()) {
-            win.webContents.send("ws:disconnected");
+          if (!disconnectHandled) {
+            disconnectHandled = true;
+            emitWsDisconnected();
+            scheduleReconnect();
           }
-
-          scheduleReconnect();
         };
 
         const cleanup = () => {
@@ -506,6 +775,12 @@ function ensureWsConnected() {
         socket.once("open", onOpen);
         socket.once("error", onError);
         socket.on("close", onClose);
+        socket.on("pong", () => {
+          if (wsPongTimeoutTimer) {
+            clearTimeout(wsPongTimeoutTimer);
+            wsPongTimeoutTimer = null;
+          }
+        });
 
         socket.on("message", (data) => {
           let msg;
@@ -595,6 +870,7 @@ async function wsRequest(type, payload, timeoutMs = 8000) {
 
 function closeWs() {
   wsIntentionalClose = true;
+  stopWsKeepAlive();
 
   if (wsClient) {
     try {
@@ -616,6 +892,16 @@ function closeWs() {
 
 // ---------- App lifecycle ----------
 app.whenReady().then(async () => {
+  try {
+    session.defaultSession.setPermissionRequestHandler((wc, permission, callback) => {
+      callback(permission === "geolocation");
+    });
+  } catch (error) {
+    logError("setPermissionRequestHandler", error);
+  }
+
+  wireAutoUpdaterEvents();
+
   bootResult = await bootstrapAuth();
   const startMode = bootResult.status === "OK" ? "APP" : "LOGIN";
 
@@ -628,6 +914,9 @@ app.whenReady().then(async () => {
       logError("appReady:ensureWsConnected", error);
     }
   }
+
+  // Periodic refresh of update state; UI-triggered checks handle immediate prompts.
+  setInterval(() => { checkForUpdatesWithPolicy({ silent: true }); }, 30 * 60 * 1000);
 });
 
 app.on("window-all-closed", () => {
@@ -655,7 +944,7 @@ ipcMain.handle("auth:bootstrap", async () => {
   return result;
 });
 
-ipcMain.handle("auth:login", async (event, { email, password }) => {
+ipcMain.handle("auth:login", async (event, { email, password, geo }) => {
   const deviceId = getDeviceId();
   const deviceName = getDeviceName();
 
@@ -678,7 +967,15 @@ ipcMain.handle("auth:login", async (event, { email, password }) => {
       password,
       deviceId,
       deviceName,
-      countryCode: countryCode || undefined
+      countryCode: countryCode || undefined,
+      geo:
+        geo && typeof geo === "object"
+          ? {
+              latitude: Number(geo.latitude),
+              longitude: Number(geo.longitude),
+              altitude: geo.altitude != null ? Number(geo.altitude) : null,
+            }
+          : undefined,
     });
   } catch (error) {
     if (error.response?.status === 423 && error.response?.data?.error === "account_locked") {
@@ -767,14 +1064,25 @@ ipcMain.handle("stats:get", async () => {
 });
 
 ipcMain.handle("ws:connect", async () => {
-  await ensureWsConnected();
-  return { ok: true };
+  try {
+    await ensureWsConnected();
+    return { ok: true };
+  } catch (error) {
+    emitWsDisconnected();
+    return { ok: false, error: error?.message || "connect_failed" };
+  }
 });
 
 ipcMain.handle("ws:send", async (event, msg) => {
-  await ensureWsConnected();
-  wsSend(msg);
-  return { ok: true };
+  try {
+    await ensureWsConnected();
+    wsSend(msg);
+    return { ok: true };
+  } catch (error) {
+    emitWsDisconnected();
+    scheduleReconnect();
+    return { ok: false, error: error?.message || "send_failed" };
+  }
 });
 
 ipcMain.handle("roles:getCache", async () => ({ roles: rolesCache }));
@@ -795,6 +1103,117 @@ ipcMain.handle("window:focus", async () => {
   }
 
   return { ok: true };
+});
+
+ipcMain.handle("desktop:notify", async (event, payload = {}) => {
+  try {
+    const title = typeof payload?.title === "string" && payload.title.trim() ? payload.title.trim() : "Yammak";
+    const body = typeof payload?.body === "string" ? payload.body.trim() : "";
+
+    if (!Notification?.isSupported?.()) {
+      return { ok: false, error: "unsupported" };
+    }
+
+    const n = new Notification({
+      title,
+      body,
+      silent: false,
+      urgency: "normal",
+    });
+
+    n.show();
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error: error?.message || "notify_failed" };
+  }
+});
+
+ipcMain.handle("updater:getState", async () => {
+  if (isDev()) return { ...updateState, phase: "idle" };
+  try {
+    await ensureUpdaterConfigured();
+    await fetchUpdatePolicy();
+    publishUpdaterState({});
+  } catch {
+    // keep last state
+  }
+  return updateState;
+});
+
+ipcMain.handle("updater:check", async () => {
+  if (isDev()) return { ok: true, state: updateState };
+  await checkForUpdatesWithPolicy({ silent: false });
+  return { ok: true, state: updateState };
+});
+
+ipcMain.handle("updater:download", async () => {
+  if (isDev()) return { ok: false, error: "dev_mode" };
+  try {
+    await ensureUpdaterConfigured();
+    await fetchUpdatePolicy();
+    if (updateDownloaded || updateState.phase === "downloaded") {
+      return { ok: true, state: updateState };
+    }
+    publishUpdaterState({
+      phase: "downloading",
+      progress: Math.max(0, Number(updateState.progress || 0)),
+      error: null,
+    });
+    await autoUpdater.downloadUpdate();
+    return { ok: true, state: updateState };
+  } catch (error) {
+    publishUpdaterState({
+      phase: "error",
+      error: String(error?.message || error || "download_failed"),
+    });
+    return { ok: false, error: error?.message || "download_failed", state: updateState };
+  }
+});
+
+ipcMain.handle("updater:restartNow", async () => {
+  if (isDev()) return { ok: false, error: "dev_mode" };
+  try {
+    // Apply update silently and relaunch app after install.
+    autoUpdater.quitAndInstall(false, true);
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error: error?.message || "restart_failed" };
+  }
+});
+
+ipcMain.handle("clipboard:copyImage", async (event, payload = {}) => {
+  try {
+    const input = String(payload?.url || "").trim();
+    if (!input) return { ok: false, error: "invalid_url" };
+
+    let img = null;
+    if (input.startsWith("data:image/")) {
+      img = nativeImage.createFromDataURL(input);
+    } else {
+      const res = await axios.get(input, { responseType: "arraybuffer", timeout: 12000 });
+      const buf = Buffer.from(res.data);
+      img = nativeImage.createFromBuffer(buf);
+    }
+
+    if (!img || img.isEmpty()) return { ok: false, error: "invalid_image" };
+    clipboard.writeImage(img);
+    return { ok: true };
+  } catch (error) {
+    logError("clipboard:copyImage", error);
+    return { ok: false, error: error?.message || "copy_failed" };
+  }
+});
+
+ipcMain.handle("shell:openExternal", async (event, url) => {
+  if (typeof url !== "string" || !url.trim()) return { ok: false, error: "invalid" };
+  const u = url.trim();
+  if (!/^tel:/i.test(u)) return { ok: false, error: "unsupported" };
+  try {
+    await shell.openExternal(u);
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, error: err?.message || "open_failed" };
+  }
 });
 
 ipcMain.handle("app:quit", () => {
@@ -853,15 +1272,24 @@ ipcMain.handle("auth:impersonateStart", async (event, { targetEmployeeId }) => {
       return { ok: false, error: "Invalid impersonation response" };
     }
 
+    const ensured = await ensureRoleAndReturn(
+      out.user,
+      local.deviceId || getDeviceId(),
+      local.deviceName || getDeviceName()
+    );
+    if (ensured.status !== "OK" || !ensured.user) {
+      return { ok: false, error: "Failed to resolve impersonated account permissions" };
+    }
+
     await applyAccessTokenAndAccount({
       accessToken: out.accessToken,
-      user: out.user
+      user: ensured.user
     });
 
     return {
       ok: true,
-      user: out.user,
-      impersonation: out.impersonation || out.user?.impersonation || null
+      user: ensured.user,
+      impersonation: out.impersonation || ensured.user?.impersonation || null
     };
   } catch (error) {
     const msg =
@@ -884,12 +1312,21 @@ ipcMain.handle("auth:impersonateStop", async () => {
       return { ok: false, error: "Invalid impersonation response" };
     }
 
+    const ensured = await ensureRoleAndReturn(
+      out.user,
+      local.deviceId || getDeviceId(),
+      local.deviceName || getDeviceName()
+    );
+    if (ensured.status !== "OK" || !ensured.user) {
+      return { ok: false, error: "Failed to resolve account after impersonation stop" };
+    }
+
     await applyAccessTokenAndAccount({
       accessToken: out.accessToken,
-      user: out.user
+      user: ensured.user
     });
 
-    return { ok: true, user: out.user };
+    return { ok: true, user: ensured.user };
   } catch (error) {
     const msg =
       error?.response?.data?.error || error?.message || "Failed to stop impersonation";
@@ -908,6 +1345,19 @@ ipcMain.handle("dialog:pickImage", async () => {
   }
 
   return { ok: true, path: res.filePaths[0] };
+});
+
+ipcMain.handle("dialog:pickImages", async () => {
+  const res = await dialog.showOpenDialog({
+    properties: ["openFile", "multiSelections"],
+    filters: [{ name: "Images", extensions: ["png", "jpg", "jpeg", "webp"] }]
+  });
+
+  if (res.canceled || !res.filePaths?.length) {
+    return { ok: false };
+  }
+
+  return { ok: true, paths: res.filePaths.slice(0, 8) };
 });
 
 ipcMain.handle("files:toDataUrl", async (event, filePath) => {
@@ -983,9 +1433,99 @@ ipcMain.handle("uploads:employees", async (event, files) => {
 
     return res.data;
   } catch (error) {
+    // Token may have expired while app is open; refresh and retry once.
+    if (isInvalidTokenError(error) && local.refreshToken) {
+      try {
+        const refreshed = await apiRefresh(local.refreshToken, getDeviceName());
+        await writeLocalAuth({
+          accessToken: refreshed.accessToken,
+          refreshToken: refreshed.refreshToken,
+          deviceId: local.deviceId || getDeviceId(),
+          deviceName: local.deviceName || getDeviceName()
+        });
+        const retry = await axios.post(`${API_BASE}/uploads/employees`, fd, {
+          headers: {
+            Authorization: `Bearer ${refreshed.accessToken}`,
+            ...fd.getHeaders()
+          },
+          maxBodyLength: Infinity,
+          maxContentLength: Infinity
+        });
+        return retry.data;
+      } catch (retryErr) {
+        logError("uploads:employees:retry", retryErr);
+      }
+    }
     logError("uploads:employees", error);
     const msg = error?.response?.data?.error || "Upload failed";
     return { ok: false, error: msg };
+  }
+});
+
+ipcMain.handle("uploads:chatImage", async (event, { filePath }) => {
+  const accessToken = await getDocumentsAuth();
+  if (!accessToken) return { ok: false, error: "Not authenticated" };
+  if (!filePath || !fs.existsSync(filePath)) return { ok: false, error: "Image required" };
+
+  const fd = new FormData();
+  fd.append("image", fs.createReadStream(filePath), path.basename(filePath));
+  try {
+    const res = await axios.post(`${API_BASE}/uploads/chat-image`, fd, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        ...fd.getHeaders()
+      },
+      maxBodyLength: Infinity,
+      maxContentLength: Infinity
+    });
+    return res.data;
+  } catch (error) {
+    logError("uploads:chatImage", error);
+    const status = error?.response?.status;
+    const data = error?.response?.data;
+    const msg =
+      data?.error ||
+      data?.message ||
+      (typeof data === "string" ? data : null) ||
+      error?.message ||
+      "Upload failed";
+    return { ok: false, error: String(msg), status, details: data };
+  }
+});
+
+ipcMain.handle("uploads:chatImageFromBuffer", async (event, { arrayBuffer, fileName }) => {
+  const accessToken = await getDocumentsAuth();
+  if (!accessToken) return { ok: false, error: "Not authenticated" };
+  if (!arrayBuffer || !(arrayBuffer instanceof ArrayBuffer)) return { ok: false, error: "Image required" };
+
+  const ext = path.extname(String(fileName || "")).toLowerCase() || ".png";
+  const tmpPath = path.join(os.tmpdir(), `chat-image-${Date.now()}-${Math.random().toString(16).slice(2)}${ext}`);
+  try {
+    fs.writeFileSync(tmpPath, Buffer.from(arrayBuffer));
+    const fd = new FormData();
+    fd.append("image", fs.createReadStream(tmpPath), fileName || `image${ext}`);
+    const res = await axios.post(`${API_BASE}/uploads/chat-image`, fd, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        ...fd.getHeaders()
+      },
+      maxBodyLength: Infinity,
+      maxContentLength: Infinity
+    });
+    return res.data;
+  } catch (error) {
+    logError("uploads:chatImageFromBuffer", error);
+    const status = error?.response?.status;
+    const data = error?.response?.data;
+    const msg =
+      data?.error ||
+      data?.message ||
+      (typeof data === "string" ? data : null) ||
+      error?.message ||
+      "Upload failed";
+    return { ok: false, error: String(msg), status, details: data };
+  } finally {
+    try { fs.unlinkSync(tmpPath); } catch {}
   }
 });
 
@@ -1061,6 +1601,26 @@ ipcMain.handle("documents:list", async () => {
 
     return { ok: true, documents: res.data.documents || [] };
   } catch (error) {
+    if (isInvalidTokenError(error)) {
+      const local = await readLocalAuth();
+      if (local.refreshToken) {
+        try {
+          const refreshed = await apiRefresh(local.refreshToken, getDeviceName());
+          await writeLocalAuth({
+            accessToken: refreshed.accessToken,
+            refreshToken: refreshed.refreshToken,
+            deviceId: local.deviceId || getDeviceId(),
+            deviceName: local.deviceName || getDeviceName()
+          });
+          const retry = await axios.get(`${API_BASE}/api/documents`, {
+            headers: { Authorization: `Bearer ${refreshed.accessToken}` }
+          });
+          return { ok: true, documents: retry.data.documents || [] };
+        } catch (retryErr) {
+          logError("documents:list:retry", retryErr);
+        }
+      }
+    }
     logError("documents:list", error);
 
     const msg =
@@ -1098,6 +1658,31 @@ ipcMain.handle("documents:upload", async (event, { title, filePath }) => {
 
     return res.data;
   } catch (error) {
+    if (isInvalidTokenError(error)) {
+      const local = await readLocalAuth();
+      if (local.refreshToken) {
+        try {
+          const refreshed = await apiRefresh(local.refreshToken, getDeviceName());
+          await writeLocalAuth({
+            accessToken: refreshed.accessToken,
+            refreshToken: refreshed.refreshToken,
+            deviceId: local.deviceId || getDeviceId(),
+            deviceName: local.deviceName || getDeviceName()
+          });
+          const retry = await axios.post(`${API_BASE}/api/documents`, fd, {
+            headers: {
+              Authorization: `Bearer ${refreshed.accessToken}`,
+              ...fd.getHeaders()
+            },
+            maxBodyLength: Infinity,
+            maxContentLength: Infinity
+          });
+          return retry.data;
+        } catch (retryErr) {
+          logError("documents:upload:retry", retryErr);
+        }
+      }
+    }
     logError("documents:upload", error);
     const msg = error?.response?.data?.error || "Upload failed";
     return { ok: false, error: msg };
@@ -1130,16 +1715,44 @@ ipcMain.handle("documents:uploadFromBuffer", async (event, { title, arrayBuffer,
       title || (fileName ? path.basename(fileName, ".pdf") : "Untitled") || "Untitled"
     );
 
-    const res = await axios.post(`${API_BASE}/api/documents`, fd, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        ...fd.getHeaders()
-      },
-      maxBodyLength: Infinity,
-      maxContentLength: Infinity
-    });
-
-    return res.data;
+    try {
+      const res = await axios.post(`${API_BASE}/api/documents`, fd, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          ...fd.getHeaders()
+        },
+        maxBodyLength: Infinity,
+        maxContentLength: Infinity
+      });
+      return res.data;
+    } catch (error) {
+      if (isInvalidTokenError(error)) {
+        const local = await readLocalAuth();
+        if (local.refreshToken) {
+          try {
+            const refreshed = await apiRefresh(local.refreshToken, getDeviceName());
+            await writeLocalAuth({
+              accessToken: refreshed.accessToken,
+              refreshToken: refreshed.refreshToken,
+              deviceId: local.deviceId || getDeviceId(),
+              deviceName: local.deviceName || getDeviceName()
+            });
+            const retry = await axios.post(`${API_BASE}/api/documents`, fd, {
+              headers: {
+                Authorization: `Bearer ${refreshed.accessToken}`,
+                ...fd.getHeaders()
+              },
+              maxBodyLength: Infinity,
+              maxContentLength: Infinity
+            });
+            return retry.data;
+          } catch (retryErr) {
+            logError("documents:uploadFromBuffer:retry", retryErr);
+          }
+        }
+      }
+      throw error;
+    }
   } catch (error) {
     logError("documents:uploadFromBuffer", error);
     const msg = error?.response?.data?.error || "Upload failed";
@@ -1379,5 +1992,303 @@ ipcMain.handle("storage:delete", async (event, id) => {
     logError("storage:delete", error);
     const msg = error?.response?.data?.error || "Delete failed";
     return { ok: false, error: msg };
+  }
+});
+
+// ---------- Call recordings (FreePBX CDR) API — permission: calls.recordings ----------
+ipcMain.handle("vaults:list", async () => {
+  const accessToken = await getDocumentsAuth();
+
+  if (!accessToken) {
+    return { ok: false, error: "Not authenticated" };
+  }
+
+  try {
+    const res = await axios.get(`${API_BASE}/api/vaults`, {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+
+    return {
+      ok: true,
+      items: res.data.items || [],
+      categories: res.data.categories || []
+    };
+  } catch (error) {
+    logError("vaults:list", error);
+    const msg = error?.response?.data?.error || "Failed to load vault";
+    return { ok: false, error: msg, items: [], categories: [] };
+  }
+});
+
+ipcMain.handle("vaults:createCategory", async (event, { name, color }) => {
+  const accessToken = await getDocumentsAuth();
+
+  if (!accessToken) {
+    return { ok: false, error: "Not authenticated" };
+  }
+
+  try {
+    const res = await axios.post(
+      `${API_BASE}/api/vaults/categories`,
+      { name, color },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    return res.data;
+  } catch (error) {
+    logError("vaults:createCategory", error);
+    const msg = error?.response?.data?.error || "Failed to create category";
+    return { ok: false, error: msg };
+  }
+});
+
+ipcMain.handle("vaults:create", async (event, payload) => {
+  const accessToken = await getDocumentsAuth();
+
+  if (!accessToken) {
+    return { ok: false, error: "Not authenticated" };
+  }
+
+  try {
+    const res = await axios.post(`${API_BASE}/api/vaults`, payload, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json"
+      }
+    });
+
+    return res.data;
+  } catch (error) {
+    logError("vaults:create", error);
+    const msg = error?.response?.data?.error || "Failed to create vault item";
+    return { ok: false, error: msg };
+  }
+});
+
+ipcMain.handle("vaults:update", async (event, { id, ...payload }) => {
+  const accessToken = await getDocumentsAuth();
+
+  if (!accessToken) {
+    return { ok: false, error: "Not authenticated" };
+  }
+
+  if (!id) {
+    return { ok: false, error: "Vault item id is required" };
+  }
+
+  try {
+    const res = await axios.patch(`${API_BASE}/api/vaults/${id}`, payload, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json"
+      }
+    });
+
+    return res.data;
+  } catch (error) {
+    logError("vaults:update", error);
+    const msg = error?.response?.data?.error || "Failed to update vault item";
+    return { ok: false, error: msg };
+  }
+});
+
+ipcMain.handle("vaults:delete", async (event, id) => {
+  const accessToken = await getDocumentsAuth();
+
+  if (!accessToken) {
+    return { ok: false, error: "Not authenticated" };
+  }
+
+  if (!id) {
+    return { ok: false, error: "Vault item id is required" };
+  }
+
+  try {
+    await axios.delete(`${API_BASE}/api/vaults/${id}`, {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+
+    return { ok: true };
+  } catch (error) {
+    logError("vaults:delete", error);
+    const msg = error?.response?.data?.error || "Failed to delete vault item";
+    return { ok: false, error: msg };
+  }
+});
+
+ipcMain.handle("vaults:reorder", async (event, itemIds) => {
+  const accessToken = await getDocumentsAuth();
+
+  if (!accessToken) {
+    return { ok: false, error: "Not authenticated" };
+  }
+
+  try {
+    const res = await axios.patch(
+      `${API_BASE}/api/vaults/reorder`,
+      { itemIds: Array.isArray(itemIds) ? itemIds : [] },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    return res.data;
+  } catch (error) {
+    logError("vaults:reorder", error);
+    const msg = error?.response?.data?.error || "Failed to reorder vault items";
+    return { ok: false, error: msg };
+  }
+});
+
+ipcMain.handle("calls:list", async (event, params = {}) => {
+  const accessToken = await getDocumentsAuth();
+
+  if (!accessToken) {
+    return { ok: false, error: "Not authenticated" };
+  }
+
+  const q = new URLSearchParams();
+  if (params.page != null) q.set("page", String(params.page));
+  if (params.limit != null) q.set("limit", String(params.limit));
+  if (params.hasRecording !== undefined) {
+    q.set("hasRecording", params.hasRecording ? "true" : "false");
+  }
+  if (params.src) q.set("src", String(params.src));
+  if (params.dst) q.set("dst", String(params.dst));
+  if (params.direction) q.set("direction", String(params.direction));
+  if (params.disposition) q.set("disposition", String(params.disposition));
+  if (params.from) q.set("from", String(params.from));
+  if (params.to) q.set("to", String(params.to));
+  if (params.fromEmployeeIds) q.set("fromEmployeeIds", String(params.fromEmployeeIds));
+
+  const qs = q.toString();
+  const url = `${API_BASE}/api/calls${qs ? `?${qs}` : ""}`;
+
+  try {
+    const res = await axios.get(url, {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+
+    return {
+      ok: true,
+      items: res.data.items || [],
+      page: res.data.page ?? 1,
+      limit: res.data.limit ?? 50,
+      total: res.data.total ?? 0,
+      pages: res.data.pages ?? 1,
+      scanCapped: Boolean(res.data.scanCapped),
+      scanned: res.data.scanned
+    };
+  } catch (error) {
+    logError("calls:list", error);
+
+    const msg =
+      error?.response?.data?.error ||
+      (error?.response?.status === 403 ? "forbidden" : "Failed to load calls");
+
+    return { ok: false, error: msg };
+  }
+});
+
+ipcMain.handle("calls:analytics", async (event, params = {}) => {
+  const accessToken = await getDocumentsAuth();
+
+  if (!accessToken) {
+    return { ok: false, error: "Not authenticated" };
+  }
+
+  const q = new URLSearchParams();
+  if (params.from) q.set("from", String(params.from));
+  if (params.to) q.set("to", String(params.to));
+  if (params.hasRecording !== undefined) {
+    q.set("hasRecording", params.hasRecording ? "true" : "false");
+  }
+
+  const qs = q.toString();
+  const url = `${API_BASE}/api/calls/analytics${qs ? `?${qs}` : ""}`;
+
+  try {
+    const res = await axios.get(url, {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+    return { ok: true, data: res.data };
+  } catch (error) {
+    logError("calls:analytics", error);
+    const msg =
+      error?.response?.data?.error ||
+      (error?.response?.status === 403 ? "forbidden" : "Failed to load analytics");
+    return { ok: false, error: msg };
+  }
+});
+
+ipcMain.handle("calls:getAudio", async (event, uniqueid) => {
+  const accessToken = await getDocumentsAuth();
+
+  if (!accessToken) {
+    return { ok: false, error: "Not authenticated" };
+  }
+
+  if (!uniqueid || typeof uniqueid !== "string") {
+    return { ok: false, error: "uniqueid required" };
+  }
+
+  try {
+    const res = await axios.get(`${API_BASE}/api/calls/${encodeURIComponent(uniqueid)}/audio`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      responseType: "arraybuffer",
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity
+    });
+
+    const ct = res.headers["content-type"] || "audio/wav";
+    const base64 = Buffer.from(res.data).toString("base64");
+    return { ok: true, dataUrl: `data:${ct};base64,${base64}` };
+  } catch (error) {
+    logError("calls:getAudio", error);
+    return {
+      ok: false,
+      error: error?.response?.status === 404 ? "not_found" : "Failed to load audio"
+    };
+  }
+});
+
+ipcMain.handle("calls:delete", async (event, uniqueid) => {
+  const accessToken = await getDocumentsAuth();
+
+  if (!accessToken) {
+    return { ok: false, error: "Not authenticated" };
+  }
+
+  if (!uniqueid || typeof uniqueid !== "string") {
+    return { ok: false, error: "uniqueid required" };
+  }
+
+  try {
+    const res = await axios.delete(`${API_BASE}/api/calls/${encodeURIComponent(uniqueid)}`, {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+
+    return {
+      ok: true,
+      uniqueid: res.data?.uniqueid ?? uniqueid,
+      deletedFromSource: Boolean(res.data?.deletedFromSource),
+      deletedFile: Boolean(res.data?.deletedFile),
+    };
+  } catch (error) {
+    logError("calls:delete", error);
+    return {
+      ok: false,
+      error:
+        error?.response?.data?.error ||
+        (error?.response?.status === 404 ? "not_found" : "Failed to delete recording")
+    };
   }
 });

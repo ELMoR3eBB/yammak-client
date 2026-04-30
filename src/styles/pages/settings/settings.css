@@ -239,6 +239,53 @@
   transition: transform 0.2s var(--st-ease), opacity 0.2s var(--st-ease);
 }
 
+.settingsPage .settingsThemeRow{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.settingsPage .settingsThemeOption{
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  border-radius: var(--st-radius);
+  padding: 14px;
+  text-align: left;
+  color: var(--st-text);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: border-color 0.2s var(--st-ease), background 0.2s var(--st-ease), transform 0.2s var(--st-ease);
+}
+
+.settingsPage .settingsThemeOption:hover:not(:disabled){
+  border-color: rgba(251, 191, 36, 0.35);
+  background: var(--st-surface-hover);
+  transform: translateY(-1px);
+}
+
+.settingsPage .settingsThemeOption.active{
+  border-color: rgba(251, 191, 36, 0.5);
+  background: var(--st-accent-soft);
+}
+
+.settingsPage .settingsThemeOption:disabled{
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.settingsPage .settingsThemeOptionTitle{
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.settingsPage .settingsThemeOptionSub{
+  font-size: 12px;
+  color: var(--st-text-muted);
+}
+
 .settingsPage .settingsEmpty{
   flex: 1;
   display: flex;

@@ -74,6 +74,21 @@
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+@keyframes dashboardSectionInLeft {
+  from { opacity: 0; transform: translateX(-26px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes dashboardSectionInRight {
+  from { opacity: 0; transform: translateX(26px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes dashboardSectionInTop {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 @keyframes dashboardListItemEnter {
   from { opacity: 0; transform: translateX(-6px); }
   to { opacity: 1; transform: translateX(0); }
@@ -467,6 +482,10 @@
   animation: dashboardMainIn 0.4s var(--st-ease) backwards;
 }
 
+.dashboardPage .dashboardSection--from-left { animation-name: dashboardSectionInLeft; }
+.dashboardPage .dashboardSection--from-right { animation-name: dashboardSectionInRight; }
+.dashboardPage .dashboardSection--from-top { animation-name: dashboardSectionInTop; }
+
 .dashboardPage .dashboardSection:nth-child(1){ animation-delay: 0.02s; }
 .dashboardPage .dashboardSection:nth-child(2){ animation-delay: 0.06s; }
 .dashboardPage .dashboardSection:nth-child(3){ animation-delay: 0.1s; }
@@ -493,6 +512,29 @@
   opacity: 1;
   transform: translateY(0);
 }
+
+.dashboardPage .dashboardSection--scroll.dashboardSection--from-left { transform: translateX(-26px); }
+.dashboardPage .dashboardSection--scroll.dashboardSection--from-right { transform: translateX(26px); }
+.dashboardPage .dashboardSection--scroll.dashboardSection--from-top { transform: translateY(-20px); }
+
+.dashboardPage .dashboardSection--scroll.dashboardSection--inView.dashboardSection--from-left,
+.dashboardPage .dashboardSection--scroll.dashboardSection--inView.dashboardSection--from-right,
+.dashboardPage .dashboardSection--scroll.dashboardSection--inView.dashboardSection--from-top {
+  transform: translate(0, 0);
+}
+
+.dashboardPage .dashboardBlockEnter {
+  opacity: 0;
+  animation: dashboardSectionInTop 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.dashboardPage .dashboardBlockEnter--right { animation-name: dashboardSectionInRight; }
+.dashboardPage .dashboardBlockEnter--left { animation-name: dashboardSectionInLeft; }
+.dashboardPage .dashboardBlockEnter--top { animation-name: dashboardSectionInTop; }
+
+.dashboardPage .dashboardAsideColumn > .dashboardBlockEnter:nth-child(1) { animation-delay: 0.08s; }
+.dashboardPage .dashboardAsideColumn > .dashboardBlockEnter:nth-child(2) { animation-delay: 0.14s; }
+.dashboardPage .dashboardAsideColumn > .dashboardBlockEnter:nth-child(3) { animation-delay: 0.2s; }
 
 .dashboardPage .dashboardSectionTitle{
   margin: 0 0 16px 0;
@@ -1296,6 +1338,23 @@
 .dashboardPage .dashboardKpiSummarySection .dashboardKpiChevron{
   margin-left: 10px;
   flex-shrink: 0;
+}
+
+.dashboardPage .dashboardArqamSection .dashboardKpiGrid--summary{
+  grid-template-columns: minmax(220px, 1fr);
+}
+
+.dashboardPage .dashboardKpiCard--arqam{
+  border-color: rgba(251, 191, 36, 0.22);
+  background:
+    linear-gradient(165deg, rgba(251, 191, 36, 0.08), rgba(251, 191, 36, 0.03)),
+    var(--st-surface);
+}
+
+.dashboardPage .dashboardArqamCountdown{
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--st-text-muted);
 }
 
 /* ——— Store performance ranking ——— */
@@ -2211,7 +2270,15 @@
     border-color var(--st-duration) var(--st-ease),
     background var(--st-duration) var(--st-ease),
     box-shadow var(--st-duration) var(--st-ease);
+  opacity: 0;
+  animation: dashboardKpiEnter 0.45s var(--st-ease) forwards;
 }
+
+.dashboardPage .dashboardQuickAction:nth-child(1) { animation-delay: 0.04s; }
+.dashboardPage .dashboardQuickAction:nth-child(2) { animation-delay: 0.08s; }
+.dashboardPage .dashboardQuickAction:nth-child(3) { animation-delay: 0.12s; }
+.dashboardPage .dashboardQuickAction:nth-child(4) { animation-delay: 0.16s; }
+.dashboardPage .dashboardQuickAction:nth-child(5) { animation-delay: 0.2s; }
 
 .dashboardPage .dashboardQuickAction:hover{
   transform: translateY(-2px);
@@ -2873,5 +2940,28 @@
   .dashboardPage .dashboardWelcomeCard{
     flex-direction: column;
     text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboardPage *,
+  .dashboardPage *::before,
+  .dashboardPage *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .dashboardPage .dashboardSection--scroll,
+  .dashboardPage .dashboardSection--scroll.dashboardSection--inView,
+  .dashboardPage .dashboardSection--from-left,
+  .dashboardPage .dashboardSection--from-right,
+  .dashboardPage .dashboardSection--from-top,
+  .dashboardPage .dashboardBlockEnter,
+  .dashboardPage .dashboardBlockEnter--left,
+  .dashboardPage .dashboardBlockEnter--right,
+  .dashboardPage .dashboardBlockEnter--top {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

@@ -231,11 +231,11 @@ export default function CreateEmployee({ account, editingEmployee = null, onNavi
     setConfirmPassword("");
 
     const up = editingEmployee.uploads || {};
-    setEmployeePhotoUrl(up.employeePhotoUrl || "");
-    setNidFrontUrl(up.nationalIdFrontUrl || "");
-    setNidBackUrl(up.nationalIdBackUrl || "");
-    setHCidFrontUrl(up.housingCardFrontUrl || "");
-    setHCidBackUrl(up.housingCardBackUrl || "");
+    setEmployeePhotoUrl(normalizeUploadUrl(up.employeePhotoUrl || ""));
+    setNidFrontUrl(normalizeUploadUrl(up.nationalIdFrontUrl || ""));
+    setNidBackUrl(normalizeUploadUrl(up.nationalIdBackUrl || ""));
+    setHCidFrontUrl(normalizeUploadUrl(up.housingCardFrontUrl || ""));
+    setHCidBackUrl(normalizeUploadUrl(up.housingCardBackUrl || ""));
 
     // clear local picked paths
     setEmployeePhotoPath("");
@@ -374,6 +374,12 @@ export default function CreateEmployee({ account, editingEmployee = null, onNavi
     }),
     []
   );
+
+  function normalizeUploadUrl(url) {
+    const raw = String(url || "").trim();
+    if (!raw) return "";
+    return raw.replace(/^http:\/\/accounts\.yammak\.shop\b/i, "https://accounts.yammak.shop");
+  }
 
   async function pickImage(setPath, setUrl) {
     try {
@@ -521,11 +527,11 @@ export default function CreateEmployee({ account, editingEmployee = null, onNavi
 
       // 2) merge uploads (keep existing if not replaced)
       const mergedUploads = {
-        employeePhotoUrl: newUploads.employeePhotoUrl ?? employeePhotoUrl ?? null,
-        nationalIdFrontUrl: newUploads.nationalIdFrontUrl ?? nidFrontUrl ?? null,
-        nationalIdBackUrl: newUploads.nationalIdBackUrl ?? nidBackUrl ?? null,
-        housingCardFrontUrl: newUploads.housingCardFrontUrl ?? hcidFrontUrl ?? null,
-        housingCardBackUrl: newUploads.housingCardBackUrl ?? hcidBackUrl ?? null,
+        employeePhotoUrl: normalizeUploadUrl(newUploads.employeePhotoUrl ?? employeePhotoUrl ?? null),
+        nationalIdFrontUrl: normalizeUploadUrl(newUploads.nationalIdFrontUrl ?? nidFrontUrl ?? null),
+        nationalIdBackUrl: normalizeUploadUrl(newUploads.nationalIdBackUrl ?? nidBackUrl ?? null),
+        housingCardFrontUrl: normalizeUploadUrl(newUploads.housingCardFrontUrl ?? hcidFrontUrl ?? null),
+        housingCardBackUrl: normalizeUploadUrl(newUploads.housingCardBackUrl ?? hcidBackUrl ?? null),
       };
 
       const requestId = rid();
@@ -747,7 +753,7 @@ export default function CreateEmployee({ account, editingEmployee = null, onNavi
 
               <div className="ec-sub_card">
                 <div className="ec-upload-block">
-                  <div className="ec-upload-title">National ID (Front)</div>
+                  <div className="ec-upload-title">National ID (Front) - Optional</div>
                   <label
                     className="ec-drop"
                     onClick={(e) => {
@@ -777,7 +783,7 @@ export default function CreateEmployee({ account, editingEmployee = null, onNavi
                 </div>
 
                 <div className="ec-upload-block">
-                  <div className="ec-upload-title">National ID (Back)</div>
+                  <div className="ec-upload-title">National ID (Back) - Optional</div>
                   <label
                     className="ec-drop"
                     onClick={(e) => {
@@ -807,7 +813,7 @@ export default function CreateEmployee({ account, editingEmployee = null, onNavi
                 </div>
 
                 <div className="ec-upload-block">
-                  <div className="ec-upload-title">Housing Card (Front)</div>
+                  <div className="ec-upload-title">Housing Card (Front) - Optional</div>
                   <label
                     className="ec-drop"
                     onClick={(e) => {
@@ -837,7 +843,7 @@ export default function CreateEmployee({ account, editingEmployee = null, onNavi
                 </div>
 
                 <div className="ec-upload-block">
-                  <div className="ec-upload-title">Housing Card (Back)</div>
+                  <div className="ec-upload-title">Housing Card (Back) - Optional</div>
                   <label
                     className="ec-drop"
                     onClick={(e) => {

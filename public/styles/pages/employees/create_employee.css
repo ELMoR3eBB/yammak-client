@@ -1,170 +1,42 @@
-/* create_employee.css — Settings/Employees theme, same card/flex sizes and role selector behavior */
-
-.content:has(.createEmployeePage) {
-  padding: 0;
-  overflow: hidden;
+@charset "UTF-8";
+.ec-head {
   display: flex;
   flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
 }
-
-.createEmployeePage {
-  --st-bg: #09090b;
-  --st-bg-elevated: #0f0f12;
-  --st-surface: rgba(255, 255, 255, 0.03);
-  --st-surface-hover: rgba(255, 255, 255, 0.06);
-  --st-border: rgba(255, 255, 255, 0.06);
-  --st-text: rgba(255, 255, 255, 0.92);
-  --st-text-muted: rgba(255, 255, 255, 0.5);
-  --st-accent: #fbbf24;
-  --st-accent-soft: rgba(251, 191, 36, 0.18);
-  --st-accent-glow: rgba(251, 191, 36, 0.15);
-  --st-radius: 8px;
-  --st-radius-sm: 6px;
-  --st-ease: cubic-bezier(0.4, 0, 0.2, 1);
-  --st-duration: 0.25s;
-  --st-duration-fast: 0.15s;
-
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  min-height: 0;
-  color: var(--st-text);
-  background: var(--st-bg);
-  overflow: hidden;
-  animation: createEmployeePageIn 0.45s var(--st-ease) forwards;
-  position: relative;
-}
-
-.createEmployeePage::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse 100% 50% at 0% 0%,
-    rgba(251, 191, 36, 0.04) 0%,
-    transparent 50%
-  );
-  pointer-events: none;
-  animation: createEmployeeBgIn 0.6s var(--st-ease) 0.15s both;
-}
-
-@keyframes createEmployeePageIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes createEmployeeBgIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes createEmployeeMainIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ——— Header ——— */
-.createEmployeeHeader {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--st-border);
-  flex-shrink: 0;
-  background: var(--st-bg-elevated);
-  transition: border-color var(--st-duration) var(--st-ease);
-}
-
-.createEmployeeHeader:hover .createEmployeeHeaderIcon {
-  transform: scale(1.02);
-  box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
-}
-
-.createEmployeeHeaderIcon {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--st-radius);
-  background: linear-gradient(
-    135deg,
-    rgba(251, 191, 36, 0.2) 0%,
-    rgba(251, 191, 36, 0.06) 100%
-  );
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--st-accent);
-  flex-shrink: 0;
-  transition: transform var(--st-duration) var(--st-ease),
-    box-shadow var(--st-duration) var(--st-ease);
-}
-
-.createEmployeeHeaderText {
-  flex: 1;
-  min-width: 0;
-}
-
-.createEmployeeTitle {
+.ec-head h1 {
   margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  color: var(--st-text);
-  transition: color var(--st-duration-fast) var(--st-ease);
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 0.2px;
+}
+.ec-head .muted {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.62);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 320px;
 }
 
-.createEmployeeSubtitle {
-  margin: 4px 0 0 0;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--st-text-muted);
-  transition: color var(--st-duration-fast) var(--st-ease);
-}
-
-/* ——— Main (same content padding as Employees) ——— */
-.createEmployeeMain {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  overflow-y: auto;
-  animation: createEmployeeMainIn 0.4s var(--st-ease) 0.12s both;
-}
-
-.createEmployeeContent {
-  flex: 1;
-  padding: 28px 32px 40px;
-}
-
-/* ——— Form: keep same layout and sizes ——— */
-.createEmployeePage .ec-body {
-  margin: 0;
+.ec-body {
+  margin-top: 16px;
   align-items: start;
-  animation: none;
-  transform: none;
-  opacity: 1;
+  animation: enter 0.3s ease forwards;
+  transform: translateY(20px);
+  opacity: 0;
 }
-
-/* Card: original padding 18px, gap 30px, radius 12px */
-.createEmployeePage .ec-body .ec-card {
-  background: var(--st-bg-elevated);
-  border: 1px solid var(--st-border);
+.ec-body .ec-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
   border-radius: 12px;
   padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
   display: flex;
   flex-direction: column;
   gap: 30px;
-  transition: border-color var(--st-duration) var(--st-ease),
-    background var(--st-duration) var(--st-ease),
-    box-shadow var(--st-duration) var(--st-ease);
 }
-
-.createEmployeePage .ec-body .ec-card:hover {
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
-}
-
-/* Spacing: original margin 5px 0, span 85% */
-.createEmployeePage .ec-body .ec-card .spacing {
+.ec-body .ec-card div.spacing {
   height: 1px;
   width: 100%;
   display: flex;
@@ -172,525 +44,82 @@
   border: 0;
   margin: 5px 0;
 }
-
-.createEmployeePage .ec-body .ec-card .spacing span {
+.ec-body .ec-card div.spacing span {
   width: 85%;
   height: 100%;
-  background: var(--st-border);
-  transition: background var(--st-duration-fast) var(--st-ease);
+  background-color: rgba(255, 255, 255, 0.22);
 }
-
-/* Sub cards: original flex row, gap 50px; warping 100px */
-.createEmployeePage .ec-body .ec-card .ec-sub_card {
+.ec-body .ec-card .ec-sub_card {
   display: flex;
   flex-direction: row;
-  gap: 45px;
+  gap: 50px;
 }
-
-.createEmployeePage .ec-body .ec-card .ec-sub_card .ec-third-card {
+.ec-body .ec-card .ec-sub_card .ec-third-card {
   display: flex;
   flex-direction: column;
   gap: 25px;
 }
-
-.createEmployeePage .ec-body .ec-card .ec-sub_card.warping-sub_card {
-  gap: 95px;
+.ec-body .ec-card .ec-sub_card.warping-sub_card {
+  gap: 100px;
 }
-
-/* Blocks: original gap 10px, space-around; warping-block gap 25px; row-block row gap 100px */
-.createEmployeePage .ec-body .ec-card .ec-sub_card .ec-block {
+.ec-body .ec-card .ec-sub_card .ec-block {
   display: flex;
   flex-direction: column;
   gap: 10px;
   justify-content: space-around;
 }
-
-.createEmployeePage .ec-body .ec-card .ec-sub_card .ec-block.warping-block {
+.ec-body .ec-card .ec-sub_card .ec-block.warping-block {
   justify-content: flex-start;
   gap: 25px;
 }
-
-.createEmployeePage .ec-body .ec-card .ec-sub_card .ec-salary-rating-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+.ec-body .ec-card .ec-sub_card .ec-block.row-block {
+  flex-direction: row;
+  gap: 100px;
   justify-content: flex-start;
 }
-
-.createEmployeePage .ec-body .ec-card .ec-sub_card .ec-block.row-block {
-  flex-direction: row;
-  gap: 95px;
-  justify-content: flex-start;
-}
-
-.createEmployeePage .ec-body .ec-card .ec-block .partblock {
-  display: flex;
-  flex-direction: row;
-  gap: 50px;
-}
-
-/* ——— Labels ——— */
-.createEmployeePage .ec-body label {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 14px;
-  color: var(--st-text);
-  transition: color var(--st-duration-fast) var(--st-ease);
-}
-
-.createEmployeePage .ec-body label span {
-  color: #ef4444;
-}
-
-/* ——— Inputs: original height 42px and widths ——— */
-.createEmployeePage .ec-body .ec-input {
-  height: 42px;
-  padding: 0 12px;
-  border-radius: 8px;
-  background: var(--st-surface);
-  border: 1px solid var(--st-border);
-  color: var(--st-text);
-  font-size: 14px;
-  outline: none;
-  transition: border-color var(--st-duration) var(--st-ease),
-    background var(--st-duration) var(--st-ease),
-    box-shadow var(--st-duration-fast) var(--st-ease);
-  color-scheme: dark;
-}
-
-.createEmployeePage .ec-body .ec-input::placeholder {
-  color: var(--st-text-muted);
-  opacity: 0.7;
-}
-
-.createEmployeePage .ec-body .ec-input:hover:not(:disabled) {
-  border-color: rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.createEmployeePage .ec-body .ec-input:focus {
-  border-color: var(--st-accent);
-  background: rgba(251, 191, 36, 0.06);
-  box-shadow: 0 0 0 2px var(--st-accent-glow);
-}
-
-.createEmployeePage .ec-body .ec-input:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* Original fixed widths */
-.createEmployeePage .ec-body .ec-input.fullName {
-  width: 300px;
-}
-.createEmployeePage .ec-body .ec-input.phoneNumber {
-  width: 250px;
-}
-.createEmployeePage .ec-body .ec-input.personalEmail {
-  width: 300px;
-}
-.createEmployeePage .ec-body .ec-input.dateOfBirth,
-.createEmployeePage .ec-body .ec-input.startDate {
-  width: 250px;
-}
-.createEmployeePage .ec-body .ec-input.address {
-  width: 300px;
-}
-.createEmployeePage .ec-body .ec-input.salary {
-  width: 200px;
-}
-.createEmployeePage .ec-body .ec-input.workEmail {
-  width: 300px;
-}
-.createEmployeePage .ec-body .ec-input.notes {
-  min-height: 150px;
-  min-width: 600px;
-}
-
-.createEmployeePage .ec-body textarea.ec-input {
-  height: auto;
-  padding: 10px 12px;
-  resize: vertical;
-}
-
-/* ——— Custom select (Employment Type / Salary Type): themed dropdown + arrow transition ——— */
-.createEmployeePage .ec-select-custom {
-  position: relative;
-  width: 200px;
-  min-width: 0;
-  padding: 0px !important;
-}
-
-.createEmployeePage .ec-select-custom.salaryType {
-  width: 210px;
-}
-
-.createEmployeePage .ec-select-custom.ratingSelect {
-  width: 120px;
-}
-
-.createEmployeePage .ec-select-custom__trigger {
-  width: 100%;
-  height: 42px;
-  padding: 0 0.6rem 0 12px;
-  border-radius: 8px;
-  background: var(--st-surface);
-  border: 1px solid var(--st-border);
-  color: var(--st-text);
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  text-align: left;
-  outline: none;
-  transition: border-color var(--st-duration) var(--st-ease),
-    background var(--st-duration) var(--st-ease),
-    box-shadow var(--st-duration-fast) var(--st-ease);
-}
-
-.createEmployeePage .ec-select-custom__trigger:hover:not(:disabled) {
-  border-color: rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.createEmployeePage .ec-select-custom__trigger:focus-visible {
-  border-color: var(--st-accent);
-  background: rgba(251, 191, 36, 0.06);
-  box-shadow: 0 0 0 2px var(--st-accent-glow);
-}
-
-.createEmployeePage .ec-select-custom__trigger:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.createEmployeePage .ec-select-custom__value {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.createEmployeePage .ec-select-custom__arrow {
-  flex-shrink: 0;
-  color: var(--st-accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform var(--st-duration) var(--st-ease),
-    color var(--st-duration-fast) var(--st-ease);
-}
-
-.createEmployeePage .ec-select-custom--open .ec-select-custom__arrow {
-  transform: rotate(180deg);
-}
-
-.createEmployeePage .ec-select-custom__drop {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(100% + 4px);
-  z-index: 50;
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-6px);
-  transition: opacity var(--st-duration) var(--st-ease),
-    visibility var(--st-duration) var(--st-ease),
-    transform var(--st-duration) var(--st-ease);
-}
-
-.createEmployeePage .ec-select-custom--open .ec-select-custom__drop {
-  pointer-events: auto;
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.createEmployeePage .ec-select-custom__drop-inner {
-  background: var(--st-bg-elevated);
-  border: 1px solid var(--st-border);
-  border-radius: 8px;
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
-  overflow: hidden;
-  padding: 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.createEmployeePage .ec-select-custom.ratingSelect .ec-select-custom__drop-inner {
-  max-height: 200px;
-  overflow-y: auto;
-  gap: 2px;
-}
-
-.createEmployeePage .ec-select-custom__option {
-  display: block;
-  width: 100%;
-  padding: 10px 12px;
-  border: none;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--st-text);
-  font-size: 14px;
-  text-align: left;
-  cursor: pointer;
-  transition: background var(--st-duration-fast) var(--st-ease),
-    color var(--st-duration-fast) var(--st-ease);
-}
-
-.createEmployeePage .ec-select-custom__option:hover {
-  background: var(--st-surface-hover);
-}
-
-.createEmployeePage .ec-select-custom__option--selected,
-.createEmployeePage .ec-select-custom__option:focus-visible {
-  background: var(--st-accent-soft);
-  color: var(--st-accent);
-}
-
-.createEmployeePage .ec-select-custom__option:focus-visible {
-  outline: none;
-}
-
-/* Create employee dropdown: always dark themed (no light-mode override) */
-
-/* ——— Phone container: original height 42px ——— */
-.createEmployeePage .ec-body .ec-phone-container {
-  display: flex;
-  align-items: center;
-  background: var(--st-surface);
-  border: 1px solid var(--st-border);
-  border-radius: 8px;
-  overflow: hidden;
-  height: 42px;
-  transition: border-color var(--st-duration) var(--st-ease),
-    box-shadow var(--st-duration-fast) var(--st-ease);
-}
-
-.createEmployeePage .ec-body .ec-phone-container:focus-within {
-  border-color: var(--st-accent);
-  box-shadow: 0 0 0 2px var(--st-accent-glow);
-}
-
-.createEmployeePage .ec-body .ec-phone-container input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  padding: 10px;
-  color: var(--st-text);
-  font-size: 14px;
-  outline: none;
-}
-
-.createEmployeePage .ec-body .ec-phone-container input::placeholder {
-  color: var(--st-text-muted);
-  opacity: 0.7;
-}
-
-.createEmployeePage .ec-body .ec-phone-container .ec-prefix {
-  padding: 10px 12px;
-  background: rgba(251, 191, 36, 0.1);
-  border-right: 1px solid var(--st-border);
-  color: var(--st-accent);
-  font-weight: 700;
-  transition: background var(--st-duration-fast) var(--st-ease);
-}
-
-/* ——— Upload blocks: original gap 8px; drop 213×134, square 210, wide 110 ——— */
-.createEmployeePage .ec-body .ec-upload-block {
-  display: grid;
-  gap: 8px;
-}
-
-.createEmployeePage .ec-body .ec-upload-title {
-  font-size: 13px;
-  color: var(--st-text-muted);
-  transition: color var(--st-duration-fast) var(--st-ease);
-}
-
-.createEmployeePage .ec-body .ec-drop {
-  border: 1px dashed var(--st-border);
-  background: var(--st-surface);
-  border-radius: 12px;
-  width: 213px;
-  height: 134px;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  overflow: hidden;
-  transition: border-color var(--st-duration) var(--st-ease),
-    background var(--st-duration) var(--st-ease),
-    box-shadow var(--st-duration-fast) var(--st-ease);
-}
-
-.createEmployeePage .ec-body .ec-drop:hover {
-  border-color: rgba(251, 191, 36, 0.4);
-  background: rgba(251, 191, 36, 0.06);
-  box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.12);
-}
-
-.createEmployeePage .ec-body .ec-drop--square {
-  height: 210px;
-}
-
-.createEmployeePage .ec-body .ec-drop--wide {
-  height: 110px;
-}
-
-.createEmployeePage .ec-body .ec-drop-empty {
-  text-align: center;
-  color: var(--st-text-muted);
-  display: grid;
-  gap: 6px;
-}
-
-.createEmployeePage .ec-body .ec-plus {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  display: grid;
-  place-items: center;
-  font-size: 26px;
-  background: var(--st-accent-soft);
-  border: 1px solid rgba(251, 191, 36, 0.3);
-  color: var(--st-accent);
-  margin: 0 auto;
-  transition: background var(--st-duration) var(--st-ease),
-    border-color var(--st-duration) var(--st-ease),
-    transform var(--st-duration-fast) var(--st-ease);
-}
-
-.createEmployeePage .ec-body .ec-drop:hover .ec-plus {
-  background: rgba(251, 191, 36, 0.22);
-  border-color: rgba(251, 191, 36, 0.45);
-  transform: scale(1.03);
-}
-
-.createEmployeePage .ec-body .ec-plus .icon {
-  width: 14px;
-  height: 15px;
-}
-
-.createEmployeePage .ec-body .ec-drop-hint {
-  font-size: 13px;
-}
-
-.createEmployeePage .ec-body .ec-drop-sub {
-  font-size: 12px;
-  opacity: 0.75;
-}
-
-.createEmployeePage .ec-body .ec-preview {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* ——— Actions: original gap 10px, padding-top 4px ——— */
-.createEmployeePage .ec-body .ec-actions {
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-  align-items: center;
-  padding-top: 4px;
-  transition: border-color var(--st-duration) var(--st-ease);
-}
-
-/* ——— Buttons: original ec-btn--sm padding 9px 14px, font-size 13px ——— */
-.createEmployeePage .ec-body .ec-btn {
-  border-radius: 10px;
-  border: 1px solid var(--st-border);
-  background: var(--st-surface);
-  color: var(--st-text);
-  font-weight: 700;
-  letter-spacing: 0.15px;
-  cursor: pointer;
-  transition: background var(--st-duration) var(--st-ease),
-    border-color var(--st-duration) var(--st-ease),
-    color var(--st-duration) var(--st-ease),
-    transform var(--st-duration-fast) var(--st-ease),
-    box-shadow var(--st-duration) var(--st-ease);
-}
-
-.createEmployeePage .ec-body .ec-btn:hover:not(:disabled) {
-  background: var(--st-accent-soft);
-  border-color: rgba(251, 191, 36, 0.4);
-  color: var(--st-accent);
-  box-shadow: 0 0 20px rgba(251, 191, 36, 0.15);
-  transform: translateY(-1px);
-}
-
-.createEmployeePage .ec-body .ec-btn:active:not(:disabled) {
-  transform: translateY(0) scale(0.97);
-}
-
-.createEmployeePage .ec-body .ec-btn:focus-visible {
-  outline: none;
-  border-color: var(--st-accent);
-  box-shadow: 0 0 0 2px var(--st-accent-glow);
-}
-
-.createEmployeePage .ec-body .ec-btn:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.createEmployeePage .ec-body .ec-btn--sm {
-  padding: 9px 14px;
-  font-size: 13px;
-  border-radius: 9px;
-}
-
-.createEmployeePage .ec-body .ec-btn--ghost {
-  background: var(--st-surface);
-  border-color: var(--st-border);
-}
-
-.createEmployeePage .ec-body .ec-btn--ghost:hover:not(:disabled) {
-  background: var(--st-surface-hover);
-  border-color: rgba(255, 255, 255, 0.12);
-  color: var(--st-text);
-  box-shadow: none;
-}
-
-/* ——— Role selector (Chosen): same sizes 42px height, 300px width, 44px arrow ——— */
-.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container {
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container {
   width: 300px !important;
   font-size: inherit;
 }
-
-.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-single {
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single {
+  /* Base control */
+}
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-single {
   position: relative;
   height: 42px;
   border-radius: 8px;
-  border: 1px solid var(--st-border);
-  background: var(--st-surface);
-  color: var(--st-text);
+  border: 1px solid #2a2f3a;
+  background: #151922;
+  color: #fff;
   display: flex;
   align-items: center;
+  /* ✅ vertical center */
   padding: 0 44px 0 12px;
-  transition: border-color var(--st-duration) var(--st-ease),
-    background var(--st-duration) var(--st-ease);
+  /* ✅ room for arrow */
+  transition: 0.15s ease;
   box-shadow: none;
   line-height: 42px;
+  /* ✅ helps chosen span */
 }
-
-.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-single span {
-  color: var(--st-text);
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single {
+  /* Value text */
+}
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-single span {
+  color: #fff;
   line-height: 42px;
+  /* ✅ prevents top-stuck look */
   margin-right: 0;
+  /* chosen sometimes sets a margin */
   padding: 0;
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-single div {
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single {
+  /* Arrow container */
+}
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-single div {
   width: 42px;
   height: 100%;
   position: absolute;
@@ -699,88 +128,110 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-left: 1px solid var(--st-border);
-  background: rgba(251, 191, 36, 0.08);
+  border-left: 1px solid rgba(248, 192, 40, 0.18);
+  background: rgba(248, 192, 40, 0.06);
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
-  transition: background var(--st-duration) var(--st-ease);
 }
-
-.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-single div b {
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single {
+  /* Arrow - remove chosen sprite */
+}
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-single div b {
   background: none !important;
   width: 0;
   height: 0;
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
-  border-top: 7px solid var(--st-accent);
+  border-top: 7px solid rgba(248, 192, 40, 0.95);
   opacity: 0.95;
   transform: translateY(1px);
 }
-
-.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single:hover .chosen-single {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.04);
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single {
+  /* Hover */
 }
-
-.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single:hover .chosen-single div {
-  background: rgba(251, 191, 36, 0.12);
-  border-left-color: rgba(251, 191, 36, 0.25);
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single:hover .chosen-single {
+  border-color: rgba(255, 255, 255, 0.16);
 }
-
-.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single.chosen-container-active:not(.chosen-with-drop) .chosen-single,
-.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single.chosen-with-drop .chosen-single {
-  border-color: var(--st-accent);
-  background: rgba(251, 191, 36, 0.06);
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single:hover .chosen-single div {
+  background: rgba(248, 192, 40, 0.1);
+  border-left-color: rgba(248, 192, 40, 0.26);
 }
-
-.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single.chosen-with-drop .chosen-single {
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single {
+  /* Focus/active (but CLOSED) */
+}
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single.chosen-container-active:not(.chosen-with-drop) .chosen-single {
+  border-color: rgba(248, 192, 40, 0.55);
+  border-radius: 8px;
+  /* ✅ ensure it resets */
+}
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single {
+  /* OPEN state */
+}
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single.chosen-with-drop .chosen-single {
+  border-color: rgba(248, 192, 40, 0.55);
+  /* ✅ flatten bottom corners only when open */
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+  /* ✅ remove seam between control + dropdown */
   border-bottom-color: transparent;
 }
-
-.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single.chosen-with-drop .chosen-single div {
-  border-bottom-right-radius: 0;
-  background: rgba(251, 191, 36, 0.08);
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single {
+  /* OPEN state arrow container corners should match */
 }
-
-.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single.chosen-with-drop .chosen-single div b {
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single.chosen-with-drop .chosen-single div {
+  border-bottom-right-radius: 0;
+  background: rgba(248, 192, 40, 0.08);
+}
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single {
+  /* Arrow flips up when open */
+}
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single.chosen-with-drop .chosen-single div b {
   border-top: 0;
-  border-bottom: 7px solid var(--st-accent);
+  border-bottom: 7px solid rgba(248, 192, 40, 0.95);
   transform: translateY(-1px);
 }
-
-.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-drop {
-  background: var(--st-bg-elevated);
-  border: 1px solid var(--st-border);
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single {
+  /* Dropdown */
+}
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-drop {
+  background: #151922;
+  border: 1px solid rgba(248, 192, 40, 0.55);
   border-top: none;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
   overflow: hidden;
 }
-
-.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-search {
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single {
+  /* Search box */
+}
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-search {
   padding: 10px 10px 8px;
 }
-
-.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-search input[type="text"] {
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-search input[type=text] {
   width: 100%;
   height: 38px;
   padding: 0 12px;
   border-radius: 8px;
-  background: var(--st-surface);
-  border: 1px solid var(--st-border);
-  color: var(--st-text);
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(248, 192, 40, 0.22);
+  color: #fff;
   outline: none;
-  transition: border-color var(--st-duration) var(--st-ease);
+  transition: 0.15s ease;
 }
-
-.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-search input[type="text"]:focus {
-  border-color: var(--st-accent);
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-search input[type=text]::-moz-placeholder {
+  color: rgba(255, 255, 255, 0.35);
 }
-
-.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container .chosen-results {
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-search input[type=text]::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container.chosen-container-single .chosen-search input[type=text]:focus {
+  border-color: rgba(248, 192, 40, 0.55);
+}
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container {
+  /* Results */
+}
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container .chosen-results {
   margin: 0;
   padding: 6px;
   max-height: 220px;
@@ -788,113 +239,368 @@
   flex-direction: column;
   gap: 5px;
 }
-
-.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container .chosen-results li {
-  color: var(--st-text);
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container .chosen-results li {
+  color: rgba(255, 255, 255, 0.82);
   padding: 10px 10px;
   border-radius: 8px;
-  transition: background var(--st-duration-fast) var(--st-ease);
+  transition: 0.12s ease;
 }
-
-.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container .chosen-results li.active-result:hover {
-  background: var(--st-surface-hover);
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container .chosen-results li.active-result:hover {
+  background: rgba(255, 255, 255, 0.06);
 }
-
-.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container .chosen-results li.highlighted,
-.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container .chosen-results li.result-selected {
-  background: var(--st-accent-soft);
-  color: var(--st-accent);
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container .chosen-results li.highlighted {
+  background: rgba(248, 192, 40, 0.22);
+  color: #fff;
 }
-
-.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container .chosen-results li.disabled-result {
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container .chosen-results li.result-selected {
+  background: rgba(248, 192, 40, 0.14);
+  color: rgba(255, 255, 255, 0.92);
+}
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container .chosen-results li.disabled-result {
   opacity: 0.45;
 }
-
-.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container .chosen-results li.no-results {
-  background: var(--st-surface) !important;
-  color: var(--st-text-muted) !important;
-  border: 1px solid var(--st-border);
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container .chosen-results li.no-results {
+  background: rgba(0, 0, 0, 0.22) !important;
+  color: rgba(255, 255, 255, 0.65) !important;
+  border: 1px solid rgba(248, 192, 40, 0.18);
   border-radius: 10px;
   padding: 10px 12px !important;
   margin: 6px !important;
 }
-
-.createEmployeePage .ec-body .ec-sub_card .ec-block.row-block .chosen-container .chosen-results li.no-results span {
-  color: var(--st-accent) !important;
+.ec-body .ec-card .ec-sub_card .ec-block.row-block .chosen-container .chosen-results li.no-results span {
+  color: rgba(248, 192, 40, 0.95) !important;
   font-weight: 700;
 }
-
-/* ——— Password field: same width 250px, height 42px ——— */
-.createEmployeePage .password-field {
+.ec-body .ec-card .ec-sub_card .ec-block .partblock {
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+}
+.ec-body .ec-card h2 {
+  margin: 0;
+  font-size: 18px;
+}
+.ec-body .ec-card .ec-phone-container {
+  display: flex;
+  align-items: center;
+  background: #151922;
+  border: 1px solid #2a2f3a;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: 0.15s ease;
+  height: 42px;
+}
+.ec-body .ec-card .ec-phone-container:focus-within {
+  border-color: rgba(248, 192, 40, 0.55);
+}
+.ec-body .ec-card .ec-phone-container input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 10px;
+  color: white;
+  outline: none;
+}
+.ec-body .ec-card .ec-phone-container input::-moz-placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+.ec-body .ec-card .ec-phone-container input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+.ec-body .ec-card .ec-phone-container .ec-prefix {
+  padding: 10px 12px;
+  background: rgba(248, 192, 40, 0.08);
+  border-right: 1px solid rgba(248, 192, 40, 0.22);
+  color: rgba(248, 192, 40, 0.95);
+  font-weight: 700;
+}
+.ec-body .ec-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.ec-body {
+  /* Upload column */
+}
+.ec-body .ec-upload-col {
+  display: grid;
+  gap: 14px;
+}
+.ec-body .ec-upload-block {
+  display: grid;
+  gap: 8px;
+}
+.ec-body .ec-upload-title {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+}
+.ec-body .ec-upload-title span {
+  color: rgb(251, 37, 37);
+}
+.ec-body .ec-drop {
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 12px;
+  width: 213px;
+  height: 134px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  overflow: hidden;
+  transition: 0.15s ease;
+}
+.ec-body .ec-drop:hover {
+  border-color: rgba(248, 192, 40, 0.45);
+}
+.ec-body .ec-drop--square {
+  height: 210px;
+}
+.ec-body .ec-drop--wide {
+  height: 110px;
+}
+.ec-body .ec-drop-empty {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.55);
+  display: grid;
+  gap: 6px;
+}
+.ec-body .ec-plus {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 26px;
+  background: rgba(248, 192, 40, 0.12);
+  border: 1px solid rgba(248, 192, 40, 0.25);
+  color: rgba(248, 192, 40, 0.95);
+  margin: 0 auto;
+}
+.ec-body .ec-plus .icon {
+  width: 14px;
+  height: 15px;
+}
+.ec-body .ec-drop-hint {
+  font-size: 13px;
+}
+.ec-body .ec-drop-sub {
+  font-size: 12px;
+  opacity: 0.75;
+}
+.ec-body .ec-preview {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.ec-body {
+  /* Right side panels */
+}
+.ec-body .ec-fields-col {
+  display: grid;
+  gap: 14px;
+}
+.ec-body .ec-panel {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  padding: 14px;
+}
+.ec-body .ec-panel-title {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  color: rgba(255, 255, 255, 0.78);
+  margin-bottom: 12px;
+}
+.ec-body .ec-two {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.ec-body .ec-full {
+  grid-column: 1/-1;
+}
+.ec-body label {
+  display: block;
+  margin-bottom: 6px;
+  color: #cfcfcf;
+  font-size: 14px;
+}
+.ec-body label span {
+  color: rgb(251, 37, 37);
+}
+.ec-body {
+  /* Select arrow spacing */
+}
+.ec-body select.ec-input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 2.5rem;
+  background-image: url("data:image/svg+xml,%3Csvg fill='white' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1rem;
+}
+.ec-body .ec-input {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 8px;
+  background: #151922;
+  border: 1px solid #2a2f3a;
+  color: #fff;
+  outline: none;
+  transition: 0.15s ease;
+  color-scheme: dark;
+}
+.ec-body .ec-input.fullName {
+  width: 300px;
+}
+.ec-body .ec-input.phoneNumber {
   width: 250px;
 }
-
-.createEmployeePage .password-field input {
-  background: var(--st-surface);
-  border: 1px solid var(--st-border);
-  border-radius: 8px;
-  padding: 0 44px 0 12px;
-  height: 42px;
-  color: var(--st-text);
-  transition: border-color var(--st-duration) var(--st-ease),
-    box-shadow var(--st-duration-fast) var(--st-ease);
+.ec-body .ec-input.personalEmail {
+  width: 300px;
 }
-
-.createEmployeePage .password-field input:focus {
-  border-color: var(--st-accent);
-  box-shadow: 0 0 0 2px var(--st-accent-glow);
+.ec-body .ec-input.dateOfBirth, .ec-body .ec-input.startDate {
+  width: 250px;
 }
-
-.createEmployeePage .password-field button.eye {
+.ec-body .ec-input.address {
+  width: 300px;
+}
+.ec-body .ec-input.employmentType {
+  width: 200px;
+}
+.ec-body .ec-input.salary {
+  width: 200px;
+}
+.ec-body .ec-input.salaryType {
+  width: 210px;
+}
+.ec-body .ec-input.notes {
+  min-height: 150px;
+  min-width: 600px;
+}
+.ec-body .ec-input.workEmail {
+  width: 300px;
+}
+.ec-body .ec-input::-moz-placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+.ec-body .ec-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+.ec-body .ec-input:focus {
+  border-color: rgba(248, 192, 40, 0.55);
+}
+.ec-body .ec-input:hover:not(:focus) {
+  border-color: rgba(255, 255, 255, 0.16);
+}
+.ec-body textarea.ec-input {
+  height: auto;
+  padding: 10px 12px;
+  resize: vertical;
+}
+.ec-body {
+  /* Actions row (buttons inside card) */
+}
+.ec-body .ec-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  align-items: center;
+  padding-top: 4px;
+}
+.ec-body .ec-btn {
   border-radius: 10px;
-  border: 1px solid var(--st-border);
-  background: rgba(251, 191, 36, 0.08);
-  color: var(--st-accent);
-  transition: background var(--st-duration) var(--st-ease),
-    border-color var(--st-duration) var(--st-ease),
-    transform var(--st-duration-fast) var(--st-ease);
+  background: rgba(248, 192, 40, 0.12);
+  border: 1px solid rgba(248, 192, 40, 0.32);
+  color: white;
+  font-weight: 700;
+  letter-spacing: 0.15px;
+  cursor: pointer;
+  transition: 0.15s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+.ec-body .ec-btn:hover:not(:disabled) {
+  background: rgba(248, 192, 40, 0.18);
+  border-color: rgba(248, 192, 40, 0.42);
+  transform: translateY(-1px);
+}
+.ec-body .ec-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+.ec-body .ec-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+.ec-body {
+  /* smaller buttons */
+}
+.ec-body .ec-btn--sm {
+  padding: 9px 14px;
+  font-size: 13px;
+  border-radius: 9px;
+  box-shadow: none;
+}
+.ec-body {
+  /* reset button style */
+}
+.ec-body .ec-btn--ghost {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+.ec-body .ec-btn--ghost:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.22);
 }
 
-.createEmployeePage .password-field button.eye:hover {
-  background: var(--st-accent-soft);
-  border-color: rgba(251, 191, 36, 0.3);
-}
-
-/* ——— Responsive: same breakpoint and behavior ——— */
+/* Responsive */
 @media (max-width: 980px) {
-  .createEmployeePage .ec-body .ec-card .ec-sub_card {
-    flex-direction: column;
-    gap: 24px;
+  .ec-body .ec-card-grid {
+    grid-template-columns: 1fr;
   }
-  .createEmployeePage .ec-body .ec-card .ec-sub_card.warping-sub_card {
-    gap: 32px;
-  }
-  .createEmployeePage .ec-body .ec-card .ec-sub_card .ec-block.row-block {
-    flex-direction: column;
-    gap: 20px;
-  }
-  .createEmployeePage .ec-body .ec-card .ec-sub_card .ec-block .partblock {
-    flex-direction: column;
-    gap: 16px;
-  }
-  .createEmployeePage .ec-body .ec-drop--square {
+  .ec-body .ec-drop--square {
     height: 190px;
   }
-  .createEmployeePage .ec-body .ec-actions {
+  .ec-body .ec-actions {
     justify-content: stretch;
     gap: 10px;
   }
-  .createEmployeePage .ec-body .ec-actions .ec-btn--sm {
+  .ec-body .ec-actions .ec-btn--sm {
     width: 100%;
   }
+  .ec-head .muted {
+    max-width: 100%;
+  }
 }
-
+@keyframes enter {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
 @keyframes cuEyePopOn {
-  from { opacity: 0.55; transform: scale(0.88) rotate(-6deg); }
-  to { opacity: 1; transform: scale(1) rotate(0deg); }
+  from {
+    opacity: 0.55;
+    transform: scale(0.88) rotate(-6deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
 }
-
 @keyframes cuEyePopOff {
-  from { opacity: 0.55; transform: scale(0.88) rotate(6deg); }
-  to { opacity: 1; transform: scale(1) rotate(0deg); }
-}
+  from {
+    opacity: 0.55;
+    transform: scale(0.88) rotate(6deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}/*# sourceMappingURL=create_employee.css.map */

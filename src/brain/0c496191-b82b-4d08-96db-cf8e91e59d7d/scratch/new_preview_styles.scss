@@ -1,0 +1,108 @@
+
+.vaultPreviewBox {
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--st-text);
+  font-size: 14px;
+  transition: border-color 0.2s var(--st-ease), background 0.2s var(--st-ease);
+
+  .vaultPreviewValue {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  .vaultPreviewActions {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-right: -14px;
+    height: 44px;
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+
+    button {
+      width: 44px;
+      height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      border-left: 1px solid rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.45);
+      cursor: pointer;
+      transition: color 0.15s ease, background 0.15s ease;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--st-accent);
+      }
+
+      &:first-child {
+        border-left: none;
+      }
+    }
+  }
+}
+
+.vaultAdditionalInfo {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+  h3 {
+    margin: 0 0 16px 0;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  .vaultInfoBlockList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+.vaultInfoBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-left: 12px;
+  border-left: 3px solid #10b981; // Green indicator
+  
+  .vaultInfoBlockLabel {
+    font-size: 14px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.85);
+    
+    strong {
+      color: inherit;
+    }
+  }
+}
+
+.vaultPreviewField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label {
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.35);
+    padding-left: 2px;
+  }
+}

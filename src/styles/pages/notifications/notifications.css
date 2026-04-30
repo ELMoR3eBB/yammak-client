@@ -290,7 +290,6 @@
   border-radius: var(--st-radius);
   border: 1px dashed var(--st-border);
   background: var(--st-surface);
-  max-width: 480px;
   margin: 0 auto;
 }
 
@@ -336,7 +335,7 @@
 
 .notificationsPage .notificationsItem{
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 20px;
   padding: 20px 24px;
   border-radius: var(--st-radius);

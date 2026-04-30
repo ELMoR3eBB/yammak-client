@@ -184,6 +184,156 @@
   gap: 16px;
 }
 
+.auditLogsPage .auditLogsUsersFilter {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.auditLogsPage .auditLogsUsersFilterLabel {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--st-text-muted);
+}
+
+.auditLogsPage .recordingsEmpMenu {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.auditLogsPage .recordingsEmpMenuTrigger {
+  height: 38px;
+  min-width: 210px;
+  max-width: 300px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  border-radius: var(--st-radius-sm);
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: var(--st-text);
+  cursor: pointer;
+}
+
+.auditLogsPage .recordingsEmpMenuTrigger:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.auditLogsPage .recordingsEmpMenuTriggerTextCol {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+}
+
+.auditLogsPage .recordingsEmpMenuTriggerName {
+  max-width: 170px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.auditLogsPage .recordingsEmpMenuTriggerCallId {
+  font-size: 11px;
+  color: var(--st-text-muted);
+}
+
+.auditLogsPage .recordingsEmpMenuTriggerCallId--muted {
+  opacity: 0.6;
+}
+
+.auditLogsPage .recordingsEmpMenuTriggerText {
+  max-width: 185px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.auditLogsPage .recordingsEmpMenuTriggerIcon {
+  color: var(--st-text-muted);
+}
+
+.auditLogsPage .recordingsEmpMenuTriggerChev {
+  margin-left: auto;
+  color: var(--st-text-muted);
+  transition: transform 0.2s var(--st-ease);
+}
+
+.auditLogsPage .recordingsEmpMenu--open .recordingsEmpMenuTriggerChev {
+  transform: rotate(180deg);
+}
+
+.auditLogsPage .recordingsEmpMenu--disabled {
+  opacity: 0.65;
+}
+
+.auditLogsPage .recordingsEmpMenuClear {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: var(--st-text-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.auditLogsPage .recordingsEmpMenuClear:hover {
+  color: var(--st-text);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.auditLogsPage .recordingsEmpMenuTriggerAvatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.auditLogsPage .recordingsEmpMenuTriggerAvatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.auditLogsPage .recordingsEmpMenuTriggerAvatarFallback {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--st-text);
+}
+
+.auditLogsPage .recordingsEmpMenuTriggerStack {
+  display: inline-flex;
+  align-items: center;
+}
+
+.auditLogsPage .recordingsEmpMenuTriggerStack .recordingsEmpMenuTriggerAvatar {
+  margin-left: -7px;
+}
+
+.auditLogsPage .recordingsEmpMenuTriggerStack .recordingsEmpMenuTriggerAvatar:first-child {
+  margin-left: 0;
+}
+
 .auditLogsPage .auditLogsFilterRow--dates{
   gap: 16px;
 }

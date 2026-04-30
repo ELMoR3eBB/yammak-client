@@ -141,6 +141,50 @@
   background: rgba(242, 3, 70, 0.12);
 }
 
+/* Light theme */
+html[data-theme="light"] .toast-item {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.12);
+}
+html[data-theme="light"] .toast-item .toast-item__icon {
+  background: rgba(148, 163, 184, 0.12);
+  border-color: rgba(15, 23, 42, 0.12);
+}
+html[data-theme="light"] .toast-item .toast-item__icon svg {
+  color: #0f172a;
+  opacity: 0.9;
+}
+html[data-theme="light"] .toast-item .toast-item__title {
+  color: #0f172a;
+}
+html[data-theme="light"] .toast-item .toast-item__msg {
+  color: #475569;
+}
+html[data-theme="light"] .toast-item .toast-item__close {
+  color: #64748b;
+}
+html[data-theme="light"] .toast-item .toast-item__close:hover {
+  background: rgba(15, 23, 42, 0.06);
+  color: #0f172a;
+}
+html[data-theme="light"] .toast-item--info .toast-item__icon {
+  border-color: rgba(59, 130, 246, 0.28);
+  background: rgba(59, 130, 246, 0.12);
+}
+html[data-theme="light"] .toast-item--success .toast-item__icon {
+  border-color: rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.13);
+}
+html[data-theme="light"] .toast-item--warn .toast-item__icon {
+  border-color: rgba(245, 158, 11, 0.32);
+  background: rgba(245, 158, 11, 0.14);
+}
+html[data-theme="light"] .toast-item--danger .toast-item__icon {
+  border-color: rgba(244, 63, 94, 0.3);
+  background: rgba(244, 63, 94, 0.14);
+}
+
 /* Animations */
 @keyframes toast-in {
   from {

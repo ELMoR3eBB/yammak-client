@@ -93,10 +93,37 @@
   flex-wrap: wrap;
 }
 
-/* Date range in content area (moved from header to avoid edge overlap) */
-.devicesPage.la-page .la-content > .la-toolbar{
+/* Filter header block (matches other pages toolbar cards) */
+.devicesPage.la-page .la-filterHeader{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
   margin-bottom: 20px;
-  padding-bottom: 4px;
+  padding: 16px 20px;
+  border-radius: var(--la-radius);
+  border: 1px solid var(--la-border);
+  background: linear-gradient(180deg, #0f0f12 0%, rgba(15, 15, 18, 0.98) 100%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.devicesPage.la-page .la-filterHeaderTitleWrap{
+  min-width: 220px;
+}
+
+.devicesPage.la-page .la-filterHeaderTitle{
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--la-text);
+  letter-spacing: 0.01em;
+}
+
+.devicesPage.la-page .la-filterHeaderSub{
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--la-muted);
 }
 
 /* DateRangePicker: use --la-* theme (page uses la vars, not --st-*) */
@@ -503,20 +530,20 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  padding: 0 6px;
+  padding: 2px 8px 6px;
 }
 
 .devicesPage.la-page .la-detail-menu__group{
   position: relative;
-  padding-left: 28px;
-  padding-bottom: 8px;
+  padding-left: 30px;
+  padding-bottom: 10px;
 }
 
 /* Vertical line running through the group */
 .devicesPage.la-page .la-detail-menu__group::before{
   content: "";
   position: absolute;
-  left: 9px;
+  left: 11px;
   top: 20px;
   bottom: 0;
   width: 2px;
@@ -533,14 +560,14 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   position: relative;
   padding: 2px 0;
 }
 
 .devicesPage.la-page .la-detail-menu__date-dot{
   position: absolute;
-  left: -25px;
+  left: -26px;
   top: 50%;
   transform: translateY(-50%);
   width: 14px;
@@ -597,8 +624,8 @@
   font-weight: 500;
   font-variant-numeric: tabular-nums;
   color: var(--la-text);
-  padding: 6px 10px 6px 0;
-  margin: 0 4px;
+  padding: 7px 10px 7px 0;
+  margin: 0;
   position: relative;
   min-height: 32px;
   border-radius: 6px;
@@ -612,7 +639,7 @@
 .devicesPage.la-page .la-detail-menu__time::before{
   content: "";
   position: absolute;
-  left: -22px;
+  left: -23px;
   top: 50%;
   transform: translateY(-50%);
   width: 8px;
@@ -945,7 +972,7 @@
   font-weight: 500;
   font-variant-numeric: tabular-nums;
   color: var(--la-text);
-  padding: 6px 10px 6px 0;
+  padding: 6px 10px 6px 10px;
   margin: 0 4px;
   position: relative;
   min-height: 32px;
@@ -986,6 +1013,14 @@
 }
 
 @media (max-width: 700px) {
+  .devicesPage.la-page .la-filterHeader{
+    align-items: flex-start;
+  }
+
+  .devicesPage.la-page .la-toolbar{
+    width: 100%;
+  }
+
   .devicesPage.la-page .la-row {
     grid-template-columns: 1fr;
     gap: 10px;

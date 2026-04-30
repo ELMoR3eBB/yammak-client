@@ -5,12 +5,13 @@ import { Truck, ChevronLeft, ChevronRight, Wallet, RefreshCw } from "lucide-reac
 import DataTable from "../../ui/DataTable";
 import SearchInput from "../../ui/SearchInput";
 import PaginatorSelect from "../../ui/PaginatorSelect";
+import DateRangePicker from "../../ui/DateRangePicker";
 import { useNotification } from "../../NotificationProvider";
 import { useAnimatedNumber } from "../../../hooks/useAnimatedNumber";
-import { getAssetUrl } from "../../../utils/publicUrl";
 import "../../../styles/pages/audit/audit_logs.css";
 import "../../../styles/pages/drivers/drivers.css";
 import "../../../styles/ui/paginator_select.css";
+import "../../../styles/ui/date_range_picker.css";
 
 const rid = () => Math.random().toString(36).slice(2) + Date.now().toString(36);
 const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
@@ -36,6 +37,21 @@ function formatRelativeDate(isoString) {
   return `${Math.floor(diffDays / 90)} mo+ ago`;
 }
 
+function defaultDateRangeStrings() {
+  const to = new Date();
+  to.setHours(23, 59, 59, 999);
+  const from = new Date(to);
+  from.setDate(from.getDate() - 30);
+  from.setHours(0, 0, 0, 0);
+  const fmt = (d) => {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  };
+  return { from: fmt(from), to: fmt(to) };
+}
+
 const buildPageModel = (page, totalPages) => {
   if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
   if (page <= 3) return [1, 2, 3, 4, "…", totalPages];
@@ -45,12 +61,12 @@ const buildPageModel = (page, totalPages) => {
 
 const columns = [
   { key: "serial", label: "#", sortable: false, width: "0.4fr" },
-  { key: "id", label: "ID", sortable: true, width: "0.8fr" },
+  { key: "id", label: "ID", sortable: true, width: "0.6fr" },
   { key: "name", label: "NAME", sortable: true, width: "1.4fr" },
   { key: "cashInHands", label: "CASH IN HAND", sortable: true, width: "1.1fr", align: "right" },
   { key: "totalEarnings", label: "TOTAL EARNINGS", sortable: true, width: "1.1fr", align: "right" },
   { key: "balance", label: "BALANCE", sortable: true, width: "1fr", align: "right" },
-  { key: "totalWithdrawal", label: "TOTAL WITHDRAWAL", sortable: true, width: "1.1fr", align: "right" },
+  { key: "totalWithdrawal", label: "TOTAL WITHDRAWAL", sortable: true, width: "1.3fr", align: "right" },
   { key: "lastCashinAt", label: "LAST CASH-IN", sortable: false, width: "1fr" },
 ];
 
@@ -63,19 +79,75 @@ export default function Drivers({ account, onNavigate, onOpenDriverContextMenu }
   const [sort, setSort] = useState({ key: "name", dir: "asc" });
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(15);
+  const initialRange = useMemo(() => defaultDateRangeStrings(), []);
+  const [dateRange, setDateRange] = useState(initialRange);
+  const [minOrders, setMinOrders] = useState("");
+  const [minBalance, setMinBalance] = useState("");
+  const [topLimit, setTopLimit] = useState(5);
   const [driverStats, setDriverStats] = useState(null);
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
   const [repairing, setRepairing] = useState(false);
   const [repairConfirmOpen, setRepairConfirmOpen] = useState(false);
   const [repairBrokenCount, setRepairBrokenCount] = useState(0);
+  const [debugInfo, setDebugInfo] = useState({ list: null, stats: null, listError: null, statsError: null });
   const requestIdRef = useRef(null);
   const statsReqIdRef = useRef(null);
   const repairRequestIdRef = useRef(null);
   const previewRequestIdRef = useRef(null);
-  const listParamsRef = useRef({ sortKey: "name", sortDir: "asc", page: 1, pageSize: 15, query: "" });
+  const listParamsRef = useRef({
+    sortKey: "name",
+    sortDir: "asc",
+    page: 1,
+    pageSize: 15,
+    query: "",
+    fromDate: initialRange.from,
+    toDate: initialRange.to,
+    minOrders: "",
+    minBalance: "",
+  });
 
   const sortKey = sort.key;
   const sortDir = sort.dir;
-  listParamsRef.current = { sortKey, sortDir, page, pageSize, query };
+  listParamsRef.current = {
+    sortKey,
+    sortDir,
+    page,
+    pageSize,
+    query,
+    fromDate: dateRange?.from || "",
+    toDate: dateRange?.to || "",
+    minOrders,
+    minBalance,
+  };
+
+  const buildListPayload = useCallback(
+    (params) => {
+      const fromDate = params.fromDate ? `${params.fromDate}T00:00:00.000` : undefined;
+      const toDate = params.toDate ? `${params.toDate}T23:59:59.999` : undefined;
+      return {
+        sortBy: params.sortKey,
+        sortDir: params.sortDir,
+        page: params.page,
+        pageSize: params.pageSize,
+        query: (params.query || "").trim() || undefined,
+        fromDate,
+        toDate,
+        minOrders: String(params.minOrders || "").trim() || undefined,
+        minBalance: String(params.minBalance || "").trim() || undefined,
+      };
+    },
+    []
+  );
+
+  const buildStatsPayload = useCallback(
+    (params) => ({
+      fromDate: params.fromDate ? `${params.fromDate}T00:00:00.000` : undefined,
+      toDate: params.toDate ? `${params.toDate}T23:59:59.999` : undefined,
+      minOrders: String(params.minOrders || "").trim() || undefined,
+      minBalance: String(params.minBalance || "").trim() || undefined,
+    }),
+    []
+  );
 
   const perms = account?.role?.permissions || [];
   const canView = perms.includes("*") || perms.includes("drivers.view");
@@ -90,16 +162,35 @@ export default function Drivers({ account, onNavigate, onOpenDriverContextMenu }
 
     const unsub = window.api.onWsMessage((msg) => {
       if (msg?.type === "drivers:list" && msg?.requestId === requestIdRef.current) {
+        console.debug("[drivers:list] response", msg);
         setDrivers(Array.isArray(msg.drivers) ? msg.drivers : []);
         setTotal(typeof msg.total === "number" ? msg.total : 0);
+        setDebugInfo((prev) => ({
+          ...prev,
+          list: msg?.debug || null,
+          listError: msg?.error || null,
+        }));
         setLoading(false);
+        setHasLoadedOnce(true);
       }
-      if (msg?.type === "drivers:stats" && msg?.requestId === statsReqIdRef.current && !msg?.error) {
-        setDriverStats({
-          totalMoneyInHand: typeof msg.totalMoneyInHand === "number" ? msg.totalMoneyInHand : 0,
-          totalEarnings: typeof msg.totalEarnings === "number" ? msg.totalEarnings : 0,
-          totalWithdrawal: typeof msg.totalWithdrawal === "number" ? msg.totalWithdrawal : 0,
-        });
+      if (msg?.type === "drivers:stats" && msg?.requestId === statsReqIdRef.current) {
+        console.debug("[drivers:stats] response", msg);
+        setDebugInfo((prev) => ({
+          ...prev,
+          stats: msg?.debug || null,
+          statsError: msg?.error || null,
+        }));
+        if (!msg?.error) {
+          setDriverStats({
+            totalMoneyInHand: typeof msg.totalMoneyInHand === "number" ? msg.totalMoneyInHand : 0,
+            totalEarnings: typeof msg.totalEarnings === "number" ? msg.totalEarnings : 0,
+            totalWithdrawal: typeof msg.totalWithdrawal === "number" ? msg.totalWithdrawal : 0,
+            matchedDrivers: typeof msg.matchedDrivers === "number" ? msg.matchedDrivers : 0,
+            topByOrders: Array.isArray(msg.topByOrders) ? msg.topByOrders : [],
+            topByBalance: Array.isArray(msg.topByBalance) ? msg.topByBalance : [],
+            topByEarnings: Array.isArray(msg.topByEarnings) ? msg.topByEarnings : [],
+          });
+        }
       }
       if (msg?.type === "drivers:repair:preview" && msg?.requestId === previewRequestIdRef.current) {
         const count = typeof msg.brokenCount === "number" ? msg.brokenCount : 0;
@@ -118,16 +209,14 @@ export default function Drivers({ account, onNavigate, onOpenDriverContextMenu }
             window.api.wsSend({
               type: "drivers:list",
               requestId: requestIdRef.current,
-              payload: {
-                sortBy: params.sortKey,
-                sortDir: params.sortDir,
-                page: params.page,
-                pageSize: params.pageSize,
-                query: (params.query || "").trim() || undefined,
-              },
+              payload: buildListPayload(params),
             });
             statsReqIdRef.current = rid();
-            window.api.wsSend({ type: "drivers:stats", requestId: statsReqIdRef.current });
+            window.api.wsSend({
+              type: "drivers:stats",
+              requestId: statsReqIdRef.current,
+              payload: buildStatsPayload(params),
+            });
           }
         } else {
           notify?.error?.(msg.error || "Repair failed", "Repair drivers");
@@ -140,16 +229,14 @@ export default function Drivers({ account, onNavigate, onOpenDriverContextMenu }
         window.api.wsSend({
           type: "drivers:list",
           requestId: requestIdRef.current,
-          payload: {
-            sortBy: params.sortKey,
-            sortDir: params.sortDir,
-            page: params.page,
-            pageSize: params.pageSize,
-            query: (params.query || "").trim() || undefined,
-          },
+          payload: buildListPayload(params),
         });
         statsReqIdRef.current = rid();
-        window.api.wsSend({ type: "drivers:stats", requestId: statsReqIdRef.current });
+        window.api.wsSend({
+          type: "drivers:stats",
+          requestId: statsReqIdRef.current,
+          payload: buildStatsPayload(params),
+        });
       }
     });
 
@@ -158,8 +245,13 @@ export default function Drivers({ account, onNavigate, onOpenDriverContextMenu }
       try {
         await window.api.wsConnect();
         if (!cancelled && canView && window.api.wsSend) {
+          const params = listParamsRef.current;
           statsReqIdRef.current = rid();
-          window.api.wsSend({ type: "drivers:stats", requestId: statsReqIdRef.current });
+          window.api.wsSend({
+            type: "drivers:stats",
+            requestId: statsReqIdRef.current,
+            payload: buildStatsPayload(params),
+          });
         }
       } catch {
         if (!cancelled) setLoading(false);
@@ -170,7 +262,7 @@ export default function Drivers({ account, onNavigate, onOpenDriverContextMenu }
       cancelled = true;
       unsub?.();
     };
-  }, [canView]);
+  }, [buildListPayload, buildStatsPayload, canView]);
 
   // Fetch list on mount and when sort, page, pageSize or query change
   useEffect(() => {
@@ -180,15 +272,30 @@ export default function Drivers({ account, onNavigate, onOpenDriverContextMenu }
     window.api.wsSend({
       type: "drivers:list",
       requestId: requestIdRef.current,
-      payload: {
-        sortBy: sortKey,
+      payload: buildListPayload({
+        sortKey,
         sortDir,
         page,
         pageSize,
-        query: query.trim() || undefined,
-      },
+        query,
+        fromDate: dateRange?.from || "",
+        toDate: dateRange?.to || "",
+        minOrders,
+        minBalance,
+      }),
     });
-  }, [sortKey, sortDir, page, pageSize, query]);
+    statsReqIdRef.current = rid();
+    window.api.wsSend({
+      type: "drivers:stats",
+      requestId: statsReqIdRef.current,
+      payload: buildStatsPayload({
+        fromDate: dateRange?.from || "",
+        toDate: dateRange?.to || "",
+        minOrders,
+        minBalance,
+      }),
+    });
+  }, [sortKey, sortDir, page, pageSize, query, dateRange?.from, dateRange?.to, minOrders, minBalance, buildListPayload, buildStatsPayload]);
 
   const toggleSort = useCallback((key) => {
     if (!key) return;
@@ -207,7 +314,7 @@ export default function Drivers({ account, onNavigate, onOpenDriverContextMenu }
   );
 
   useEffect(() => setPage((p) => clamp(p, 1, totalPages)), [totalPages]);
-  useEffect(() => setPage(1), [query]);
+  useEffect(() => setPage(1), [query, dateRange?.from, dateRange?.to, minOrders, minBalance]);
 
   const pageItems = useMemo(() => {
     return drivers.map((d) => ({
@@ -221,6 +328,17 @@ export default function Drivers({ account, onNavigate, onOpenDriverContextMenu }
   const animatedMoney = useAnimatedNumber(driverStats?.totalMoneyInHand ?? 0, "money", 900);
   const animatedEarnings = useAnimatedNumber(driverStats?.totalEarnings ?? 0, "earnings", 900);
   const animatedWithdrawal = useAnimatedNumber(driverStats?.totalWithdrawal ?? 0, "withdrawal", 900);
+
+  const topByOrders = useMemo(
+    () => (driverStats?.topByOrders || []).slice(0, Math.max(1, Number(topLimit) || 5)),
+    [driverStats?.topByOrders, topLimit]
+  );
+  const topByBalance = useMemo(
+    () => (driverStats?.topByBalance || []).slice(0, Math.max(1, Number(topLimit) || 5)),
+    [driverStats?.topByBalance, topLimit]
+  );
+  const topOrdersLeader = topByOrders[0] || null;
+  const topBalanceLeader = topByBalance[0] || null;
 
   if (!canView) {
     return (
@@ -238,8 +356,7 @@ export default function Drivers({ account, onNavigate, onOpenDriverContextMenu }
     );
   }
 
-  const isInitialLoad = loading && drivers.length === 0 && total === 0;
-  const hasData = total > 0;
+  const isInitialLoad = loading && !hasLoadedOnce;
 
   return (
     <div className="auditLogsPage driversPage driversPage--enter">
@@ -300,35 +417,98 @@ export default function Drivers({ account, onNavigate, onOpenDriverContextMenu }
               </div>
             ) : (
               <>
-                <div className="driversToolbar">
-                  <SearchInput
-                    value={query}
-                    onChange={(v) => {
-                      setQuery(v);
-                      setPage(1);
-                    }}
-                    fields={["name", "phone", "ID"]}
-                    size="md"
-                    width={400}
-                  />
-                  {canRepairDrivers && (
-                    <button
-                      type="button"
-                      className="driversRepairBtn"
-                      onClick={() => {
-                        if (!window.api?.wsSend || repairing) return;
-                        previewRequestIdRef.current = rid();
-                        window.api.wsSend({
-                          type: "drivers:repair:preview",
-                          requestId: previewRequestIdRef.current,
-                        });
+                <div className="driversToolbar driversToolbar--stack">
+                  <div className="driversToolbarRow">
+                    <DateRangePicker
+                      value={dateRange}
+                      onChange={(range) => {
+                        const next = {
+                          from: range?.from || "",
+                          to: range?.to || "",
+                        };
+                        setDateRange(next);
                       }}
-                      disabled={repairing}
-                    >
-                      <RefreshCw size={16} className={repairing ? "driversRepairBtnSpinner" : ""} />
-                      {repairing ? "Repairing…" : "Repair drivers"}
-                    </button>
-                  )}
+                      label="Performance range"
+                      placeholder="Select range"
+                      className="driversDateRange"
+                      popoverClassName="driversDateRangePopover"
+                      clearButtonLabel="Clear range"
+                    />
+                    <div className="driversFilterField">
+                      <label className="driversFilterLabel">Min orders</label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={minOrders}
+                        onChange={(e) => setMinOrders(e.target.value)}
+                        className="driversFilterInput"
+                        placeholder="0"
+                      />
+                    </div>
+                    <div className="driversFilterField">
+                      <label className="driversFilterLabel">Min balance</label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={minBalance}
+                        onChange={(e) => setMinBalance(e.target.value)}
+                        className="driversFilterInput"
+                        placeholder="0"
+                      />
+                    </div>
+                    <div className="driversFilterField">
+                      <label className="driversFilterLabel">Top rows</label>
+                      <PaginatorSelect
+                        value={topLimit}
+                        onChange={(v) => setTopLimit(v)}
+                        options={[3, 5, 8, 10].map((n) => ({ value: n, label: String(n) }))}
+                        openAbove
+                      />
+                    </div>
+                    {(dateRange?.from || dateRange?.to || minOrders || minBalance) && (
+                      <button
+                        type="button"
+                        className="driversRepairBtn driversRepairBtn--ghost"
+                        onClick={() => {
+                          const next = defaultDateRangeStrings();
+                          setDateRange(next);
+                          setMinOrders("");
+                          setMinBalance("");
+                        }}
+                      >
+                        Reset filters
+                      </button>
+                    )}
+                  </div>
+                  <div className="driversToolbarRow">
+                    <span className="driversFilterMeta">
+                      Showing {driverStats?.matchedDrivers ?? total} drivers in selected range
+                    </span>
+                  </div>
+                  <div className="driversToolbarRow">
+                    <pre className="driversDebugPanel">
+{JSON.stringify(
+  {
+    currentFilters: {
+      dateRange,
+      minOrders,
+      minBalance,
+      query,
+      page,
+      pageSize,
+    },
+    serverList: debugInfo?.list,
+    serverStats: debugInfo?.stats,
+    listError: debugInfo?.listError,
+    statsError: debugInfo?.statsError,
+    listRows: drivers.length,
+    totalRows: total,
+  },
+  null,
+  2
+)}
+                    </pre>
+                  </div>
                   <AnimatePresence>
                     {repairConfirmOpen && (
                       <motion.div
@@ -393,135 +573,205 @@ export default function Drivers({ account, onNavigate, onOpenDriverContextMenu }
                   </AnimatePresence>
                 </div>
 
-                {!hasData && !loading ? (
-                  <div className="driversEmpty">
-                    <img
-                      src={getAssetUrl("assets/svg/nodata-ill.svg")}
-                      alt=""
-                      className="driversEmptyIll"
-                    />
-                    <p>No drivers found</p>
+                <div className="driversInsightsGrid">
+                  <div className="driversInsightCard driversInsightCard--orders">
+                    <span className="driversInsightLabel">Top by orders</span>
+                    <strong className="driversInsightName">{topOrdersLeader?.name || "—"}</strong>
+                    <span className="driversInsightValue">{formatNum(topOrdersLeader?.totalOrders ?? 0)} orders</span>
                   </div>
-                ) : (
-                  <div className="auditLogsTableWrap">
-                    <DataTable
-                      columns={columns}
-                      sortKey={sortKey}
-                      sortDir={sortDir}
-                      onSort={toggleSort}
-                      loading={loading}
-                      emptyText="No drivers."
-                      rows={pageItems}
-                      disableVirtualization
-                      onRowClick={onNavigate ? (row) => onNavigate("drivers:profile", row) : undefined}
-                      onRowContextMenu={
-                        onOpenDriverContextMenu
-                          ? (event, row) => onOpenDriverContextMenu(event, row)
-                          : undefined
-                      }
-                      renderRow={(row) => (
-                        <>
-                          <div className="td">
-                            <div className="cell cell--muted">{row.serial ?? "—"}</div>
-                          </div>
-                          <div className="td">
-                            <div className="cell cell--muted">{row.id || "—"}</div>
-                          </div>
-                          <div className="td">
-                            <div className="driverListNameCell">
-                              <div className="cell strong">{row.name || "—"}</div>
-                              <div className="cell driverListPhone">{row.phone || "—"}</div>
-                            </div>
-                          </div>
-                          <div className="td">
-                            <div className="cell driversNum">{formatNum(row.cashInHands)}</div>
-                          </div>
-                          <div className="td">
-                            <div className="cell driversNum">{formatNum(row.totalEarnings)}</div>
-                          </div>
-                          <div className="td">
-                            <div className="cell driversNum">{formatNum(row.balance)}</div>
-                          </div>
-                          <div className="td">
-                            <div className="cell driversNum">{formatNum(row.totalWithdrawal)}</div>
-                          </div>
-                          <div className="td">
-                            <div className="cell cell--muted">{formatRelativeDate(row.lastCashinAt)}</div>
-                          </div>
-                        </>
+                  <div className="driversInsightCard driversInsightCard--balance">
+                    <span className="driversInsightLabel">Top by balance</span>
+                    <strong className="driversInsightName">{topBalanceLeader?.name || "—"}</strong>
+                    <span className="driversInsightValue">{formatNum(topBalanceLeader?.balance ?? 0)} balance</span>
+                  </div>
+                </div>
+
+                <div className="driversTopSections">
+                  <div className="driversTopCard">
+                    <h4 className="driversTopTitle">Top drivers by orders</h4>
+                    <ul className="driversTopList">
+                      {topByOrders.length === 0 ? (
+                        <li className="driversTopEmpty">No data in this range.</li>
+                      ) : (
+                        topByOrders.map((d, i) => (
+                          <li key={`orders-${d.id}-${i}`} className="driversTopItem">
+                            <span className="driversTopRank">#{i + 1}</span>
+                            <span className="driversTopName">{d.name || "—"}</span>
+                            <span className="driversTopMetric">{formatNum(d.totalOrders)}</span>
+                          </li>
+                        ))
                       )}
-                      footer={
-                        <div className="driversFooter">
-                          <div className="driversFooterLeft">
-                            <div className="driversPerPage">
-                              <PaginatorSelect
-                                label="Rows"
-                                value={pageSize}
-                                onChange={(v) => {
-                                  setPageSize(v);
-                                  setPage(1);
-                                }}
-                                options={[15, 30, 50].map((n) => ({
-                                  value: n,
-                                  label: `${n} / page`,
-                                }))}
-                                openAbove
-                              />
-                            </div>
-                          </div>
-                          <div className="driversFooterMid">
-                            <button
-                              type="button"
-                              className="driversPagerBtn"
-                              disabled={page <= 1}
-                              onClick={() => setPage((p) => p - 1)}
-                            >
-                              <ChevronLeft size={16} />
-                              Previous
-                            </button>
-                            <div className="driversPages">
-                              {pageModel.map((p, idx) =>
-                                p === "…" ? (
-                                  <span key={`dots-${idx}`} className="driversPagesDots">
-                                    …
-                                  </span>
-                                ) : (
-                                  <button
-                                    key={p}
-                                    type="button"
-                                    className={`driversPageBtn ${p === page ? "active" : ""}`}
-                                    onClick={() => setPage(p)}
-                                  >
-                                    {p}
-                                  </button>
-                                )
-                              )}
-                            </div>
-                            <button
-                              type="button"
-                              className="driversPagerBtn"
-                              disabled={page >= totalPages}
-                              onClick={() => setPage((p) => p + 1)}
-                            >
-                              Next
-                              <ChevronRight size={16} />
-                            </button>
-                          </div>
-                          <div className="driversFooterRight">
-                            <span className="driversMuted">
-                              {total === 0
-                                ? "0 results"
-                                : `Showing ${(page - 1) * pageSize + 1}–${Math.min(
-                                    page * pageSize,
-                                    total
-                                  )} of ${total}`}
-                            </span>
+                    </ul>
+                  </div>
+                  <div className="driversTopCard">
+                    <h4 className="driversTopTitle">Top drivers by balance</h4>
+                    <ul className="driversTopList">
+                      {topByBalance.length === 0 ? (
+                        <li className="driversTopEmpty">No data in this range.</li>
+                      ) : (
+                        topByBalance.map((d, i) => (
+                          <li key={`balance-${d.id}-${i}`} className="driversTopItem">
+                            <span className="driversTopRank">#{i + 1}</span>
+                            <span className="driversTopName">{d.name || "—"}</span>
+                            <span className="driversTopMetric">{formatNum(d.balance)}</span>
+                          </li>
+                        ))
+                      )}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="driversSearchBarWrap">
+                  <div className="driversSearchBarRow">
+                    <SearchInput
+                      value={query}
+                      onChange={(v) => {
+                        setQuery(v);
+                        setPage(1);
+                      }}
+                      fields={["name", "phone", "ID"]}
+                      size="md"
+                      width={480}
+                    />
+                    {canRepairDrivers && (
+                      <button
+                        type="button"
+                        className="driversRepairBtn"
+                        onClick={() => {
+                          if (!window.api?.wsSend || repairing) return;
+                          previewRequestIdRef.current = rid();
+                          window.api.wsSend({
+                            type: "drivers:repair:preview",
+                            requestId: previewRequestIdRef.current,
+                          });
+                        }}
+                        disabled={repairing}
+                      >
+                        <RefreshCw size={16} className={repairing ? "driversRepairBtnSpinner" : ""} />
+                        {repairing ? "Repairing…" : "Repair drivers"}
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                <div className="auditLogsTableWrap">
+                  <DataTable
+                    columns={columns}
+                    sortKey={sortKey}
+                    sortDir={sortDir}
+                    onSort={toggleSort}
+                    loading={loading}
+                    emptyText="No drivers found."
+                    rows={pageItems}
+                    disableVirtualization
+                    onRowClick={onNavigate ? (row) => onNavigate("drivers:profile", row) : undefined}
+                    onRowContextMenu={
+                      onOpenDriverContextMenu
+                        ? (event, row) => onOpenDriverContextMenu(event, row)
+                        : undefined
+                    }
+                    renderRow={(row) => (
+                      <>
+                        <div className="td">
+                          <div className="cell cell--muted">{row.serial ?? "—"}</div>
+                        </div>
+                        <div className="td">
+                          <div className="cell cell--muted">{row.id || "—"}</div>
+                        </div>
+                        <div className="td">
+                          <div className="driverListNameCell">
+                            <div className="cell strong">{row.name || "—"}</div>
+                            <div className="cell driverListPhone">{row.phone || "—"}</div>
                           </div>
                         </div>
-                      }
-                    />
-                  </div>
-                )}
+                        <div className="td">
+                          <div className="cell driversNum">{formatNum(row.cashInHands)}</div>
+                        </div>
+                        <div className="td">
+                          <div className="cell driversNum">{formatNum(row.totalEarnings)}</div>
+                        </div>
+                        <div className="td">
+                          <div className="cell driversNum">{formatNum(row.balance)}</div>
+                        </div>
+                        <div className="td">
+                          <div className="cell driversNum">{formatNum(row.totalWithdrawal)}</div>
+                        </div>
+                        <div className="td">
+                          <div className="cell cell--muted">{formatRelativeDate(row.lastCashinAt)}</div>
+                        </div>
+                      </>
+                    )}
+                    footer={
+                      <div className="driversFooter">
+                        <div className="driversFooterLeft">
+                          <div className="driversPerPage">
+                            <PaginatorSelect
+                              label="Rows"
+                              value={pageSize}
+                              onChange={(v) => {
+                                setPageSize(v);
+                                setPage(1);
+                              }}
+                              options={[15, 30, 50].map((n) => ({
+                                value: n,
+                                label: `${n} / page`,
+                              }))}
+                              openAbove
+                            />
+                          </div>
+                        </div>
+                        <div className="driversFooterMid">
+                          <button
+                            type="button"
+                            className="driversPagerBtn"
+                            disabled={page <= 1}
+                            onClick={() => setPage((p) => p - 1)}
+                          >
+                            <ChevronLeft size={16} />
+                            Previous
+                          </button>
+                          <div className="driversPages">
+                            {pageModel.map((p, idx) =>
+                              p === "…" ? (
+                                <span key={`dots-${idx}`} className="driversPagesDots">
+                                  …
+                                </span>
+                              ) : (
+                                <button
+                                  key={p}
+                                  type="button"
+                                  className={`driversPageBtn ${p === page ? "active" : ""}`}
+                                  onClick={() => setPage(p)}
+                                >
+                                  {p}
+                                </button>
+                              )
+                            )}
+                          </div>
+                          <button
+                            type="button"
+                            className="driversPagerBtn"
+                            disabled={page >= totalPages}
+                            onClick={() => setPage((p) => p + 1)}
+                          >
+                            Next
+                            <ChevronRight size={16} />
+                          </button>
+                        </div>
+                        <div className="driversFooterRight">
+                          <span className="driversMuted">
+                            {total === 0
+                              ? "0 results"
+                              : `Showing ${(page - 1) * pageSize + 1}–${Math.min(
+                                  page * pageSize,
+                                  total
+                                )} of ${total}`}
+                          </span>
+                        </div>
+                      </div>
+                    }
+                  />
+                </div>
               </>
             )}
           </section>

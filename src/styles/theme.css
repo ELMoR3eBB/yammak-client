@@ -1,0 +1,2278 @@
+/* Global theme tokens */
+:root {
+  --app-bg: #09090b;
+  --app-surface: #111216;
+  --app-surface-soft: rgba(255, 255, 255, 0.04);
+  --app-border: rgba(255, 255, 255, 0.1);
+  --app-text: rgba(255, 255, 255, 0.92);
+  --app-text-muted: rgba(255, 255, 255, 0.6);
+}
+
+html[data-theme="light"] {
+  --app-bg: #f4f6fb;
+  --app-surface: #ffffff;
+  --app-surface-soft: #f7f9fc;
+  --app-border: rgba(15, 23, 42, 0.12);
+  --app-text: #0f172a;
+  --app-text-muted: #64748b;
+  color-scheme: light;
+}
+
+html[data-theme="light"] body,
+html[data-theme="light"] #root,
+html[data-theme="light"] .main,
+html[data-theme="light"] .content,
+html[data-theme="light"] .page {
+  background: var(--app-bg) !important;
+  color: var(--app-text) !important;
+}
+
+/* Generic cards, sections and surfaces */
+html[data-theme="light"] [class*="Card"],
+html[data-theme="light"] [class*="Section"],
+html[data-theme="light"] [class*="panel"],
+html[data-theme="light"] [class*="Panel"],
+html[data-theme="light"] [class*="surface"] {
+  border-color: var(--app-border) !important;
+  color: var(--app-text) !important;
+}
+
+/* Sidebars and app-level pages that use custom css vars */
+html[data-theme="light"] .sidebar2 {
+  --sb-bg: #ffffff;
+  --sb-surface: #f3f6fb;
+  --sb-surface-hover: #e9eef7;
+  --sb-surface-active: rgba(251, 191, 36, 0.2);
+  --sb-border: rgba(15, 23, 42, 0.1);
+  --sb-text: #0f172a;
+  --sb-text-muted: #64748b;
+}
+
+html[data-theme="light"] .sidebar2 .sb2-item .sb2-badge--circle {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  background: #f59e0b !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(217, 119, 6, 0.38) !important;
+  box-shadow: 0 0 0 2px #ffffff, 0 2px 6px rgba(15, 23, 42, 0.18) !important;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+html[data-theme="light"] .sidebar2 .sb2-item:hover .sb2-badge--circle,
+html[data-theme="light"] .sidebar2 .sb2-item.active .sb2-badge--circle {
+  background: #d97706 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .settingsPage {
+  --st-bg: #f4f6fb;
+  --st-bg-elevated: #ffffff;
+  --st-surface: #f7f9fc;
+  --st-surface-hover: #edf2fa;
+  --st-border: rgba(15, 23, 42, 0.12);
+  --st-text: #0f172a;
+  --st-text-muted: #64748b;
+}
+
+html[data-theme="light"] .settingsPage .toggle-switch-background {
+  background: #e9eef7 !important;
+  border-color: rgba(15, 23, 42, 0.18) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+html[data-theme="light"] .settingsPage .toggle-switch-handle {
+  background: #ffffff !important;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.22), 0 1px 2px rgba(15, 23, 42, 0.16) !important;
+}
+
+html[data-theme="light"] .settingsPage .toggle-switch:hover .toggle-switch-background {
+  background: #dfe7f3 !important;
+  border-color: rgba(15, 23, 42, 0.24) !important;
+}
+
+html[data-theme="light"] .settingsPage .toggle-switch input:checked + .toggle-switch-background {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  border-color: rgba(217, 119, 6, 0.7) !important;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.18) !important;
+}
+
+html[data-theme="light"] .settingsPage .toggle-switch input:checked + .toggle-switch-background .toggle-switch-handle {
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.24), 0 0 0 2px rgba(255, 255, 255, 0.7) !important;
+}
+
+html[data-theme="light"] .devicesPage {
+  --dv-bg: #f4f6fb;
+  --dv-bg-elevated: #ffffff;
+  --dv-surface: #f7f9fc;
+  --dv-border: rgba(15, 23, 42, 0.12);
+  --dv-text: #0f172a;
+  --dv-text-muted: #64748b;
+}
+
+/* Vaults page light mode */
+html[data-theme="light"] .vaultPage {
+  --st-bg: #f4f6fb;
+  --st-bg-elevated: #ffffff;
+  --st-border: rgba(15, 23, 42, 0.12);
+  --st-text: #0f172a;
+  --st-text-muted: #64748b;
+  --st-accent: #d97706;
+  background: var(--st-bg) !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultHeader,
+html[data-theme="light"] .vaultPage .vaultToolbar,
+html[data-theme="light"] .vaultPage .vaultBody .vaultMetrics .vaultMetric,
+html[data-theme="light"] .vaultPage .vaultMiniCard,
+html[data-theme="light"] .vaultModal,
+html[data-theme="light"] .vaultCategoryFilterMenu {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08) !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultSearchInput,
+html[data-theme="light"] .vaultPage .vaultCategoryFilterTrigger,
+html[data-theme="light"] .vaultPage .vaultFormInput,
+html[data-theme="light"] .vaultPage .vaultFormTextarea {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultSearchInput::placeholder,
+html[data-theme="light"] .vaultPage .vaultFormInput::placeholder,
+html[data-theme="light"] .vaultPage .vaultFormTextarea::placeholder {
+  color: #64748b !important;
+  opacity: 1 !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultMiniCard .vaultMiniBottom,
+html[data-theme="light"] .vaultModalHeader,
+html[data-theme="light"] .vaultModalFooter {
+  border-color: rgba(15, 23, 42, 0.1) !important;
+}
+
+html[data-theme="light"] .vaultModalBackdrop {
+  background: rgba(15, 23, 42, 0.28) !important;
+}
+
+/* Forms and text */
+html[data-theme="light"] input,
+html[data-theme="light"] textarea,
+html[data-theme="light"] select,
+html[data-theme="light"] button {
+  color: var(--app-text);
+}
+
+html[data-theme="light"] input:not(.p-colorpicker-preview),
+html[data-theme="light"] textarea,
+html[data-theme="light"] select {
+  background: #ffffff !important;
+  border-color: var(--app-border) !important;
+}
+
+html[data-theme="light"] p,
+html[data-theme="light"] span,
+html[data-theme="light"] label,
+html[data-theme="light"] h1,
+html[data-theme="light"] h2,
+html[data-theme="light"] h3,
+html[data-theme="light"] h4,
+html[data-theme="light"] h5,
+html[data-theme="light"] h6 {
+  color: inherit;
+}
+
+/* Tables */
+html[data-theme="light"] .dt {
+  background: #ffffff !important;
+  border-color: var(--app-border) !important;
+}
+html[data-theme="light"] .dt-head,
+html[data-theme="light"] .dt-footer {
+  background: #f3f6fb !important;
+  border-color: var(--app-border) !important;
+}
+html[data-theme="light"] .dt-row {
+  border-color: var(--app-border) !important;
+}
+html[data-theme="light"] .dt-row:hover {
+  background: #f8fbff !important;
+}
+html[data-theme="light"] .dt-th {
+  color: #334155 !important;
+}
+
+/* Generic table fallback */
+html[data-theme="light"] table,
+html[data-theme="light"] th,
+html[data-theme="light"] td {
+  background: #ffffff;
+  color: var(--app-text);
+  border-color: var(--app-border) !important;
+}
+
+/* Modals/popovers/context menus/tooltips */
+html[data-theme="light"] [class*="Modal"],
+html[data-theme="light"] [class*="modal"],
+html[data-theme="light"] .p-dialog,
+html[data-theme="light"] .p-overlaypanel,
+html[data-theme="light"] .p-contextmenu,
+html[data-theme="light"] .p-menu,
+html[data-theme="light"] [role="menu"] {
+  background: #ffffff !important;
+  color: var(--app-text) !important;
+  border-color: var(--app-border) !important;
+}
+
+html[data-theme="light"] .tippy-box {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+}
+html[data-theme="light"] .tippy-arrow {
+  color: #ffffff !important;
+}
+
+/* Backdrops */
+html[data-theme="light"] [class*="Backdrop"],
+html[data-theme="light"] [class*="backdrop"] {
+  background: rgba(15, 23, 42, 0.28) !important;
+}
+
+/* Requested page-by-page light mode coverage */
+html[data-theme="light"] .dashboardPage,
+html[data-theme="light"] .gamingPage,
+html[data-theme="light"] .createEmployeePage,
+html[data-theme="light"] .employeesPage,
+html[data-theme="light"] .createRolePage,
+html[data-theme="light"] .rolesPage,
+html[data-theme="light"] .holidaysPage {
+  --st-bg: #f4f6fb;
+  --st-bg-elevated: #ffffff;
+  --st-surface: #f7f9fc;
+  --st-surface-hover: #edf2fa;
+  --st-border: rgba(15, 23, 42, 0.12);
+  --st-text: #0f172a;
+  --st-text-muted: #64748b;
+  --st-accent-soft: rgba(245, 158, 11, 0.16);
+  --st-accent-glow: rgba(245, 158, 11, 0.18);
+}
+
+html[data-theme="light"] .dashboardPage::before,
+html[data-theme="light"] .gamingPage::before,
+html[data-theme="light"] .createEmployeePage::before,
+html[data-theme="light"] .employeesPage::before,
+html[data-theme="light"] .createRolePage::before,
+html[data-theme="light"] .rolesPage::before,
+html[data-theme="light"] .holidaysPage::before {
+  background: radial-gradient(
+    ellipse 100% 50% at 0% 0%,
+    rgba(245, 158, 11, 0.06) 0%,
+    transparent 55%
+  );
+}
+
+/* Chat page + start modal */
+html[data-theme="light"] .chatPage {
+  --chat-bg: #f4f6fb;
+  --chat-surface: #ffffff;
+  --chat-surface-2: #f7f9fc;
+  --chat-border: rgba(15, 23, 42, 0.12);
+  --chat-text: #0f172a;
+  --chat-muted: #64748b;
+  --chat-accent: #f59e0b;
+  --chat-accent-2: #d97706;
+  background: var(--chat-bg);
+}
+
+html[data-theme="light"] .chatSidebar,
+html[data-theme="light"] .chatMain,
+html[data-theme="light"] .chatStartModal {
+  background: linear-gradient(180deg, #ffffff, #f7f9fc);
+  border-color: var(--chat-border);
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.1);
+}
+
+html[data-theme="light"] .chatConversationItem {
+  background: rgba(15, 23, 42, 0.03);
+}
+
+html[data-theme="light"] .chatConversationItem.is-active {
+  background: rgba(245, 158, 11, 0.14);
+  border-color: rgba(245, 158, 11, 0.38);
+}
+
+html[data-theme="light"] .chatConversationItem.is-department {
+  background: rgba(20, 184, 166, 0.1);
+  border-color: rgba(20, 184, 166, 0.26);
+}
+
+html[data-theme="light"] .chatConversationItem.is-department.is-active {
+  background: linear-gradient(135deg, rgba(45, 212, 191, 0.18), rgba(20, 184, 166, 0.12));
+  border-color: rgba(13, 148, 136, 0.38);
+}
+
+html[data-theme="light"] .chatConversationItem.is-department .chatGlobalPill {
+  color: #0f766e !important;
+  border-color: rgba(15, 118, 110, 0.34) !important;
+  background: rgba(45, 212, 191, 0.2) !important;
+}
+
+html[data-theme="light"] .chatMainConversation.is-department .chatMainHeader {
+  border-bottom-color: rgba(15, 118, 110, 0.24) !important;
+  background: linear-gradient(180deg, rgba(45, 212, 191, 0.16), rgba(240, 253, 250, 0.78)) !important;
+}
+
+html[data-theme="light"] .chatPresenceDot {
+  border-color: #ffffff;
+}
+
+html[data-theme="light"] .chatStartModalBackdrop {
+  background: rgba(15, 23, 42, 0.24);
+}
+
+html[data-theme="light"] .chatStartTab {
+  border-color: rgba(15, 23, 42, 0.14);
+  background: #f8fafc;
+  color: #475569;
+}
+
+html[data-theme="light"] .chatStartTab:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: rgba(15, 23, 42, 0.24);
+}
+
+html[data-theme="light"] .chatStartTab--active,
+html[data-theme="light"] .chatStartTab--active:hover {
+  color: #92400e;
+  background: rgba(245, 158, 11, 0.18);
+}
+
+html[data-theme="light"] .chatSidebarTabs,
+html[data-theme="light"] .chatSidebarTabBtn,
+html[data-theme="light"] .chatConversationContextMenu,
+html[data-theme="light"] .chatMessageContextMenu,
+html[data-theme="light"] .chatPinnedPopover,
+html[data-theme="light"] .chatPollModal,
+html[data-theme="light"] .chatPollCard,
+html[data-theme="light"] .chatComposer,
+html[data-theme="light"] .chatComposerContextBar {
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .chatSidebarTabBtn {
+  background: #f8fafc !important;
+}
+
+html[data-theme="light"] .chatSidebarTabBtn.is-active {
+  background: rgba(245, 158, 11, 0.16) !important;
+  color: #92400e !important;
+}
+
+html[data-theme="light"] .chatPinBtn {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #475569 !important;
+}
+
+html[data-theme="light"] .chatPinBtn:hover {
+  background: #eef2f8 !important;
+  border-color: rgba(15, 23, 42, 0.24) !important;
+  color: #1e293b !important;
+}
+
+html[data-theme="light"] .chatPinBtn.is-active,
+html[data-theme="light"] .chatPinBtn.is-active:hover {
+  border-color: rgba(245, 158, 11, 0.45) !important;
+  background: rgba(245, 158, 11, 0.16) !important;
+  color: #b45309 !important;
+}
+
+html[data-theme="light"] .chatPinBtn .chatPinBtnBadge,
+html[data-theme="light"] .chatPinBtn:hover .chatPinBtnBadge,
+html[data-theme="light"] .chatPinBtn.is-active .chatPinBtnBadge,
+html[data-theme="light"] .chatPinBtn.is-active:hover .chatPinBtnBadge {
+  background: #f59e0b !important;
+  color: #ffffff !important;
+  border: 1px solid #ffffff !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.18) !important;
+  min-width: 14px !important;
+  height: 14px !important;
+  padding: 0 3px !important;
+  font-size: 9px !important;
+  line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+html[data-theme="light"] .chatMessageContextMenu,
+html[data-theme="light"] .chatConversationContextMenu,
+html[data-theme="light"] .chatPinnedPopover,
+html[data-theme="light"] .chatPollModal {
+  background: radial-gradient(ellipse at top left, rgba(245, 158, 11, 0.08), transparent 58%), #ffffff !important;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.16) !important;
+}
+
+html[data-theme="light"] .chatMessageContextItem,
+html[data-theme="light"] .chatPollAnswerRemoveBtn,
+html[data-theme="light"] .chatPollAddAnswerBtn,
+html[data-theme="light"] .chatPollDurationBtn {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .chatMessageContextItem:hover,
+html[data-theme="light"] .chatPollDurationBtn:hover {
+  background: rgba(15, 23, 42, 0.06) !important;
+}
+
+html[data-theme="light"] .chatPinnedItem:hover,
+html[data-theme="light"] .chatPollOptionBtn:hover {
+  background: rgba(15, 23, 42, 0.05) !important;
+}
+
+html[data-theme="light"] .chatPollInput {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.16) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .chatSidebarSearch input::placeholder,
+html[data-theme="light"] .chatStartSearch input::placeholder,
+html[data-theme="light"] .chatStartField input::placeholder,
+html[data-theme="light"] .chatComposer textarea::placeholder,
+html[data-theme="light"] .chatPollInput::placeholder,
+html[data-theme="light"] .chatStartGroupTitleInput::placeholder,
+html[data-theme="light"] .chatStartInput::placeholder {
+  color: #64748b !important;
+  opacity: 1 !important;
+}
+
+html[data-theme="light"] .chatSidebarSearch input::placeholder {
+  color: #64748b !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.01em !important;
+}
+
+html[data-theme="light"] .chatSidebarSearch:focus-within input::placeholder {
+  color: #b45309 !important;
+}
+
+html[data-theme="light"] .chatMessageRole {
+  background: #e9eef7 !important;
+  border: 1px solid rgba(15, 23, 42, 0.12) !important;
+  color: #475569 !important;
+}
+
+html[data-theme="light"] .chatPollCard {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.1) !important;
+}
+
+html[data-theme="light"] .chatPollHead,
+html[data-theme="light"] .chatPollPrompt,
+html[data-theme="light"] .chatPollOptionVotes,
+html[data-theme="light"] .chatPollFooterMeta {
+  color: #475569 !important;
+}
+
+html[data-theme="light"] .chatPollOptionBtn {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .chatPollOptionBtn.is-voted {
+  border-color: rgba(245, 158, 11, 0.42) !important;
+  background: rgba(245, 158, 11, 0.12) !important;
+}
+
+html[data-theme="light"] .chatPollOptionFill {
+  background: rgba(245, 158, 11, 0.18) !important;
+}
+
+html[data-theme="light"] .chatPollOptionPercent {
+  color: #1e293b !important;
+}
+
+html[data-theme="light"] .chatPollRemoveVoteBtn {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .chatPollRemoveVoteBtn:hover:not(:disabled) {
+  background: #eef2f8 !important;
+}
+
+html[data-theme="light"] .chatEmojiPanel {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.16) !important;
+}
+
+html[data-theme="light"] .chatEmojiPanel .EmojiPickerReact {
+  --epr-bg-color: #ffffff;
+  --epr-category-label-bg-color: #f8fafc;
+  --epr-hover-bg-color: rgba(15, 23, 42, 0.06);
+  --epr-focus-bg-color: rgba(245, 158, 11, 0.16);
+  --epr-highlight-color: #d97706;
+  --epr-text-color: #0f172a;
+}
+
+html[data-theme="light"] .chatEmojiPanel .epr-category-nav {
+  border-bottom-color: rgba(15, 23, 42, 0.1) !important;
+  background: #f8fafc !important;
+}
+
+html[data-theme="light"] .chatEmojiPanel .EmojiPickerReact .epr-body::-webkit-scrollbar-thumb,
+html[data-theme="light"] .chatEmojiPanel .EmojiPickerReact .epr-emoji-category-content::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.55) !important;
+  border-color: #ffffff !important;
+}
+
+html[data-theme="light"] .chatEmojiPanel .EmojiPickerReact .epr-body,
+html[data-theme="light"] .chatEmojiPanel .EmojiPickerReact .epr-emoji-category-content {
+  scrollbar-color: rgba(100, 116, 139, 0.55) transparent !important;
+}
+
+/* Light-mode page headers: distinct tinted strip across pages */
+html[data-theme="light"] [class$="Page"] [class*="Header"]:not(.chatMainHeader):not(.chatSidebarHeader):not(.holidayReqModal-header):not(.holidayStatusModal-header),
+html[data-theme="light"] [class$="Page"] [class*="header"]:not(.chatMainHeader):not(.chatSidebarHeader):not(.holidayReqModal-header):not(.holidayStatusModal-header) {
+  background: linear-gradient(180deg, #eef4ff, #f8fbff) !important;
+  border-color: rgba(59, 130, 246, 0.16) !important;
+}
+
+html[data-theme="light"] .chatPollTimer,
+html[data-theme="light"] .chatMessageRole,
+html[data-theme="light"] .chatPinnedItemTime,
+html[data-theme="light"] .chatConversationPreview {
+  color: #64748b !important;
+}
+
+html[data-theme="light"] .chatComposerLockNotice {
+  background: rgba(245, 158, 11, 0.1) !important;
+  border-color: rgba(245, 158, 11, 0.25) !important;
+  color: #92400e !important;
+}
+
+html[data-theme="light"] .chatReactionBtn {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .chatReactionBtn span:last-child {
+  color: #334155 !important;
+  font-weight: 700 !important;
+}
+
+html[data-theme="light"] .chatReactionBtn:hover {
+  background: #eef2f8 !important;
+  border-color: rgba(15, 23, 42, 0.2) !important;
+}
+
+html[data-theme="light"] .chatReactionBtn.is-active {
+  background: rgba(245, 158, 11, 0.14) !important;
+  border-color: rgba(245, 158, 11, 0.45) !important;
+}
+
+html[data-theme="light"] .chatReactionBtn.is-active span:last-child {
+  color: #92400e !important;
+}
+
+html[data-theme="light"] .chatDayDivider {
+  color: #64748b !important;
+}
+
+html[data-theme="light"] .chatDayDivider::before,
+html[data-theme="light"] .chatDayDivider::after {
+  background: rgba(15, 23, 42, 0.14) !important;
+}
+
+html[data-theme="light"] .chatMessageRemovedLabel {
+  color: rgba(71, 85, 105, 0.85) !important;
+}
+
+html[data-theme="light"] .chatMessageBubble.is-removed:hover .chatMessageRemovedLabel {
+  color: rgba(51, 65, 85, 0.95) !important;
+}
+
+html[data-theme="light"] .chatMessageSenderBtn:hover {
+  text-decoration-color: rgba(15, 23, 42, 0.38) !important;
+}
+
+html[data-theme="light"] .chatMessageContextEmoji {
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  background: #f8fafc !important;
+}
+
+html[data-theme="light"] .chatMessageContextEmoji:hover {
+  border-color: rgba(15, 23, 42, 0.24) !important;
+  background: #eef2f8 !important;
+}
+
+html[data-theme="light"] .chatMessageContextSeparator {
+  background: rgba(15, 23, 42, 0.14) !important;
+  margin: 4px 2px !important;
+}
+
+html[data-theme="light"] .chatActionBtn,
+html[data-theme="light"] .chatIconBtn {
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  background: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .chatActionBtn:hover,
+html[data-theme="light"] .chatIconBtn:hover {
+  border-color: rgba(15, 23, 42, 0.24) !important;
+  background: #eef2f8 !important;
+}
+
+html[data-theme="light"] .chatMessageRow::before {
+  background: rgba(15, 23, 42, 0.055) !important;
+}
+
+html[data-theme="light"] .chatMessageRow.is-reply-highlighted::before {
+  background: rgba(245, 158, 11, 0.16) !important;
+}
+
+html[data-theme="light"] .chatMessageReplyLead {
+  border-top-color: rgba(15, 23, 42, 0.3) !important;
+  border-left-color: rgba(15, 23, 42, 0.3) !important;
+}
+
+html[data-theme="light"] .chatMessageReplyRef {
+  color: rgba(51, 65, 85, 0.9) !important;
+}
+
+html[data-theme="light"] .chatMessageReplyRef:hover {
+  color: #0f172a !important;
+  background: rgba(15, 23, 42, 0.06) !important;
+}
+
+html[data-theme="light"] .chatMessageReplyRefSender {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .chatMessageReplyRefText {
+  color: #475569 !important;
+}
+
+html[data-theme="light"] .chatMessageTime {
+  color: #64748b !important;
+}
+
+html[data-theme="light"] .chatMessageInlineTime {
+  color: #475569 !important;
+}
+
+html[data-theme="light"] .contentRouteBar {
+  background: linear-gradient(180deg, #eef4ff, #f8fbff) !important;
+  border-color: rgba(59, 130, 246, 0.16) !important;
+  color: black;
+}
+
+html[data-theme="light"] .contentHelpBtn {
+  border-color: rgba(15, 23, 42, 0.18) !important;
+  background: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .contentHelpBtn:hover {
+  border-color: rgba(15, 23, 42, 0.26) !important;
+  background: #eef2f8 !important;
+}
+
+html[data-theme="light"] .contentHelpBtn.active {
+  border-color: rgba(217, 119, 6, 0.42) !important;
+  background: rgba(245, 158, 11, 0.16) !important;
+  color: #92400e !important;
+}
+
+html[data-theme="light"] .contentHelpBtn--globalChat {
+  border-color: rgba(14, 116, 144, 0.34) !important;
+  background: rgba(6, 182, 212, 0.14) !important;
+  color: #0e7490 !important;
+}
+
+html[data-theme="light"] .contentHelpBtn--globalChat:hover {
+  border-color: rgba(14, 116, 144, 0.48) !important;
+  background: rgba(6, 182, 212, 0.2) !important;
+}
+
+html[data-theme="light"] .contextHelpOverlay {
+  background: rgba(15, 23, 42, 0.24) !important;
+}
+
+html[data-theme="light"] .contextHelpPanel {
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  background: radial-gradient(ellipse at top left, rgba(245, 158, 11, 0.08), transparent 58%), #ffffff !important;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16) !important;
+}
+
+html[data-theme="light"] .contextHelpPanelHeader,
+html[data-theme="light"] .contextHelpActions {
+  border-color: rgba(15, 23, 42, 0.1) !important;
+}
+
+html[data-theme="light"] .contextHelpPanelEyebrow {
+  color: #b45309 !important;
+}
+
+html[data-theme="light"] .contextHelpPanelTitle {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .contextHelpPanelSummary {
+  color: #475569 !important;
+}
+
+html[data-theme="light"] .contextHelpPanelClose {
+  border-color: rgba(15, 23, 42, 0.16) !important;
+  background: #f8fafc !important;
+  color: #334155 !important;
+}
+
+html[data-theme="light"] .contextHelpPanelClose:hover {
+  border-color: rgba(15, 23, 42, 0.26) !important;
+  background: #eef2f8 !important;
+}
+
+html[data-theme="light"] .contextHelpListItem {
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  background: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .contextHelpListItem::before {
+  background: #d97706 !important;
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2) !important;
+}
+
+html[data-theme="light"] .contextHelpActionBtn {
+  border-color: rgba(217, 119, 6, 0.34) !important;
+  background: rgba(245, 158, 11, 0.14) !important;
+  color: #92400e !important;
+}
+
+html[data-theme="light"] .contextHelpActionBtn:hover {
+  border-color: rgba(217, 119, 6, 0.46) !important;
+  background: rgba(245, 158, 11, 0.2) !important;
+}
+
+html[data-theme="light"] .appLoader-backdrop {
+  background: rgba(248, 250, 252, 0.96) !important;
+}
+
+html[data-theme="light"] .appLoader-spinner {
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  border-top-color: #d97706 !important;
+}
+
+html[data-theme="light"] .appLoader-text {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .appLoader-sub {
+  color: #64748b !important;
+}
+
+/* Holidays: in-page deny modal */
+html[data-theme="light"] .holidaysPage .holidayDenyModal {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.12);
+  color: #0f172a;
+}
+
+html[data-theme="light"] .holidaysPage .holidayDenyModal-title,
+html[data-theme="light"] .holidaysPage .holidayDenyModal-desc,
+html[data-theme="light"] .holidaysPage .holidayDenyModal-desc--confirm {
+  color: #0f172a;
+}
+
+html[data-theme="light"] .holidaysPage .holidayDenyModal-input {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.18);
+  color: #0f172a;
+}
+
+html[data-theme="light"] .holidaysPage input,
+html[data-theme="light"] .holidaysPage select,
+html[data-theme="light"] .holidaysPage textarea,
+html[data-theme="light"] .holidaysPage .si-input,
+html[data-theme="light"] .holidaysPage .paginatorSelectTrigger {
+  color-scheme: light !important;
+}
+
+/* Holiday request modal */
+html[data-theme="light"] .holidayReqModal-backdrop {
+  --st-bg-elevated: #ffffff;
+  --st-surface: #f7f9fc;
+  --st-surface-hover: #edf2fa;
+  --st-border: rgba(15, 23, 42, 0.12);
+  --st-text: #0f172a;
+  --st-text-muted: #64748b;
+  --st-accent-soft: rgba(245, 158, 11, 0.16);
+  --st-accent-glow: rgba(245, 158, 11, 0.18);
+  background: rgba(15, 23, 42, 0.28);
+}
+
+html[data-theme="light"] .holidayReqModal {
+  background: radial-gradient(
+      ellipse at top left,
+      rgba(245, 158, 11, 0.08),
+      transparent 52%
+    ),
+    #ffffff;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+}
+
+html[data-theme="light"] .holidayReqModal-last {
+  background: #f7f9fc;
+}
+
+html[data-theme="light"] .holidayReqModal-lastValue,
+html[data-theme="light"] .holidayReqModal-label {
+  color: #334155;
+}
+
+html[data-theme="light"] .holidayReqModal-input[type="date"] {
+  color-scheme: light;
+}
+
+html[data-theme="light"] .holidayReqModal-input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: none;
+}
+
+/* Hot notification modal light-mode */
+html[data-theme="light"] .hotModal-backdrop {
+  background: rgba(15, 23, 42, 0.28) !important;
+}
+
+html[data-theme="light"] .hotModal {
+  background: radial-gradient(ellipse at top left, rgba(245, 158, 11, 0.08), transparent 56%), #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18) !important;
+}
+
+html[data-theme="light"] .hotModal-title {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .hotModal-message {
+  color: #64748b !important;
+}
+
+html[data-theme="light"] .hotModal-dismiss {
+  background: rgba(245, 158, 11, 0.16) !important;
+  border: 1px solid rgba(217, 119, 6, 0.34) !important;
+  color: #92400e !important;
+}
+
+html[data-theme="light"] .hotModal-dismiss:hover {
+  background: rgba(245, 158, 11, 0.22) !important;
+  border-color: rgba(217, 119, 6, 0.46) !important;
+  opacity: 1 !important;
+}
+
+/* Notifications page light-mode */
+html[data-theme="light"] .notificationsPage {
+  --st-bg: #f4f6fb;
+  --st-bg-elevated: #ffffff;
+  --st-surface: #f8fafc;
+  --st-surface-hover: #eef2f8;
+  --st-border: rgba(15, 23, 42, 0.12);
+  --st-text: #0f172a;
+  --st-text-muted: #64748b;
+  --st-accent: #d97706;
+  --st-accent-soft: rgba(245, 158, 11, 0.16);
+}
+
+html[data-theme="light"] .notificationsPage::before {
+  background: radial-gradient(ellipse 100% 50% at 0% 0%, rgba(245, 158, 11, 0.08) 0%, transparent 52%) !important;
+}
+
+html[data-theme="light"] .notificationsPage .notificationsHeader,
+html[data-theme="light"] .notificationsPage .notificationsToolbar,
+html[data-theme="light"] .notificationsPage .notificationsItem,
+html[data-theme="light"] .notificationsPage .notificationsEmpty {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08) !important;
+}
+
+html[data-theme="light"] .notificationsPage .notificationsHeaderIcon {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(245, 158, 11, 0.08) 100%) !important;
+  color: #b45309 !important;
+}
+
+html[data-theme="light"] .notificationsPage .notificationsTitle,
+html[data-theme="light"] .notificationsPage .notificationsItemTitle,
+html[data-theme="light"] .notificationsPage .notificationsEmptyText {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .notificationsPage .notificationsSubtitle,
+html[data-theme="light"] .notificationsPage .notificationsItemDate,
+html[data-theme="light"] .notificationsPage .notificationsItemRelative,
+html[data-theme="light"] .notificationsPage .notificationsItemMessage,
+html[data-theme="light"] .notificationsPage .notificationsEmptySub,
+html[data-theme="light"] .notificationsPage .notificationsStat {
+  color: #64748b !important;
+}
+
+html[data-theme="light"] .notificationsPage .notificationsStat strong {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .notificationsPage .notificationsStat--unread strong {
+  color: #b45309 !important;
+}
+
+html[data-theme="light"] .notificationsPage .notificationsItem:hover {
+  border-color: rgba(15, 23, 42, 0.2) !important;
+  background: #f8fafc !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12) !important;
+}
+
+html[data-theme="light"] .notificationsPage .notificationsItem--read {
+  opacity: 0.92;
+}
+
+html[data-theme="light"] .notificationsPage .notificationsMarkAll,
+html[data-theme="light"] .notificationsPage .notificationsItemAction {
+  color: #92400e !important;
+  background: rgba(245, 158, 11, 0.14) !important;
+  border-color: rgba(217, 119, 6, 0.32) !important;
+}
+
+html[data-theme="light"] .notificationsPage .notificationsMarkAll:hover:not(:disabled),
+html[data-theme="light"] .notificationsPage .notificationsItemAction:hover {
+  background: rgba(245, 158, 11, 0.2) !important;
+  border-color: rgba(217, 119, 6, 0.44) !important;
+}
+
+html[data-theme="light"] .notificationsPage .notificationsMarkAll:disabled {
+  opacity: 0.5;
+}
+
+html[data-theme="light"] .notificationsPage .notificationsDateInput {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #0f172a !important;
+  color-scheme: light !important;
+}
+
+html[data-theme="light"] .notificationsPage .notificationsDateInput:focus {
+  border-color: #d97706 !important;
+}
+
+html[data-theme="light"] .notificationsPage .notificationsDateRangePicker .dateRangePickerLabel {
+  color: #64748b !important;
+}
+
+html[data-theme="light"] .notificationsPage .notificationsDateRangePicker .dateRangePickerTrigger {
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+/* Hot Send page light-mode */
+html[data-theme="light"] .hotSendPage {
+  --st-bg: #f4f6fb;
+  --st-bg-elevated: #ffffff;
+  --st-surface: #f8fafc;
+  --st-border: rgba(15, 23, 42, 0.12);
+  --st-text: #0f172a;
+  --st-text-muted: #64748b;
+  --st-accent: #d97706;
+}
+
+html[data-theme="light"] .hotSendPage::before {
+  background: radial-gradient(ellipse 100% 50% at 0% 0%, rgba(245, 158, 11, 0.08) 0%, transparent 52%) !important;
+}
+
+html[data-theme="light"] .hotSendPage .hotSendHeader {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08) !important;
+}
+
+html[data-theme="light"] .hotSendPage .hotSendHeaderIcon {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(245, 158, 11, 0.08) 100%) !important;
+  color: #b45309 !important;
+}
+
+html[data-theme="light"] .hotSendPage .hotSendInput,
+html[data-theme="light"] .hotSendPage .hotSendTextarea {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #0f172a !important;
+  color-scheme: light !important;
+}
+
+html[data-theme="light"] .hotSendPage .hotSendInput:hover,
+html[data-theme="light"] .hotSendPage .hotSendTextarea:hover {
+  border-color: rgba(15, 23, 42, 0.22) !important;
+  background: #f8fafc !important;
+}
+
+html[data-theme="light"] .hotSendPage .hotSendInput:focus,
+html[data-theme="light"] .hotSendPage .hotSendTextarea:focus {
+  border-color: #d97706 !important;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2) !important;
+}
+
+html[data-theme="light"] .hotSendPage .hotSendTargetList {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+}
+
+html[data-theme="light"] .hotSendPage .hotSendSubmit,
+html[data-theme="light"] .hotSendPage .hotSendConfirm35Btn,
+html[data-theme="light"] .hotSendPage .hotSendModalBtn--confirm {
+  background: rgba(245, 158, 11, 0.16) !important;
+  border: 1px solid rgba(217, 119, 6, 0.34) !important;
+  color: #92400e !important;
+}
+
+html[data-theme="light"] .hotSendPage .hotSendSubmit:hover:not(:disabled),
+html[data-theme="light"] .hotSendPage .hotSendConfirm35Btn:hover:not(:disabled),
+html[data-theme="light"] .hotSendPage .hotSendModalBtn--confirm:hover:not(:disabled) {
+  background: rgba(245, 158, 11, 0.28) !important;
+  border-color: rgba(217, 119, 6, 0.5) !important;
+  color: #7c2d12 !important;
+}
+
+html[data-theme="light"] .hotSendPage .hotSendTemplateBtn.active,
+html[data-theme="light"] .hotSendPage .hotSendTargetChip.active {
+  border-color: rgba(217, 119, 6, 0.42) !important;
+  background: rgba(245, 158, 11, 0.16) !important;
+  color: #92400e !important;
+}
+
+html[data-theme="light"] .hotSendModalBackdrop {
+  --st-bg-elevated: #ffffff;
+  --st-border: rgba(15, 23, 42, 0.14);
+  --st-surface: #f8fafc;
+  --st-text: #0f172a;
+  --st-text-muted: #64748b;
+  --st-accent: #d97706;
+  background: rgba(15, 23, 42, 0.28) !important;
+}
+
+html[data-theme="light"] .hotSendModal {
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16) !important;
+}
+
+/* Login Attempts page light-mode (both routes) */
+html[data-theme="light"] .loginAttemptsPage,
+html[data-theme="light"] .devicesPage.la-page {
+  --la-bg: #f4f6fb;
+  --la-bg-elevated: #ffffff;
+  --la-surface: #f8fafc;
+  --la-surface-hover: #eef2f8;
+  --la-border: rgba(15, 23, 42, 0.12);
+  --la-text: #0f172a;
+  --la-muted: #64748b;
+  --la-accent: #d97706;
+}
+
+html[data-theme="light"] .loginAttemptsPage::before {
+  background: radial-gradient(ellipse 100% 50% at 0% 0%, rgba(245, 158, 11, 0.08) 0%, transparent 52%) !important;
+}
+
+html[data-theme="light"] .loginAttemptsPage .la-header,
+html[data-theme="light"] .devicesPage.la-page .la-header,
+html[data-theme="light"] .loginAttemptsPage .la-filterHeader,
+html[data-theme="light"] .devicesPage.la-page .la-filterHeader,
+html[data-theme="light"] .loginAttemptsPage .la-card,
+html[data-theme="light"] .devicesPage.la-page .la-card {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08) !important;
+}
+
+html[data-theme="light"] .loginAttemptsPage .la-date-wrap input[type="date"],
+html[data-theme="light"] .devicesPage.la-page .la-date-wrap input[type="date"] {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #0f172a !important;
+  color-scheme: light !important;
+}
+
+html[data-theme="light"] .loginAttemptsPage .la-row,
+html[data-theme="light"] .devicesPage.la-page .la-row {
+  background: #f8fafc !important;
+}
+
+html[data-theme="light"] .loginAttemptsPage .la-row-bar-wrap,
+html[data-theme="light"] .devicesPage.la-page .la-row-bar-wrap {
+  background: #e9eef7 !important;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.12) !important;
+}
+
+html[data-theme="light"] .la-detail-backdrop {
+  background: rgba(15, 23, 42, 0.24) !important;
+}
+
+html[data-theme="light"] .la-detail-menu {
+  --la-border: rgba(15, 23, 42, 0.12);
+  --la-bg: #ffffff;
+  --la-text: #0f172a;
+  --la-muted: #64748b;
+  --la-accent: #d97706;
+  background: #ffffff !important;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16) !important;
+}
+
+html[data-theme="light"] .la-detail-menu__time:hover {
+  background: #f8fafc !important;
+}
+
+/* Audit Logs page light mode */
+html[data-theme="light"] .auditLogsPage {
+  --st-bg: #f4f6fb;
+  --st-bg-elevated: #ffffff;
+  --st-surface: #f8fafc;
+  --st-surface-hover: #eef2f8;
+  --st-border: rgba(15, 23, 42, 0.12);
+  --st-text: #0f172a;
+  --st-text-muted: #64748b;
+  --st-accent: #d97706;
+  --st-accent-soft: rgba(245, 158, 11, 0.16);
+  --st-accent-glow: rgba(245, 158, 11, 0.18);
+  background: var(--st-bg) !important;
+}
+
+html[data-theme="light"] .auditLogsPage::before {
+  background: radial-gradient(ellipse 100% 50% at 0% 0%, rgba(245, 158, 11, 0.08) 0%, transparent 52%) !important;
+}
+
+html[data-theme="light"] .auditLogsPage .auditLogsHeader,
+html[data-theme="light"] .auditLogsPage .auditLogsToolbar,
+html[data-theme="light"] .auditLogsPage .auditLogsFooter,
+html[data-theme="light"] .auditLogsPage .auditLogsTableWrap .dt {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08) !important;
+}
+
+html[data-theme="light"] .auditLogsPage .auditLogsTableWrap .dt-head {
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.12) 0%, #ffffff 100%) !important;
+  border-bottom-color: rgba(217, 119, 6, 0.28) !important;
+}
+
+html[data-theme="light"] .auditLogsPage .auditLogsTableWrap .dt-row:nth-child(even) {
+  background: #f8fafc !important;
+}
+
+html[data-theme="light"] .auditLogsPage .auditLogsTableWrap .dt-row:hover {
+  background: #eef2f8 !important;
+  border-left-color: rgba(217, 119, 6, 0.4) !important;
+}
+
+html[data-theme="light"] .auditLogsPage .auditLogsActionBadge {
+  color: #92400e !important;
+  background: rgba(245, 158, 11, 0.16) !important;
+}
+
+html[data-theme="light"] .auditLogsPage .auditLogsPagerBtn,
+html[data-theme="light"] .auditLogsPage .auditLogsPageBtn {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .auditLogsPage .auditLogsPagerBtn:hover:not(:disabled),
+html[data-theme="light"] .auditLogsPage .auditLogsPageBtn:hover {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.22) !important;
+}
+
+/* Holiday status modal */
+html[data-theme="light"] .holidayStatusModal-backdrop {
+  --st-bg-elevated: #ffffff;
+  --st-surface: #f7f9fc;
+  --st-surface-hover: #edf2fa;
+  --st-border: rgba(15, 23, 42, 0.12);
+  --st-text: #0f172a;
+  --st-text-muted: #64748b;
+  --st-accent-soft: rgba(245, 158, 11, 0.16);
+  --st-accent-glow: rgba(245, 158, 11, 0.18);
+  background: rgba(15, 23, 42, 0.26);
+}
+
+html[data-theme="light"] .holidayStatusModal {
+  background: radial-gradient(
+      ellipse at top left,
+      rgba(245, 158, 11, 0.08),
+      transparent 52%
+    ),
+    #ffffff;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+}
+
+/* Employee / role related modals */
+html[data-theme="light"] .users-modal-backdrop,
+html[data-theme="light"] .epmodal-backdrop,
+html[data-theme="light"] .eam-backdrop,
+html[data-theme="light"] .cmodal-backdrop {
+  background: rgba(15, 23, 42, 0.28);
+}
+
+html[data-theme="light"] .users-modal,
+html[data-theme="light"] .epmodal,
+html[data-theme="light"] .eam-modal,
+html[data-theme="light"] .cmodal {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.12);
+  color: #0f172a;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+}
+
+html[data-theme="light"] .users-modal .users-modal-head,
+html[data-theme="light"] .epmodal-header,
+html[data-theme="light"] .epmodal-actions {
+  border-color: rgba(15, 23, 42, 0.12);
+  background: #f8fafc;
+}
+
+html[data-theme="light"] .users-modal .users-modal-head .users-modal-title,
+html[data-theme="light"] .users-modal .users-modal-head .users-modal-muted,
+html[data-theme="light"] .users-modal .users-modal-body .users-form label,
+html[data-theme="light"] .epmodal-title,
+html[data-theme="light"] .epmodal-role,
+html[data-theme="light"] .epmodal-item-label,
+html[data-theme="light"] .epmodal-item-value,
+html[data-theme="light"] .epmodal-notes-text,
+html[data-theme="light"] .eam-title,
+html[data-theme="light"] .eam-sub,
+html[data-theme="light"] .eam-cardLabel,
+html[data-theme="light"] .eam-cardName,
+html[data-theme="light"] .eam-k,
+html[data-theme="light"] .eam-v,
+html[data-theme="light"] .cmodal-title,
+html[data-theme="light"] .cmodal-desc {
+  color: #0f172a;
+}
+
+html[data-theme="light"] .users-modal .users-modal-body .users-form .users-input,
+html[data-theme="light"] .users-modal .users-modal-body .users-form .chosen-container.chosen-container-single .chosen-single,
+html[data-theme="light"] .users-modal .users-modal-body .users-form .chosen-container.chosen-container-single .chosen-drop,
+html[data-theme="light"] .eam-card,
+html[data-theme="light"] .eam-btn.ghost,
+html[data-theme="light"] .cmodal-btn--ghost,
+html[data-theme="light"] .epmodal-btn--ghost {
+  background: #f8fafc;
+  border-color: rgba(15, 23, 42, 0.14);
+  color: #0f172a;
+}
+
+/* Context menus */
+html[data-theme="light"] .driverContextMenu {
+  --driver-menu-bg: #ffffff;
+  --driver-menu-border: rgba(15, 23, 42, 0.14);
+  --driver-menu-shadow: 0 14px 30px rgba(15, 23, 42, 0.14);
+}
+
+html[data-theme="light"] .driverContextMenuHead {
+  border-bottom-color: rgba(15, 23, 42, 0.1);
+  background: linear-gradient(180deg, #f8fafc, #ffffff);
+}
+
+html[data-theme="light"] .driverContextMenuAction {
+  background: #f8fafc;
+  border-color: rgba(15, 23, 42, 0.12);
+  color: #0f172a;
+}
+
+html[data-theme="light"] .driverContextMenuActionIcon {
+  background: rgba(15, 23, 42, 0.08);
+  color: #334155;
+}
+
+/* Vaults: full light-mode polish */
+html[data-theme="light"] .vaultPage {
+  --st-bg: #f4f6fb;
+  --st-bg-elevated: #ffffff;
+  --st-border: rgba(15, 23, 42, 0.12);
+  --st-text: #0f172a;
+  --st-text-muted: #64748b;
+  --st-accent: #d97706;
+}
+
+html[data-theme="light"] .vaultPage .vaultHeader,
+html[data-theme="light"] .vaultPage .vaultToolbar,
+html[data-theme="light"] .vaultPage .vaultBody .vaultMetrics .vaultMetric,
+html[data-theme="light"] .vaultPage .vaultMiniCard,
+html[data-theme="light"] .vaultPage .vaultCustomFieldsCard,
+html[data-theme="light"] .vaultPage .vaultPreviewNotes,
+html[data-theme="light"] .vaultPage .vaultSecretField,
+html[data-theme="light"] .vaultPage .vaultExistingCategories,
+html[data-theme="light"] .vaultModal,
+html[data-theme="light"] .vaultCategoryFilterMenu,
+html[data-theme="light"] .vaultCustomSelectPortal {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08) !important;
+}
+
+html[data-theme="light"] .vaultModalBackdrop {
+  background: rgba(15, 23, 42, 0.3) !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultSearchInput,
+html[data-theme="light"] .vaultPage .vaultFormInput,
+html[data-theme="light"] .vaultPage .vaultFormTextarea,
+html[data-theme="light"] .vaultPage .vaultCategoryFilterTrigger,
+html[data-theme="light"] .vaultPage .vaultCustomSelectSearch,
+html[data-theme="light"] .vaultPage .vaultCategorySelectTrigger {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultFormInput.vaultCategorySelectTrigger,
+html[data-theme="light"] .vaultPage .vaultCategoryFilterTrigger {
+  border: 1px solid rgba(15, 23, 42, 0.18) !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06) !important;
+}
+
+html[data-theme="light"] .vaultModal .vaultFormInput.vaultCategorySelectTrigger {
+  border: 1px solid rgba(15, 23, 42, 0.2) !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08) !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultFormInput.vaultCategorySelectTrigger:hover,
+html[data-theme="light"] .vaultPage .vaultCategoryFilterTrigger:hover {
+  border-color: rgba(15, 23, 42, 0.28) !important;
+  background: #f8fafc !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultFormInput.vaultCategorySelectTrigger:focus-visible,
+html[data-theme="light"] .vaultPage .vaultCategoryFilter.is-open .vaultCategoryFilterTrigger,
+html[data-theme="light"] .vaultPage .vaultCategoryFilterTrigger:focus-visible {
+  border-color: rgba(217, 119, 6, 0.52) !important;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.18) !important;
+  background: #fffaf0 !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultSearchInput::placeholder,
+html[data-theme="light"] .vaultPage .vaultFormInput::placeholder,
+html[data-theme="light"] .vaultPage .vaultFormTextarea::placeholder,
+html[data-theme="light"] .vaultPage .vaultCustomSelectSearch::placeholder {
+  color: #64748b !important;
+  opacity: 1 !important;
+  font-weight: 500;
+}
+
+html[data-theme="light"] .vaultModal .vaultFormTextarea::placeholder,
+html[data-theme="light"] .vaultModal .vaultFormInput::placeholder {
+  color: #64748b !important;
+  opacity: 1 !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultSearchIcon,
+html[data-theme="light"] .vaultPage .vaultCategorySelectTriggerIcon,
+html[data-theme="light"] .vaultPage .vaultCategoryFilterTriggerIcon,
+html[data-theme="light"] .vaultPage .vaultCustomSelectSearchIcon {
+  color: #475569 !important;
+  opacity: 1 !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultMiniCard .vaultMiniBottom {
+  border-top-color: rgba(15, 23, 42, 0.12) !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultMiniCard .vaultMiniBottom .vaultMiniActions button {
+  color: #475569 !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultMiniCard .vaultMiniBottom .vaultMiniActions button:hover {
+  background: #eef2f7 !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultMiniCard .vaultMiniBottom .vaultMiniActions button.danger:hover {
+  background: rgba(239, 68, 68, 0.12) !important;
+  color: #dc2626 !important;
+}
+
+html[data-theme="light"] .vaultModalHeader,
+html[data-theme="light"] .vaultModalFooter,
+html[data-theme="light"] .vaultCategoryFilterMenuHeader,
+html[data-theme="light"] .vaultCustomSelectHeader {
+  border-color: rgba(15, 23, 42, 0.1) !important;
+}
+
+html[data-theme="light"] .vaultModalHeader.vaultModalHeader--requestLike .vaultModalTitle {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .vaultModalBody {
+  background: #ffffff !important;
+}
+
+html[data-theme="light"] .vaultCustomFieldsCard .vaultCustomFieldsHeader {
+  border-bottom-color: rgba(15, 23, 42, 0.1) !important;
+}
+
+html[data-theme="light"] .vaultGhostButton {
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.14) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .vaultGhostButton:hover:not(:disabled) {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.24) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .vaultCategoryFilterMenu,
+html[data-theme="light"] .vaultCustomSelectPortal {
+  background: radial-gradient(ellipse at top left, rgba(245, 158, 11, 0.07), transparent 60%), #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.14) !important;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.14) !important;
+}
+
+html[data-theme="light"] .vaultCategoryFilterOption,
+html[data-theme="light"] .vaultCustomSelectOption {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .vaultCategoryFilterOptionIcon {
+  color: #64748b !important;
+}
+
+html[data-theme="light"] .vaultCategoryFilterOption:hover,
+html[data-theme="light"] .vaultCustomSelectOption:hover {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+}
+
+html[data-theme="light"] .vaultCategoryFilterOption:hover .vaultCategoryFilterOptionIcon {
+  color: #334155 !important;
+}
+
+html[data-theme="light"] .vaultCategoryFilterOption.is-active,
+html[data-theme="light"] .vaultCustomSelectOption.is-selected {
+  background: rgba(245, 158, 11, 0.12) !important;
+  border-color: rgba(217, 119, 6, 0.34) !important;
+  color: #92400e !important;
+}
+
+html[data-theme="light"] .vaultCategoryFilterOption.is-active .vaultCategoryFilterOptionIcon {
+  color: #b45309 !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultColorLayout {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+  border: 1px solid rgba(15, 23, 42, 0.14) !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultColorLayout .p-colorpicker .p-inputtext:not(.p-colorpicker-preview) {
+  border-color: rgba(15, 23, 42, 0.2) !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.12) !important;
+  background: transparent !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultColorLayout .p-colorpicker-preview {
+  border: 1px solid rgba(15, 23, 42, 0.16) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.72) !important;
+  background-image: none !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultColorLayout .p-colorpicker-panel {
+  background: radial-gradient(ellipse at top left, rgba(245, 158, 11, 0.08), transparent 58%), #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.14) !important;
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.16) !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultColorLayout .p-colorpicker-color-selector,
+html[data-theme="light"] .vaultPage .vaultColorLayout .p-colorpicker-hue {
+  border: 1px solid rgba(15, 23, 42, 0.16) !important;
+  border-radius: 8px !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultPasswordStrength {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: #f8fafc;
+}
+
+html[data-theme="light"] .vaultPage .vaultStrengthBar {
+  background: #dbe4f1 !important;
+  border: 1px solid rgba(15, 23, 42, 0.16) !important;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.14) !important;
+}
+
+/* Portal-rendered editor modal (outside .vaultPage) */
+html[data-theme="light"] .vaultModal .vaultStrengthBar {
+  background: #dbe4f1 !important;
+  border: 1px solid rgba(15, 23, 42, 0.16) !important;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.14) !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultStrengthLabel {
+  color: #475569 !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultPreviewGrid,
+html[data-theme="light"] .vaultPage .vaultAdditionalInfo,
+html[data-theme="light"] .vaultPage .vaultInfoBlock,
+html[data-theme="light"] .vaultPage .vaultPreviewBox {
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  background: #f8fafc !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultPreviewField > label,
+html[data-theme="light"] .vaultPage .vaultInfoBlockLabel {
+  color: #64748b !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultPreviewValue {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultPreviewActions button {
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  background: #ffffff !important;
+  color: #475569 !important;
+}
+
+html[data-theme="light"] .vaultPage .vaultPreviewActions button:hover {
+  border-color: rgba(217, 119, 6, 0.34) !important;
+  background: rgba(245, 158, 11, 0.12) !important;
+  color: #92400e !important;
+}
+
+/* Recordings page light mode */
+html[data-theme="light"] .recordingsPage {
+  --st-bg: #f4f6fb;
+  --st-bg-elevated: #ffffff;
+  --st-surface: #f7f9fc;
+  --st-surface-hover: #eef2f8;
+  --st-border: rgba(15, 23, 42, 0.12);
+  --st-text: #0f172a;
+  --st-text-muted: #64748b;
+  --st-accent: #d97706;
+  --st-accent-soft: rgba(245, 158, 11, 0.16);
+  --st-accent-glow: rgba(245, 158, 11, 0.18);
+  background: var(--st-bg) !important;
+}
+
+html[data-theme="light"] .recordingsPage::before {
+  background: radial-gradient(
+    ellipse 100% 50% at 0% 0%,
+    rgba(245, 158, 11, 0.06) 0%,
+    transparent 55%
+  ) !important;
+}
+
+html[data-theme="light"] .recordingsPage .recordingsHeader,
+html[data-theme="light"] .recordingsPage .recordingsTableWrap .dt,
+html[data-theme="light"] .recordingsPage .recordingsDashTopBar,
+html[data-theme="light"] .recordingsPage .recordingsDashKpi,
+html[data-theme="light"] .recordingsPage .recordingsDashChartCard {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08) !important;
+}
+
+html[data-theme="light"] .recordingsPage .recordingsTableWrap .dt-head {
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.08) 0%, #ffffff 100%) !important;
+  border-bottom-color: rgba(245, 158, 11, 0.28) !important;
+}
+
+html[data-theme="light"] .recordingsPage .recordingsTableWrap .dt-body,
+html[data-theme="light"] .recordingsPage .recordingsTableWrap .dt-empty {
+  background: #ffffff !important;
+}
+
+html[data-theme="light"] .recordingsPage .recordingsTableWrap .dt-row:nth-child(even) {
+  background: #f8fafc !important;
+}
+
+html[data-theme="light"] .recordingsPage .recordingsTableWrap .dt-row:hover {
+  background: #eef2f8 !important;
+  border-left-color: rgba(245, 158, 11, 0.5) !important;
+}
+
+html[data-theme="light"] .recordingsPage .recordingsTableWrap .dt-th.sort:hover {
+  background: rgba(245, 158, 11, 0.1) !important;
+  color: #334155 !important;
+}
+
+html[data-theme="light"] .recordingsPage .recordingsFilterPill {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  color: #334155 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+html[data-theme="light"] .recordingsPage .recordingsFilterPill:hover {
+  background: #eef2f8 !important;
+  border-color: rgba(15, 23, 42, 0.2) !important;
+}
+
+html[data-theme="light"] .recordingsPage .recordingsFilterPill .uiCheckbox-label {
+  color: #334155 !important;
+}
+
+html[data-theme="light"] .recordingsPage .recordingsIconBtn,
+html[data-theme="light"] .recordingsPage .recordingsPagerBtn,
+html[data-theme="light"] .recordingsPage .recordingsPageBtn,
+html[data-theme="light"] .recordingsPage .recordingsEmpMenuTrigger {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .recordingsPage .recordingsIconBtn:hover,
+html[data-theme="light"] .recordingsPage .recordingsPagerBtn:hover:not(:disabled),
+html[data-theme="light"] .recordingsPage .recordingsPageBtn:hover,
+html[data-theme="light"] .recordingsPage .recordingsEmpMenuTrigger:hover {
+  background: #eef2f8 !important;
+  border-color: rgba(15, 23, 42, 0.2) !important;
+}
+
+html[data-theme="light"] .recordingsPage .recordingsFooter {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+}
+
+html[data-theme="light"] .recordingsPage .recDir--unknown {
+  background: #f1f5f9 !important;
+  color: #64748b !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+}
+
+html[data-theme="light"] .recordingsPage .recDisp--other {
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+}
+
+html[data-theme="light"] .recordingsPage .recDir,
+html[data-theme="light"] .recordingsPage .recDisp {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65) !important;
+  color: #334155 !important;
+  border-color: rgba(15, 23, 42, 0.2) !important;
+  font-weight: 700 !important;
+}
+
+html[data-theme="light"] .recordingsPage .recDir--inbound {
+  background: rgba(37, 99, 235, 0.18) !important;
+  color: #1d4ed8 !important;
+  border-color: rgba(37, 99, 235, 0.34) !important;
+}
+
+html[data-theme="light"] .recordingsPage .recDir--outbound {
+  background: rgba(217, 119, 6, 0.18) !important;
+  color: #b45309 !important;
+  border-color: rgba(217, 119, 6, 0.34) !important;
+}
+
+html[data-theme="light"] .recordingsPage .recDir--internal {
+  background: rgba(147, 51, 234, 0.18) !important;
+  color: #7e22ce !important;
+  border-color: rgba(147, 51, 234, 0.34) !important;
+}
+
+html[data-theme="light"] .recordingsPage .recPlayBtn {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #334155 !important;
+}
+
+html[data-theme="light"] .recordingsPage .recPlayBtn:hover:not(:disabled) {
+  background: #eef2f8 !important;
+}
+
+html[data-theme="light"] .recordingsPage .recPlayBtn-empty {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="light"] .recordingsPage .recDeleteBtn {
+  background: #fff1f2 !important;
+  border-color: rgba(244, 63, 94, 0.28) !important;
+  color: #e11d48 !important;
+}
+
+html[data-theme="light"] .recordingsPage .recDeleteBtn:hover:not(:disabled) {
+  background: #ffe4e6 !important;
+  border-color: rgba(225, 29, 72, 0.45) !important;
+  color: #be123c !important;
+}
+
+html[data-theme="light"] .recordingsPage .recTelLink {
+  color: #0284c7 !important;
+}
+
+html[data-theme="light"] .recordingsPage .recTelLink:hover {
+  color: #0369a1 !important;
+}
+
+html[data-theme="light"] .recordingsPage .recordingsDashSpinner {
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  border-top-color: #d97706 !important;
+}
+
+html[data-theme="light"] .recordingsPage .recDisp--answered {
+  background: rgba(22, 163, 74, 0.18) !important;
+  color: #166534 !important;
+  border-color: rgba(22, 163, 74, 0.34) !important;
+}
+
+html[data-theme="light"] .recordingsPage .recDisp--noanswer {
+  background: rgba(71, 85, 105, 0.15) !important;
+  color: #334155 !important;
+  border-color: rgba(71, 85, 105, 0.3) !important;
+}
+
+html[data-theme="light"] .recordingsPage .recDisp--busy {
+  background: rgba(217, 119, 6, 0.18) !important;
+  color: #b45309 !important;
+  border-color: rgba(217, 119, 6, 0.34) !important;
+}
+
+html[data-theme="light"] .recordingsPage .recDisp--failed {
+  background: rgba(225, 29, 72, 0.16) !important;
+  color: #be123c !important;
+  border-color: rgba(225, 29, 72, 0.34) !important;
+}
+
+html[data-theme="light"] .recordingsPage .recDisp--unavail {
+  background: rgba(71, 85, 105, 0.16) !important;
+  color: #334155 !important;
+  border-color: rgba(71, 85, 105, 0.32) !important;
+}
+
+/* Portaled recordings employee menu */
+html[data-theme="light"] .recordingsEmpMenuPortalRoot {
+  --st-bg: #f4f6fb;
+  --st-bg-elevated: #ffffff;
+  --st-surface: #f7f9fc;
+  --st-surface-hover: #eef2f8;
+  --st-border: rgba(15, 23, 42, 0.12);
+  --st-text: #0f172a;
+  --st-text-muted: #64748b;
+  --st-accent: #d97706;
+  --st-accent-soft: rgba(245, 158, 11, 0.16);
+  --st-accent-glow: rgba(245, 158, 11, 0.18);
+}
+
+html[data-theme="light"] .recordingsEmpMenuPortalRoot.recordingsEmpMenuPanel {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16) !important;
+}
+
+html[data-theme="light"] .recordingsEmpMenuPortalRoot .recordingsEmpMenuSearch .si-sm .si-input {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .recordingsPage .recordingsEmpMenuSearch .si-icon,
+html[data-theme="light"] .recordingsEmpMenuPortalRoot .recordingsEmpMenuSearch .si-icon {
+  color: #64748b !important;
+}
+
+html[data-theme="light"] .recordingsPage .recordingsEmpMenuHeadTitle,
+html[data-theme="light"] .recordingsEmpMenuPortalRoot .recordingsEmpMenuHeadTitle {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .recordingsPage .uiCheckbox-input:hover + .uiCheckbox-box,
+html[data-theme="light"] .recordingsEmpMenuPortalRoot .uiCheckbox-input:hover + .uiCheckbox-box {
+  border-color: rgba(15, 23, 42, 0.3) !important;
+  background: #ffffff !important;
+}
+
+html[data-theme="light"] .recordingsPage .uiCheckbox-input:checked + .uiCheckbox-box,
+html[data-theme="light"] .recordingsEmpMenuPortalRoot .uiCheckbox-input:checked + .uiCheckbox-box {
+  background: #d97706 !important;
+  border-color: #d97706 !important;
+  box-shadow: 0 0 0 1px #d97706 !important;
+}
+
+html[data-theme="light"] .recordingsPage .uiCheckbox-input:checked + .uiCheckbox-box::after,
+html[data-theme="light"] .recordingsEmpMenuPortalRoot .uiCheckbox-input:checked + .uiCheckbox-box::after {
+  border-color: #ffffff !important;
+}
+
+html[data-theme="light"] .paginatorSelectDropPortal {
+  --st-bg-elevated: #ffffff;
+  --st-border: rgba(15, 23, 42, 0.14);
+  --st-text: #0f172a;
+  --st-text-muted: #64748b;
+  --st-surface-hover: #eef2f8;
+  --st-accent: #d97706;
+  --st-accent-soft: rgba(245, 158, 11, 0.16);
+}
+
+html[data-theme="light"] .paginatorSelectDropPortal.paginatorSelectDropInner {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.16) !important;
+}
+
+html[data-theme="light"] .paginatorSelectTrigger {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .paginatorSelectTrigger:hover {
+  background: #eef2f8 !important;
+  border-color: rgba(15, 23, 42, 0.22) !important;
+}
+
+html[data-theme="light"] .dateRangePickerDrop {
+  --st-bg-elevated: #ffffff;
+  --st-surface: #f8fafc;
+  --st-surface-hover: #eef2f8;
+  --st-border: rgba(15, 23, 42, 0.14);
+  --st-text: #0f172a;
+  --st-text-muted: #64748b;
+  --st-accent: #d97706;
+  --st-accent-soft: rgba(245, 158, 11, 0.16);
+}
+
+html[data-theme="light"] .dateRangePickerTrigger {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dateRangePickerTrigger:hover {
+  background: #eef2f8 !important;
+  border-color: rgba(15, 23, 42, 0.22) !important;
+}
+
+html[data-theme="light"] .dateRangePickerTrigger:focus-visible {
+  border-color: #d97706 !important;
+}
+
+html[data-theme="light"] .dateRangePickerDropInner {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.16) !important;
+}
+
+/* Recordings delete modal button hover polish (light mode) */
+html[data-theme="light"] .cmodal-btn--ghost:hover:not(:disabled) {
+  background: #eef2f8 !important;
+  border-color: rgba(15, 23, 42, 0.2) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .cmodal-btn--danger:hover:not(:disabled) {
+  background: #ffe4e6 !important;
+  border-color: rgba(225, 29, 72, 0.45) !important;
+  color: #be123c !important;
+}
+
+html[data-theme="light"] .cmodal-btn--primary:hover:not(:disabled) {
+  background: #e8eefb !important;
+  border-color: rgba(59, 130, 246, 0.34) !important;
+  color: #1d4ed8 !important;
+}
+
+/* Dashboard full light-mode cleanup */
+html[data-theme="light"] .dashboardPage .dashboardHeader,
+html[data-theme="light"] .dashboardPage .dashboardWelcomeCard,
+html[data-theme="light"] .dashboardPage .dashboardPresenceBlock,
+html[data-theme="light"] .dashboardPage .dashboardCalendarBlock,
+html[data-theme="light"] .dashboardPage .dashboardBirthdaysBlock,
+html[data-theme="light"] .dashboardPage .dashboardKpiCard,
+html[data-theme="light"] .dashboardPage .dashboardStoreRankingCard,
+html[data-theme="light"] .dashboardPage .dashboardFinanceDriversStrip,
+html[data-theme="light"] .dashboardPage .dashboardFinanceDriversCard,
+html[data-theme="light"] .dashboardPage .dashboardRevenueChartWrap,
+html[data-theme="light"] .dashboardPage .dashboardTopDriversBlockCard,
+html[data-theme="light"] .dashboardPage .dashboardTopDriversCard,
+html[data-theme="light"] .dashboardPage .dashboardActivityWrap,
+html[data-theme="light"] .dashboardPage .dashboardTeamSummaryText,
+html[data-theme="light"] .dashboardPage .dashboardPendingApprovalLink {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08) !important;
+}
+
+html[data-theme="light"] .dashboardPage .dashboardPresenceCurrent,
+html[data-theme="light"] .dashboardPage .dashboardPresenceItem,
+html[data-theme="light"] .dashboardPage .dashboardBirthdaysBlockItem,
+html[data-theme="light"] .dashboardPage .dashboardTopDriversRow:hover,
+html[data-theme="light"] .dashboardPage .dashboardListItem--clickable:hover,
+html[data-theme="light"] .dashboardPage .dashboardActivityCard:hover::before,
+html[data-theme="light"] .dashboardPage .dashboardQuickAction {
+  background: #f8fafc !important;
+}
+
+html[data-theme="light"] .dashboardPage .dashboardQuickAction:hover,
+html[data-theme="light"] .dashboardPage .dashboardPendingApprovalLink:hover {
+  background: #eef2f8 !important;
+  border-color: rgba(15, 23, 42, 0.18) !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="light"] .dashboardPage .dashboardCalendarNav,
+html[data-theme="light"] .dashboardPage .dashboardRevenueChartDayBtn,
+html[data-theme="light"] .dashboardPage .dashboardTopDriversTab,
+html[data-theme="light"] .dashboardPage .dashboardStoreRankingTab {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  color: #475569 !important;
+}
+
+html[data-theme="light"] .dashboardPage .dashboardCalendarNav:hover,
+html[data-theme="light"] .dashboardPage .dashboardRevenueChartDayBtn:hover,
+html[data-theme="light"] .dashboardPage .dashboardTopDriversTab:hover,
+html[data-theme="light"] .dashboardPage .dashboardStoreRankingTab:hover {
+  background: #eef2f8 !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dashboardPage .dashboardKpiIcon--users,
+html[data-theme="light"] .dashboardPage .dashboardKpiIcon--stores,
+html[data-theme="light"] .dashboardPage .dashboardKpiIcon--pending,
+html[data-theme="light"] .dashboardPage .dashboardKpiIcon--transactions,
+html[data-theme="light"] .dashboardPage .dashboardKpiIcon--drivers,
+html[data-theme="light"] .dashboardPage .dashboardKpiIcon--roles,
+html[data-theme="light"] .dashboardPage .dashboardKpiIcon--holiday,
+html[data-theme="light"] .dashboardPage .dashboardKpiIcon--report,
+html[data-theme="light"] .dashboardPage .dashboardKpiIcon--suggest,
+html[data-theme="light"] .dashboardPage .dashboardKpiIcon--finance {
+  filter: saturate(0.95);
+}
+
+html[data-theme="light"] .dashboardPage .dashboardActivityCard {
+  border-bottom-color: rgba(15, 23, 42, 0.1) !important;
+}
+
+html[data-theme="light"] .dashboardPage .dashboardActivityCard--unread {
+  background: rgba(245, 158, 11, 0.08) !important;
+}
+
+html[data-theme="light"] .dashboardPage .dashboardSectionHead,
+html[data-theme="light"] .dashboardPage .dashboardActivitySectionHead,
+html[data-theme="light"] .dashboardPage .dashboardStoreRankingHeader,
+html[data-theme="light"] .dashboardPage .dashboardRevenueChartHeader,
+html[data-theme="light"] .dashboardPage .dashboardFinanceDriversStripHeader,
+html[data-theme="light"] .dashboardPage .dashboardBirthdaysBlockHeader {
+  background: linear-gradient(180deg, #f8fbff, #f2f6fd) !important;
+  border: 1px solid rgba(15, 23, 42, 0.1) !important;
+  border-radius: 10px !important;
+  padding: 10px 12px !important;
+}
+
+html[data-theme="light"] .dashboardPage .dashboardRevenueChartTitle,
+html[data-theme="light"] .dashboardPage .dashboardFinanceDriversStripHeader,
+html[data-theme="light"] .dashboardPage .dashboardSectionTitle,
+html[data-theme="light"] .dashboardPage .dashboardActivitySectionSub {
+  color: #334155 !important;
+}
+
+html[data-theme="light"] .dashboardPage .dashboardCalendarHeader,
+html[data-theme="light"] .dashboardPage .dashboardBirthdayUpcomingHeader {
+  background: linear-gradient(180deg, #f8fbff, #f1f5fb) !important;
+  border: 1px solid rgba(15, 23, 42, 0.1) !important;
+  border-radius: 10px !important;
+  padding: 8px 10px !important;
+  color: #475569 !important;
+}
+
+html[data-theme="light"] .dashboardPage .dashboardFinanceDriversStripIcon,
+html[data-theme="light"] .dashboardPage .dashboardBirthdaysBlockIcon {
+  color: #d97706 !important;
+}
+
+html[data-theme="light"] .dashboardPage .dashboardPendingApprovalCount {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 26px !important;
+  height: 26px !important;
+  padding: 0 8px !important;
+  line-height: 1 !important;
+  border-radius: 999px !important;
+}
+
+html[data-theme="light"] .dashboardPage .dashboardTopDriversAvatar--skeleton,
+html[data-theme="light"] .dashboardPage .dashboardTopDriversSkeletonLine,
+html[data-theme="light"] .dashboardPage .dashboardTopDriversBadge--skeleton {
+  background: rgba(15, 23, 42, 0.1) !important;
+}
+
+html[data-theme="light"] .dashboardPage .dashboardCalendarDay--today {
+  background: rgba(245, 158, 11, 0.18) !important;
+  color: #b45309 !important;
+}
+
+/* Global chat popout in light mode */
+html[data-theme="light"] .globalChatFab {
+  border-color: rgba(15, 23, 42, 0.16) !important;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.18), rgba(59, 130, 246, 0.06)) !important;
+  color: #2563eb !important;
+}
+
+html[data-theme="light"] .globalChatFab:hover {
+  border-color: rgba(59, 130, 246, 0.34) !important;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.24), rgba(59, 130, 246, 0.1)) !important;
+}
+
+html[data-theme="light"] .globalChatBackdrop {
+  background: rgba(15, 23, 42, 0.28) !important;
+}
+
+html[data-theme="light"] .globalChatPanel {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  box-shadow: 0 -8px 34px rgba(15, 23, 42, 0.18) !important;
+}
+
+html[data-theme="light"] .globalChatHeader,
+html[data-theme="light"] .globalChatComposerWrap {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.1) !important;
+}
+
+html[data-theme="light"] .globalChatTitle {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .globalChatSubTitle,
+html[data-theme="light"] .globalChatEmpty,
+html[data-theme="light"] .globalChatMeta,
+html[data-theme="light"] .globalChatBubbleMeta {
+  color: #64748b !important;
+}
+
+html[data-theme="light"] .globalChatClose {
+  color: #64748b !important;
+}
+
+html[data-theme="light"] .globalChatClose:hover {
+  background: rgba(15, 23, 42, 0.06) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .globalChatList {
+  background: linear-gradient(180deg, #ffffff, #f8fafc) !important;
+}
+
+html[data-theme="light"] .globalChatAvatar {
+  background: #e2e8f0 !important;
+}
+
+html[data-theme="light"] .globalChatSender,
+html[data-theme="light"] .globalChatText {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .globalChatBubble {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  color: #0f172a !important;
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.08) !important;
+}
+
+html[data-theme="light"] .globalChatMessageRow.is-mine .globalChatBubble {
+  background: rgba(245, 158, 11, 0.14) !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+}
+
+html[data-theme="light"] .globalChatBubble.is-removed {
+  color: #b91c1c !important;
+}
+
+html[data-theme="light"] .globalChatComposer textarea {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .globalChatComposer textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="light"] .globalChatComposer textarea:focus {
+  border-color: rgba(37, 99, 235, 0.45) !important;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.14) !important;
+}
+
+html[data-theme="light"] .globalChatSend {
+  background: #2563eb !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .globalChatLockNotice {
+  color: #b45309 !important;
+}
+
+html[data-theme="light"] .chatDepartmentMembersPopover {
+  background:
+    radial-gradient(ellipse at top left, rgba(245, 158, 11, 0.08), transparent 58%),
+    #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.16) !important;
+}
+
+html[data-theme="light"] .chatDepartmentMemberStrip img {
+  border-color: #f8fafc !important;
+}
+
+html[data-theme="light"] .chatDepartmentMemberRow:hover {
+  background: #f8fafc !important;
+}
+
+html[data-theme="light"] .chatDepartmentMemberSub,
+html[data-theme="light"] .chatDepartmentMembersHeader {
+  color: #64748b !important;
+}
+
+html[data-theme="light"] .chatDepartmentCandidateBtn,
+html[data-theme="light"] .chatDepartmentMemberRemoveBtn,
+html[data-theme="light"] .chatDepartmentMembersHeader,
+html[data-theme="light"] .chatDepartmentMembersAdd {
+  border-color: rgba(15, 23, 42, 0.12) !important;
+}
+
+/* Storage page light mode */
+html[data-theme="light"] .storagePage {
+  --st-bg: #f4f6fb;
+  --st-bg-elevated: #ffffff;
+  --st-border: rgba(15, 23, 42, 0.12);
+  --st-text: #0f172a;
+  --st-text-muted: #64748b;
+  --st-accent: #d97706;
+  background: var(--st-bg) !important;
+}
+
+html[data-theme="light"] .storageHeader,
+html[data-theme="light"] .storageChartBlock,
+html[data-theme="light"] .storageSummaryCard,
+html[data-theme="light"] .storageCard,
+html[data-theme="light"] .storageModal {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08) !important;
+}
+
+html[data-theme="light"] .storageCard:hover {
+  background: #f8fafc !important;
+  border-color: rgba(217, 119, 6, 0.22) !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12) !important;
+}
+
+html[data-theme="light"] .storageCardRight {
+  background: #f8fafc !important;
+  border-left-color: rgba(15, 23, 42, 0.12) !important;
+}
+
+html[data-theme="light"] .storageChartNoData,
+html[data-theme="light"] .storageLoading,
+html[data-theme="light"] .storageEmpty,
+html[data-theme="light"] .storageSubtitle,
+html[data-theme="light"] .storageSummaryLabel,
+html[data-theme="light"] .storageCardBroken,
+html[data-theme="light"] .storageCardUpdated,
+html[data-theme="light"] .storageCardUnits,
+html[data-theme="light"] .storageReplaceHint,
+html[data-theme="light"] .storageModalLabel {
+  color: #64748b !important;
+}
+
+html[data-theme="light"] .storageCardBarWrap {
+  background: #e2e8f0 !important;
+}
+
+html[data-theme="light"] .storageSpinner {
+  border-color: rgba(15, 23, 42, 0.16) !important;
+  border-top-color: #d97706 !important;
+}
+
+html[data-theme="light"] .storageAddBtn,
+html[data-theme="light"] .storageEmptyAdd,
+html[data-theme="light"] .storageModalBtn--primary {
+  background: rgba(245, 158, 11, 0.16) !important;
+  border-color: rgba(217, 119, 6, 0.34) !important;
+  color: #92400e !important;
+}
+
+html[data-theme="light"] .storageAddBtn:hover,
+html[data-theme="light"] .storageEmptyAdd:hover,
+html[data-theme="light"] .storageModalBtn--primary:hover:not(:disabled) {
+  background: rgba(245, 158, 11, 0.26) !important;
+  border-color: rgba(217, 119, 6, 0.48) !important;
+  color: #7c2d12 !important;
+}
+
+html[data-theme="light"] .storageCardBtn {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .storageCardBtn:hover:not(:disabled) {
+  background: #f8fafc !important;
+  border-color: rgba(217, 119, 6, 0.3) !important;
+  color: #b45309 !important;
+}
+
+html[data-theme="light"] .storageCardBtn--danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.12) !important;
+  border-color: rgba(239, 68, 68, 0.34) !important;
+  color: #dc2626 !important;
+}
+
+html[data-theme="light"] .storageBackdrop {
+  background: rgba(15, 23, 42, 0.28) !important;
+}
+
+html[data-theme="light"] .storageModalHeader,
+html[data-theme="light"] .storageModalFooter {
+  border-color: rgba(15, 23, 42, 0.12) !important;
+}
+
+html[data-theme="light"] .storageModalInput {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .storageModalInput::placeholder {
+  color: #64748b !important;
+  opacity: 1 !important;
+}
+
+html[data-theme="light"] .storageModalInput:focus {
+  border-color: rgba(217, 119, 6, 0.55) !important;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.16) !important;
+}
+
+html[data-theme="light"] .storageModalBtn {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .storageModalBtn:hover:not(:disabled) {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.24) !important;
+}
+

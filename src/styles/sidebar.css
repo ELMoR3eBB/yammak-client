@@ -219,8 +219,6 @@
   background: var(--sb-accent);
   color: var(--sb-bg, #09090b);
   font-size: 11px;
-  font-weight: 700;
-  line-height: 1;
   box-shadow: 0 0 0 2px var(--sb-bg, #09090b);
   flex-shrink: 0;
   transition: none;
@@ -242,6 +240,29 @@
 }
 .sidebar2 .sb2-item:active {
   transform: scale(0.99);
+}
+
+.sidebar2 .sb2-disabledWrap {
+  display: block;
+  width: 100%;
+}
+
+.sidebar2 .sb2-disabledWrap .sb2-item,
+.sidebar2 .sb2-disabledWrap .sb2-groupBtn {
+  opacity: 0.48;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.sidebar2 .sb2-disabledWrap .sb2-item:hover,
+.sidebar2 .sb2-disabledWrap .sb2-groupBtn:hover {
+  background: transparent;
+  transform: none;
+}
+
+.sidebar2 .sb2-disabledWrap .sb2-item .sb2-ic,
+.sidebar2 .sb2-disabledWrap .sb2-groupBtn .sb2-ic {
+  color: rgba(255, 255, 255, 0.38);
 }
 
 .sidebar2 .sb2-item:hover .sb2-ic {

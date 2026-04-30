@@ -3,7 +3,6 @@ import { Store, ChevronLeft, ChevronRight } from "lucide-react";
 import DataTable from "../../ui/DataTable";
 import SearchInput from "../../ui/SearchInput";
 import PaginatorSelect from "../../ui/PaginatorSelect";
-import { getAssetUrl } from "../../../utils/publicUrl";
 import "../../../styles/pages/audit/audit_logs.css";
 import "../../../styles/pages/drivers/drivers.css";
 import "../../../styles/ui/paginator_select.css";
@@ -57,6 +56,7 @@ export default function Stores({ account, onNavigate }) {
   const [sort, setSort] = useState({ key: "storeName", dir: "asc" });
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(15);
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
   const requestIdRef = useRef(null);
 
   const sortKey = sort.key;
@@ -76,6 +76,7 @@ export default function Stores({ account, onNavigate }) {
         setStores(Array.isArray(msg.stores) ? msg.stores : []);
         setTotal(typeof msg.total === "number" ? msg.total : 0);
         setLoading(false);
+        setHasLoadedOnce(true);
       }
     });
 
@@ -156,8 +157,7 @@ export default function Stores({ account, onNavigate }) {
     );
   }
 
-  const isInitialLoad = loading && stores.length === 0 && total === 0;
-  const hasData = total > 0;
+  const isInitialLoad = loading && !hasLoadedOnce;
 
   return (
     <div className="auditLogsPage driversPage driversPage--enter">
@@ -194,127 +194,116 @@ export default function Stores({ account, onNavigate }) {
                   />
                 </div>
 
-                {!hasData && !loading ? (
-                  <div className="driversEmpty">
-                    <img
-                      src={getAssetUrl("assets/svg/nodata-ill.svg")}
-                      alt=""
-                      className="driversEmptyIll"
-                    />
-                    <p>No stores found</p>
-                  </div>
-                ) : (
-                  <div className="auditLogsTableWrap">
-                    <DataTable
-                      columns={columns}
-                      sortKey={sortKey}
-                      sortDir={sortDir}
-                      onSort={toggleSort}
-                      loading={loading}
-                      emptyText="No stores."
-                      rows={pageItems}
-                      disableVirtualization
-                      onRowClick={onNavigate ? (row) => onNavigate("stores:profile", row) : undefined}
-                      renderRow={(row) => (
-                        <>
-                          <div className="td">
-                            <div className="cell cell--muted">{row.serial ?? "-"}</div>
-                          </div>
-                          <div className="td">
-                            <div className="cell cell--muted">{row.id || "-"}</div>
-                          </div>
-                          <div className="td">
-                            <div className="driverListNameCell">
-                              <div className="cell strong">{row.storeName || "-"}</div>
-                              <div className="cell driverListPhone">{row.storePhone || row.ownerPhone || "-"}</div>
-                            </div>
-                          </div>
-                          <div className="td">
-                            <div className="cell driversNum">{formatNum(row.totalEarning)}</div>
-                          </div>
-                          <div className="td">
-                            <div className="cell driversNum">{formatNum(row.balance)}</div>
-                          </div>
-                          <div className="td">
-                            <div className="cell driversNum">{formatNum(row.totalWithdrawn)}</div>
-                          </div>
-                          <div className="td">
-                            <div className="cell cell--muted">{formatRelativeDate(row.lastCashoutAt)}</div>
-                          </div>
-                        </>
-                      )}
-                      footer={
-                        <div className="driversFooter">
-                          <div className="driversFooterLeft">
-                            <div className="driversPerPage">
-                              <PaginatorSelect
-                                label="Rows"
-                                value={pageSize}
-                                onChange={(v) => {
-                                  setPageSize(v);
-                                  setPage(1);
-                                }}
-                                options={[15, 30, 50].map((n) => ({
-                                  value: n,
-                                  label: `${n} / page`,
-                                }))}
-                                openAbove
-                              />
-                            </div>
-                          </div>
-                          <div className="driversFooterMid">
-                            <button
-                              type="button"
-                              className="driversPagerBtn"
-                              disabled={page <= 1}
-                              onClick={() => setPage((p) => p - 1)}
-                            >
-                              <ChevronLeft size={16} />
-                              Previous
-                            </button>
-                            <div className="driversPages">
-                              {pageModel.map((p, idx) =>
-                                p === "..." ? (
-                                  <span key={`dots-${idx}`} className="driversPagesDots">
-                                    ...
-                                  </span>
-                                ) : (
-                                  <button
-                                    key={p}
-                                    type="button"
-                                    className={`driversPageBtn ${p === page ? "active" : ""}`}
-                                    onClick={() => setPage(p)}
-                                  >
-                                    {p}
-                                  </button>
-                                )
-                              )}
-                            </div>
-                            <button
-                              type="button"
-                              className="driversPagerBtn"
-                              disabled={page >= totalPages}
-                              onClick={() => setPage((p) => p + 1)}
-                            >
-                              Next
-                              <ChevronRight size={16} />
-                            </button>
-                          </div>
-                          <div className="driversFooterRight">
-                            <span className="driversMuted">
-                              {total === 0
-                                ? "0 results"
-                                : `Showing ${(page - 1) * pageSize + 1}-${Math.min(
-                                    page * pageSize,
-                                    total
-                                  )} of ${total}`}
-                            </span>
+                <div className="auditLogsTableWrap">
+                  <DataTable
+                    columns={columns}
+                    sortKey={sortKey}
+                    sortDir={sortDir}
+                    onSort={toggleSort}
+                    loading={loading}
+                    emptyText="No stores found."
+                    rows={pageItems}
+                    disableVirtualization
+                    onRowClick={onNavigate ? (row) => onNavigate("stores:profile", row) : undefined}
+                    renderRow={(row) => (
+                      <>
+                        <div className="td">
+                          <div className="cell cell--muted">{row.serial ?? "-"}</div>
+                        </div>
+                        <div className="td">
+                          <div className="cell cell--muted">{row.id || "-"}</div>
+                        </div>
+                        <div className="td">
+                          <div className="driverListNameCell">
+                            <div className="cell strong">{row.storeName || "-"}</div>
+                            <div className="cell driverListPhone">{row.storePhone || row.ownerPhone || "-"}</div>
                           </div>
                         </div>
-                      }
-                    />
-                  </div>
-                )}
+                        <div className="td">
+                          <div className="cell driversNum">{formatNum(row.totalEarning)}</div>
+                        </div>
+                        <div className="td">
+                          <div className="cell driversNum">{formatNum(row.balance)}</div>
+                        </div>
+                        <div className="td">
+                          <div className="cell driversNum">{formatNum(row.totalWithdrawn)}</div>
+                        </div>
+                        <div className="td">
+                          <div className="cell cell--muted">{formatRelativeDate(row.lastCashoutAt)}</div>
+                        </div>
+                      </>
+                    )}
+                    footer={
+                      <div className="driversFooter">
+                        <div className="driversFooterLeft">
+                          <div className="driversPerPage">
+                            <PaginatorSelect
+                              label="Rows"
+                              value={pageSize}
+                              onChange={(v) => {
+                                setPageSize(v);
+                                setPage(1);
+                              }}
+                              options={[15, 30, 50].map((n) => ({
+                                value: n,
+                                label: `${n} / page`,
+                              }))}
+                              openAbove
+                            />
+                          </div>
+                        </div>
+                        <div className="driversFooterMid">
+                          <button
+                            type="button"
+                            className="driversPagerBtn"
+                            disabled={page <= 1}
+                            onClick={() => setPage((p) => p - 1)}
+                          >
+                            <ChevronLeft size={16} />
+                            Previous
+                          </button>
+                          <div className="driversPages">
+                            {pageModel.map((p, idx) =>
+                              p === "..." ? (
+                                <span key={`dots-${idx}`} className="driversPagesDots">
+                                  ...
+                                </span>
+                              ) : (
+                                <button
+                                  key={p}
+                                  type="button"
+                                  className={`driversPageBtn ${p === page ? "active" : ""}`}
+                                  onClick={() => setPage(p)}
+                                >
+                                  {p}
+                                </button>
+                              )
+                            )}
+                          </div>
+                          <button
+                            type="button"
+                            className="driversPagerBtn"
+                            disabled={page >= totalPages}
+                            onClick={() => setPage((p) => p + 1)}
+                          >
+                            Next
+                            <ChevronRight size={16} />
+                          </button>
+                        </div>
+                        <div className="driversFooterRight">
+                          <span className="driversMuted">
+                            {total === 0
+                              ? "0 results"
+                              : `Showing ${(page - 1) * pageSize + 1}-${Math.min(
+                                  page * pageSize,
+                                  total
+                                )} of ${total}`}
+                          </span>
+                        </div>
+                      </div>
+                    }
+                  />
+                </div>
               </>
             )}
           </section>

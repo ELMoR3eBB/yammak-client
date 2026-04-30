@@ -9,6 +9,15 @@ const LanguageContext = createContext(null);
 
 const STORAGE_KEY = "yammak_lang";
 
+/** Replace `{{key}}` placeholders (used by locale strings). */
+function interpolateLocaleString(str, vars) {
+  if (str == null || typeof str !== "string") return str;
+  if (!vars || typeof vars !== "object") return str;
+  return str.replace(/\{\{(\w+)\}\}/g, (_, k) =>
+    vars[k] != null && vars[k] !== "" ? String(vars[k]) : ""
+  );
+}
+
 export function LanguageProvider({ children }) {
   const [language, setLanguageState] = useState(() => {
     let lang = "en";
@@ -36,10 +45,11 @@ export function LanguageProvider({ children }) {
   }, []);
 
   const t = useCallback(
-    (key) => {
+    (key, vars) => {
       const server = serverTranslations[language] || {};
       const static_ = staticLocales[language] || staticLocales.en;
-      return server[key] ?? static_[key] ?? staticLocales.en[key] ?? key;
+      const raw = server[key] ?? static_[key] ?? staticLocales.en[key] ?? key;
+      return interpolateLocaleString(raw, vars);
     },
     [language, serverTranslations]
   );
@@ -74,7 +84,7 @@ export function useLanguage() {
     return {
       language: "en",
       setLanguage: () => {},
-      t: (k) => k,
+      t: (k, vars) => interpolateLocaleString(staticLocales.en[k] ?? k, vars),
       setServerTranslationsFromSettings: () => {},
       staticLocales,
       serverTranslations: { en: {}, ar: {} },

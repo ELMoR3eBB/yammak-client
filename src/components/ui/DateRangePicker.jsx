@@ -59,6 +59,7 @@ export default function DateRangePicker({
   minValue = null,
   maxValue = null,
   closeOnRangeSelect = true,
+  clearButtonLabel = "Clear",
 }) {
   const { from: fromVal, to: toVal } = value;
   const [open, setOpen] = useState(false);
@@ -69,6 +70,8 @@ export default function DateRangePicker({
   });
   const [draft, setDraft] = useState({ from: fromVal, to: toVal });
   const [hoverDate, setHoverDate] = useState(null); // preview end date while selecting range
+  const [monthAnimDir, setMonthAnimDir] = useState(""); // "prev" | "next" | ""
+  const [monthAnimTick, setMonthAnimTick] = useState(0);
   const wrapRef = useRef(null);
   const triggerRef = useRef(null);
   const dropRef = useRef(null);
@@ -169,6 +172,8 @@ export default function DateRangePicker({
   }, [onChange, closeDropdown]);
 
   const prevMonth = useCallback(() => {
+    setMonthAnimDir("prev");
+    setMonthAnimTick((n) => n + 1);
     setViewDate((v) => {
       if (v.month === 0) return { year: v.year - 1, month: 11 };
       return { year: v.year, month: v.month - 1 };
@@ -176,6 +181,8 @@ export default function DateRangePicker({
   }, []);
 
   const nextMonth = useCallback(() => {
+    setMonthAnimDir("next");
+    setMonthAnimTick((n) => n + 1);
     setViewDate((v) => {
       if (v.month === 11) return { year: v.year + 1, month: 0 };
       return { year: v.year, month: v.month + 1 };
@@ -270,7 +277,11 @@ export default function DateRangePicker({
                   </span>
                 ))}
               </div>
-              <div className="dateRangePickerDropGrid">
+              <div
+                key={`month-grid-${viewDate.year}-${viewDate.month}-${monthAnimTick}`}
+                className={`dateRangePickerDropGrid ${monthAnimDir ? `dateRangePickerDropGrid--${monthAnimDir}` : ""}`}
+                onAnimationEnd={() => setMonthAnimDir("")}
+              >
                 {days.map(({ date, currentMonth, key }) => {
                   const inRange = isInRange(key);
                   const isStartEnd = isStart(key);
@@ -293,7 +304,7 @@ export default function DateRangePicker({
               </div>
               <div className="dateRangePickerDropFooter">
                 <button type="button" className="dateRangePickerDropClear" onClick={handleClear}>
-                  Clear
+                  {clearButtonLabel}
                 </button>
               </div>
             </div>

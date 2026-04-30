@@ -26,10 +26,6 @@
   outline: none;
   transition: 0.15s ease;
 }
-
-.si-wrap.si-hasClear .si-input {
-  padding-right: 44px;
-}
 .si-input::-moz-placeholder {
   color: rgba(154, 167, 189, 0.85);
 }
@@ -50,41 +46,18 @@
   right: 8px;
   top: 50%;
   transform: translateY(-50%);
-  width: 28px;
-  height: 28px;
-  min-width: 28px;
-  min-height: 28px;
-  padding: 0;
-  margin: 0;
-  border-radius: 6px;
+  width: 30px;
+  height: 30px;
+  border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(230, 234, 242, 0.85);
+  background: rgba(255, 255, 255, 0.02);
+  color: rgba(230, 234, 242, 0.92);
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  line-height: 0;
-  font-size: 0;
-  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 .si-clear:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.95);
-}
-
-.si-clear:focus-visible {
-  outline: none;
-  border-color: rgba(248, 192, 40, 0.5);
-  box-shadow: 0 0 0 2px rgba(248, 192, 40, 0.2);
-}
-
-.si-clear svg {
-  display: block;
-  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.14);
 }
 
 .si-helper {

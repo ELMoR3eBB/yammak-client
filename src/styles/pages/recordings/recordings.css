@@ -1,0 +1,1753 @@
+/* Recordings — standalone page (tokens aligned with Employee List, no import of employee_list.css) */
+
+.content:has(.recordingsPage) {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.content > .recordingsPage {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+.recordingsPage {
+  --st-bg: #09090b;
+  --st-bg-elevated: #0f0f12;
+  --st-surface: rgba(255, 255, 255, 0.03);
+  --st-surface-hover: rgba(255, 255, 255, 0.06);
+  --st-border: rgba(255, 255, 255, 0.06);
+  --st-text: rgba(255, 255, 255, 0.92);
+  --st-text-muted: rgba(255, 255, 255, 0.5);
+  --st-accent: #fbbf24;
+  --st-accent-soft: rgba(251, 191, 36, 0.18);
+  --st-accent-glow: rgba(251, 191, 36, 0.15);
+  --st-radius: 8px;
+  --st-radius-sm: 6px;
+  --st-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --st-duration: 0.25s;
+  --st-duration-fast: 0.15s;
+
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+  color: var(--st-text);
+  background: var(--st-bg);
+  overflow: hidden;
+  position: relative;
+  animation: recordingsPageIn 0.45s var(--st-ease) forwards;
+}
+
+.recordingsPage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 100% 50% at 0% 0%,
+    rgba(251, 191, 36, 0.04) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+  animation: recordingsBgIn 0.6s var(--st-ease) 0.15s both;
+}
+
+@keyframes recordingsPageIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes recordingsBgIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes recordingsMainIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header */
+.recordingsPage .recordingsHeader {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--st-border);
+  flex-shrink: 0;
+  background: var(--st-bg-elevated);
+}
+
+.recordingsPage .recordingsHeader:hover .recordingsHeaderIcon {
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
+}
+
+.recordingsPage .recordingsHeaderIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--st-radius);
+  background: linear-gradient(
+    135deg,
+    rgba(251, 191, 36, 0.2) 0%,
+    rgba(251, 191, 36, 0.06) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--st-accent);
+  flex-shrink: 0;
+  transition: transform 0.25s var(--st-ease), box-shadow 0.25s var(--st-ease);
+}
+
+.recordingsPage .recordingsHeaderText {
+  flex: 1;
+  min-width: 0;
+}
+
+.recordingsPage .recordingsTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--st-text);
+}
+
+.recordingsPage .recordingsSubtitle {
+  margin: 4px 0 0 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--st-text-muted);
+}
+
+.recordingsPage .recordingsHeaderExtras {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.recordingsFilterPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.recordingsFilterPill:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.recordingsPage .recordingsFilterPill .uiCheckbox {
+  gap: 8px;
+}
+
+.recordingsPage .recordingsFilterPill .uiCheckbox-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.recordingsIconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--st-radius-sm);
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: var(--st-text);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+
+.recordingsIconBtn:hover {
+  background: var(--st-surface-hover);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.recordingsIconBtn:active {
+  transform: scale(0.97);
+}
+
+/* Main + table shell */
+.recordingsPage .recordingsMain {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  animation: recordingsMainIn 0.4s var(--st-ease) 0.12s both;
+}
+
+.recordingsPage .recordingsContent {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 20px 24px 24px;
+  box-sizing: border-box;
+}
+
+.recordingsPage .recordingsSection {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  gap: 16px;
+}
+
+.recordingsPage .recordingsTableWrap {
+  flex: 0 0 auto;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  overflow-x: auto;
+  overflow-y: visible;
+  border-radius: var(--st-radius);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: box-shadow var(--st-duration) var(--st-ease);
+  position: relative;
+}
+
+.recordingsPage .recordingsTableWrap:focus-within {
+  box-shadow: 0 0 0 1px var(--st-border), 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.recordingsPage .recordingsTableWrap .dt {
+  flex: 0 0 auto;
+  min-width: 860px;
+  border: 1px solid var(--st-border);
+  border-radius: var(--st-radius);
+  overflow: hidden;
+  background: var(--st-bg-elevated);
+  transition: border-color var(--st-duration) var(--st-ease), background var(--st-duration) var(--st-ease);
+}
+
+.recordingsPage .recordingsTableWrap .dt-head {
+  display: grid;
+  grid-template-columns: var(--dt-grid);
+  background: linear-gradient(
+    180deg,
+    rgba(251, 191, 36, 0.06) 0%,
+    var(--st-bg-elevated) 100%
+  );
+  border-bottom: 2px solid rgba(251, 191, 36, 0.2);
+}
+
+.recordingsPage .recordingsTableWrap .dt-th {
+  height: 48px;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--st-text-muted);
+  white-space: nowrap;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.recordingsPage .recordingsTableWrap .dt-th.sort {
+  appearance: none;
+  width: 100%;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  gap: 8px;
+  transition: background var(--st-duration) var(--st-ease), color var(--st-duration-fast) var(--st-ease),
+    box-shadow var(--st-duration-fast) var(--st-ease);
+}
+
+.recordingsPage .recordingsTableWrap .dt-th.sort:hover {
+  background: rgba(251, 191, 36, 0.08);
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.recordingsPage .recordingsTableWrap .dt-th.sort:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px rgba(251, 191, 36, 0.4);
+}
+
+.recordingsPage .recordingsTableWrap .dt-sortMark {
+  margin-left: auto;
+  color: var(--st-accent);
+  font-size: 10px;
+  min-width: 14px;
+  text-align: right;
+  opacity: 0.9;
+}
+
+.recordingsPage .recordingsTableWrap .dt-th.center {
+  justify-content: center;
+}
+
+.recordingsPage .recordingsTableWrap .dt-th.center.sort {
+  justify-content: center;
+}
+
+.recordingsPage .recordingsTableWrap .dt-th.center .dt-sortMark {
+  margin-left: 6px;
+}
+
+.recordingsPage .recordingsTableWrap .dt-body {
+  display: flex;
+  flex-direction: column;
+  background: var(--st-surface);
+  overflow: hidden;
+}
+
+.recordingsPage .recordingsTableWrap .dt-row {
+  display: grid;
+  grid-template-columns: var(--dt-grid);
+  align-items: center;
+  border-bottom: 1px solid var(--st-border);
+  min-height: 58px;
+  background: transparent;
+  border-left: 3px solid transparent;
+  transition: background var(--st-duration) var(--st-ease), border-left-color var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration-fast) var(--st-ease);
+}
+
+.recordingsPage .recordingsTableWrap .dt-row:nth-child(even) {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.recordingsPage .recordingsTableWrap .dt-row:hover {
+  background: var(--st-surface-hover);
+  border-left-color: rgba(251, 191, 36, 0.5);
+  box-shadow: inset 0 0 0 1px rgba(251, 191, 36, 0.06);
+}
+
+.recordingsPage .recordingsTableWrap .dt-row:last-child {
+  border-bottom: 0;
+}
+
+.recordingsPage .recordingsTableWrap .dt-empty {
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--st-text-muted);
+  font-size: 14px;
+  font-weight: 500;
+  background: var(--st-surface);
+  border-bottom: 1px solid var(--st-border);
+}
+
+.recordingsPage .recordingsTableWrap .dt-footer {
+  padding: 0;
+  background: transparent;
+}
+
+/* Cells */
+.recordingsPage .td {
+  padding: 14px 18px;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.recordingsPage .td-center {
+  display: flex;
+  justify-content: center;
+}
+
+.recordingsPage .cell {
+  font-size: 13.5px;
+  line-height: 1.25;
+  color: var(--st-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recordingsPage .cell.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  letter-spacing: 0.02em;
+}
+
+.recordingsPage .cell.muted {
+  color: var(--st-text-muted);
+}
+
+.recordingsPage .cell.small {
+  font-size: 12px;
+  margin-top: 4px;
+  white-space: normal;
+  line-height: 1.35;
+}
+
+/* Tel link: simple color transition only */
+.recordingsPage .recTelLink {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  max-width: 100%;
+  align-items: baseline;
+  vertical-align: baseline;
+  color: #a5f3fc;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: none;
+  overflow: visible;
+  transition: color 0.2s ease;
+}
+
+.recordingsPage .recTelLinkText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recordingsPage .recTelLink:hover {
+  color: #fde68a;
+}
+
+.recordingsPage .recTelLink:active {
+  color: #fcd34d;
+  transition: color 0.12s ease;
+}
+
+.recordingsPage .recTelLink:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.45);
+  border-radius: 2px;
+}
+
+.recordingsPage .recPartyStack {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+/* Employee match chip */
+.recordingsPage .recEmpChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  max-width: 100%;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  background: rgba(34, 197, 94, 0.1);
+  color: #86efac;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+
+.recordingsPage .recEmpChip:hover {
+  background: rgba(34, 197, 94, 0.18);
+  border-color: rgba(34, 197, 94, 0.5);
+}
+
+.recordingsPage .recEmpChip:active {
+  transform: scale(0.98);
+}
+
+.recordingsPage .recEmpChip-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 140px;
+}
+
+/* Call direction + disposition (readable labels, not raw CDR) */
+.recordingsPage .recDir {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  border: 1px solid transparent;
+}
+
+.recordingsPage .recDir--inbound {
+  background: rgba(59, 130, 246, 0.14);
+  color: #93c5fd;
+  border-color: rgba(59, 130, 246, 0.35);
+}
+
+.recordingsPage .recDir--outbound {
+  background: rgba(251, 191, 36, 0.12);
+  color: #fde68a;
+  border-color: rgba(251, 191, 36, 0.35);
+}
+
+.recordingsPage .recDir--internal {
+  background: rgba(168, 85, 247, 0.14);
+  color: #d8b4fe;
+  border-color: rgba(168, 85, 247, 0.35);
+}
+
+.recordingsPage .recDir--unknown {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.45);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.recordingsPage .recDisp {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  border: 1px solid transparent;
+}
+
+.recordingsPage .recDisp--answered {
+  background: rgba(34, 197, 94, 0.14);
+  color: #86efac;
+  border-color: rgba(34, 197, 94, 0.38);
+}
+
+.recordingsPage .recDisp--noanswer {
+  background: rgba(148, 163, 184, 0.12);
+  color: #cbd5e1;
+  border-color: rgba(148, 163, 184, 0.28);
+}
+
+.recordingsPage .recDisp--busy {
+  background: rgba(245, 158, 11, 0.14);
+  color: #fcd34d;
+  border-color: rgba(245, 158, 11, 0.38);
+}
+
+.recordingsPage .recDisp--failed {
+  background: rgba(239, 68, 68, 0.14);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.38);
+}
+
+.recordingsPage .recDisp--unavail {
+  background: rgba(100, 116, 139, 0.16);
+  color: #94a3b8;
+  border-color: rgba(100, 116, 139, 0.35);
+}
+
+.recordingsPage .recDisp--other {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.72);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Play — simple circular control */
+.recordingsPage .recPlayBtn {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0;
+  margin: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.88);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.12s ease;
+}
+
+.recordingsPage .recPlayBtn-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+.recordingsPage .recPlayBtn-iconPlay {
+  margin-left: 2px;
+}
+
+.recordingsPage .recPlayBtn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(251, 191, 36, 0.45);
+  color: #fde68a;
+}
+
+.recordingsPage .recPlayBtn:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.recordingsPage .recPlayBtn--active {
+  border-color: rgba(251, 191, 36, 0.55);
+  background: rgba(251, 191, 36, 0.16);
+  color: #fef3c7;
+}
+
+.recordingsPage .recPlayBtn--loading {
+  cursor: wait;
+}
+
+.recordingsPage .recPlayBtn:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.recordingsPage .recPlayBtn-spin {
+  animation: recPlaySpin 0.75s linear infinite;
+}
+
+@keyframes recPlaySpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.recordingsPage .recPlayBtn-empty {
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 13px;
+}
+
+.recordingsPage .recDeleteBtn {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0;
+  margin: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(248, 113, 113, 0.24);
+  background: rgba(248, 113, 113, 0.08);
+  color: #fecaca;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.12s ease;
+}
+
+.recordingsPage .recDeleteBtn:hover:not(:disabled) {
+  background: rgba(248, 113, 113, 0.15);
+  border-color: rgba(248, 113, 113, 0.44);
+  color: #fee2e2;
+}
+
+.recordingsPage .recDeleteBtn:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.recordingsPage .recDeleteBtn:disabled,
+.recordingsPage .recDeleteBtn--loading {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.recordingsPage .td.actions {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.recordingsHiddenAudio {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Footer */
+.recordingsPage .recordingsFooter {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 20px;
+  background: linear-gradient(180deg, var(--st-bg-elevated) 0%, rgba(15, 15, 18, 0.98) 100%);
+}
+
+.recordingsPage .recordingsMuted {
+  color: var(--st-text-muted);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.recordingsFooterLeft,
+.recordingsFooterMid,
+.recordingsPage .recordingsFooterRight {
+  display: flex;
+  align-items: center;
+}
+
+.recordingsPage .recordingsFooterLeft {
+  justify-content: flex-start;
+}
+
+.recordingsPage .recordingsFooterMid {
+  justify-content: center;
+  gap: 12px;
+}
+
+.recordingsPage .recordingsFooterRight {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.recordingsPage .recordingsPerPage {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.recordingsPage .recordingsPagerBtn {
+  height: 38px;
+  padding: 0 16px;
+  border-radius: var(--st-radius-sm);
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: var(--st-text);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background var(--st-duration) var(--st-ease), border-color var(--st-duration) var(--st-ease),
+    color var(--st-duration) var(--st-ease), transform var(--st-duration-fast) var(--st-ease),
+    box-shadow var(--st-duration-fast) var(--st-ease);
+}
+
+.recordingsPage .recordingsPagerBtn:hover:not(:disabled) {
+  background: var(--st-accent-soft);
+  border-color: rgba(251, 191, 36, 0.4);
+  color: var(--st-accent);
+  box-shadow: 0 2px 8px rgba(251, 191, 36, 0.15);
+}
+
+.recordingsPage .recordingsPagerBtn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.recordingsPage .recordingsPagerBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.recordingsPage .recordingsPagerBtn:focus-visible {
+  outline: none;
+  border-color: var(--st-accent);
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+.recordingsPage .recordingsPages {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.recordingsPage .recordingsPagesDots {
+  padding: 0 6px;
+  color: var(--st-text-muted);
+  font-weight: 500;
+}
+
+.recordingsPage .recordingsPageBtn {
+  min-width: 38px;
+  height: 38px;
+  padding: 0 12px;
+  border-radius: var(--st-radius-sm);
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: var(--st-text);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--st-duration) var(--st-ease), border-color var(--st-duration) var(--st-ease),
+    color var(--st-duration) var(--st-ease), transform var(--st-duration-fast) var(--st-ease),
+    box-shadow var(--st-duration-fast) var(--st-ease);
+}
+
+.recordingsPage .recordingsPageBtn:hover {
+  background: var(--st-surface-hover);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.recordingsPage .recordingsPageBtn.active {
+  background: var(--st-accent-soft);
+  border-color: rgba(251, 191, 36, 0.45);
+  color: var(--st-accent);
+  box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.2);
+}
+
+.recordingsPage .recordingsPageBtn:focus-visible {
+  outline: none;
+  border-color: var(--st-accent);
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+}
+
+@keyframes recordingsDashEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes recordingsDashFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes recordingsDashSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes recordingsDashRevealIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes recordingsKpiPeakIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Insights / filters — full-width dashboard strip */
+.recordingsPage .recordingsDashboard {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.recordingsPage .recordingsDashReveal {
+  animation: recordingsDashRevealIn 0.55s var(--st-ease) both;
+}
+
+.recordingsPage .recordingsDashKpiPeakText {
+  display: block;
+  animation: recordingsKpiPeakIn 0.5s var(--st-ease) both;
+}
+
+.recordingsPage .recordingsDashKpiSkeleton {
+  display: block;
+  width: 100%;
+  max-width: 120px;
+}
+
+.recordingsPage .recordingsDashKpiRate {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 1px;
+}
+
+.recordingsPage .recordingsDashKpiRatePct {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--st-text-muted);
+  margin-left: 1px;
+}
+
+.recordingsPage .recordingsDashChartCanvas {
+  position: relative;
+  isolation: isolate;
+}
+
+.recordingsPage .recordingsDashChartCanvas canvas {
+  max-height: 100% !important;
+}
+
+.recordingsPage .recordingsDashTopBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px 16px;
+  padding: 16px 18px;
+  border-radius: calc(var(--st-radius) + 2px);
+  border: 1px solid var(--st-border);
+  background: linear-gradient(165deg, rgba(251, 191, 36, 0.07) 0%, var(--st-bg-elevated) 42%, var(--st-bg-elevated) 100%);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.22);
+}
+
+.recordingsPage .recordingsDashTopBarLeft {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  min-width: min(100%, 260px);
+}
+
+.recordingsPage .recordingsDashTopBarRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.recordingsPage .recordingsDashDateRange .dateRangePickerTrigger {
+  min-width: 220px;
+  height: 40px;
+  border-radius: var(--st-radius-sm);
+  transition: transform var(--st-duration-fast) var(--st-ease), border-color var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration) var(--st-ease), background var(--st-duration) var(--st-ease);
+}
+
+.recordingsPage .recordingsDashDateRange .dateRangePickerTrigger:active {
+  transform: scale(0.98);
+}
+
+.recordingsPage .recordingsDashDatePopover .dateRangePickerDropInner {
+  min-width: 300px;
+}
+
+/* Employee filter popover trigger */
+.recordingsPage .recordingsEmpMenu {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Above date-range popover (z-index ~9999) and other dashboard controls */
+.recordingsPage .recordingsEmpMenu--open {
+  position: relative;
+  z-index: 51990;
+}
+
+.recordingsPage .recordingsEmpMenu--disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.recordingsPage .recordingsEmpMenuTrigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 12px 0 10px;
+  border-radius: var(--st-radius-sm);
+  border: 1px solid var(--st-border);
+  background: var(--st-surface);
+  color: var(--st-text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  max-width: min(380px, 88vw);
+  transition: border-color var(--st-duration) var(--st-ease), background var(--st-duration) var(--st-ease),
+    box-shadow var(--st-duration) var(--st-ease), transform var(--st-duration-fast) var(--st-ease);
+}
+
+.recordingsPage .recordingsEmpMenuTrigger--hasSelection {
+  padding-left: 8px;
+}
+
+.recordingsPage .recordingsEmpMenuTriggerTextCol {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+  text-align: left;
+}
+
+.recordingsPage .recordingsEmpMenuTriggerName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--st-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.recordingsPage .recordingsEmpMenuTriggerCallId {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--st-accent);
+  letter-spacing: 0.04em;
+}
+
+.recordingsPage .recordingsEmpMenuTriggerCallId--muted {
+  color: var(--st-text-muted);
+  font-weight: 500;
+}
+
+.recordingsPage .recordingsEmpMenuTriggerAvatar {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  min-height: 28px;
+  max-width: 28px;
+  max-height: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.3), rgba(125, 211, 252, 0.12));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  contain: strict;
+  box-sizing: border-box;
+}
+
+.recordingsPage .recordingsEmpMenuTriggerAvatarImg {
+  box-sizing: border-box;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 28px !important;
+  max-height: 28px !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  flex: 0 0 auto;
+}
+
+.recordingsPage .recordingsEmpMenuTriggerAvatarFallback {
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--st-accent);
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.recordingsPage .recordingsEmpMenuTriggerStack {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.recordingsPage .recordingsEmpMenuTriggerStack .recordingsEmpMenuTriggerAvatar {
+  margin-left: -10px;
+  box-shadow: 0 0 0 2px var(--st-bg-elevated);
+}
+
+.recordingsPage .recordingsEmpMenuTriggerStack .recordingsEmpMenuTriggerAvatar:first-child {
+  margin-left: 0;
+}
+
+.recordingsPage .recordingsEmpMenuTrigger:hover {
+  border-color: rgba(251, 191, 36, 0.35);
+  background: rgba(251, 191, 36, 0.06);
+}
+
+.recordingsPage .recordingsEmpMenuTrigger:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--st-accent-glow);
+  border-color: var(--st-accent);
+}
+
+.recordingsPage .recordingsEmpMenu--open .recordingsEmpMenuTriggerChev {
+  transform: rotate(180deg);
+  color: var(--st-accent);
+}
+
+.recordingsPage .recordingsEmpMenuTriggerChev {
+  flex-shrink: 0;
+  color: var(--st-text-muted);
+  transition: transform var(--st-duration) var(--st-ease), color var(--st-duration) var(--st-ease);
+}
+
+.recordingsPage .recordingsEmpMenuTriggerText {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.recordingsPage .recordingsEmpMenuTriggerIcon {
+  flex-shrink: 0;
+  color: var(--st-accent);
+}
+
+.recordingsPage .recordingsEmpMenuClear {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--st-radius-sm);
+  border: 1px solid var(--st-border);
+  background: transparent;
+  color: var(--st-text-muted);
+  cursor: pointer;
+  transition: color var(--st-duration-fast) var(--st-ease), border-color var(--st-duration-fast) var(--st-ease),
+    background var(--st-duration-fast) var(--st-ease), transform var(--st-duration-fast) var(--st-ease);
+}
+
+.recordingsPage .recordingsEmpMenuClear:hover {
+  color: #fecaca;
+  border-color: rgba(248, 113, 113, 0.4);
+  background: rgba(248, 113, 113, 0.08);
+}
+
+.recordingsPage .recordingsEmpMenuClear:active {
+  transform: scale(0.95);
+}
+
+@keyframes recordingsEmpMenuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes recordingsEmpMenuOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.99);
+  }
+}
+
+/* Portaled employee panel lives on document.body (not under .recordingsPage) — root carries tokens + stacking */
+.recordingsEmpMenuPortalRoot {
+  --st-bg: #09090b;
+  --st-bg-elevated: #0f0f12;
+  --st-surface: rgba(255, 255, 255, 0.03);
+  --st-surface-hover: rgba(255, 255, 255, 0.06);
+  --st-border: rgba(255, 255, 255, 0.06);
+  --st-text: rgba(255, 255, 255, 0.92);
+  --st-text-muted: rgba(255, 255, 255, 0.5);
+  --st-accent: #fbbf24;
+  --st-accent-soft: rgba(251, 191, 36, 0.18);
+  --st-accent-glow: rgba(251, 191, 36, 0.15);
+  --st-radius: 8px;
+  --st-radius-sm: 6px;
+  --st-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --st-duration: 0.25s;
+  --st-duration-fast: 0.15s;
+  color: var(--st-text);
+  isolation: isolate;
+}
+
+/* Floating panel — same rules for in-page and portaled instances */
+.recordingsPage .recordingsEmpMenuPanel,
+.recordingsEmpMenuPortalRoot.recordingsEmpMenuPanel {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  pointer-events: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  /* ~0.92 opaque surface so content behind does not show through */
+  background: linear-gradient(
+    165deg,
+    rgba(251, 191, 36, 0.1) 0%,
+    rgba(22, 22, 28, 1) 0%,
+    rgba(16, 16, 20, 0.92) 102%
+  );
+  box-shadow: 0 22px 56px rgba(0, 0, 0, 0.58), 0 0 0 1px rgba(251, 191, 36, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.recordingsPage .recordingsEmpMenuPanel--enter .recordingsEmpMenuPanelShell,
+.recordingsEmpMenuPortalRoot.recordingsEmpMenuPanel--enter .recordingsEmpMenuPanelShell {
+  animation: recordingsEmpMenuIn 0.24s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.recordingsPage .recordingsEmpMenuPanel--exit .recordingsEmpMenuPanelShell,
+.recordingsEmpMenuPortalRoot.recordingsEmpMenuPanel--exit .recordingsEmpMenuPanelShell {
+  animation: recordingsEmpMenuOut 0.18s ease-in both;
+}
+
+.recordingsPage .recordingsEmpMenuPanelShell,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuPanelShell {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.recordingsPage .recordingsEmpMenuHead,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuHead {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid var(--st-border);
+}
+
+.recordingsPage .recordingsEmpMenuHeadTitle,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuHeadTitle {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  min-width: 0;
+}
+
+.recordingsPage .recordingsEmpMenuHeadMeta,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuHeadMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.recordingsPage .recordingsEmpMenuHeadBadge,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuHeadBadge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(251, 191, 36, 0.16);
+  color: var(--st-accent);
+  border: 1px solid rgba(251, 191, 36, 0.28);
+}
+
+.recordingsPage .recordingsEmpMenuHeadCount,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuHeadCount {
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--st-text-muted);
+}
+
+.recordingsPage .recordingsEmpMenuSearch,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuSearch {
+  flex-shrink: 0;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--st-border);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.recordingsPage .recordingsEmpMenuSearch .recordingsEmpMenuSearchWrap,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuSearch .recordingsEmpMenuSearchWrap {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+.recordingsPage .recordingsEmpMenuSearch .si-wrap,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuSearch .si-wrap {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+.recordingsPage .recordingsEmpMenuSearch .si-sm .si-input.recordingsEmpMenuSearchInput,
+.recordingsPage .recordingsEmpMenuSearch .si-sm .si-input,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuSearch .si-sm .si-input.recordingsEmpMenuSearchInput,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuSearch .si-sm .si-input {
+  height: 38px;
+  font-size: 13px;
+  border-radius: var(--st-radius-sm);
+  background: rgba(0, 0, 0, 0.35);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.recordingsPage .recordingsEmpMenuSearch .si-sm .si-input:focus,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuSearch .si-sm .si-input:focus {
+  border-color: rgba(251, 191, 36, 0.45);
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.recordingsPage .recordingsEmpMenuList,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuList {
+  flex: 1 1 auto;
+  min-height: 72px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 6px 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.recordingsPage .recordingsEmpMenuEmpty,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuEmpty {
+  padding: 28px 16px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--st-text-muted);
+}
+
+.recordingsPage .recordingsEmpMenuRow,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuRow {
+  display: grid;
+  grid-template-columns: 36px 40px minmax(0, 1fr);
+  align-items: center;
+  column-gap: 10px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-height: 48px;
+  padding: 8px 10px;
+  margin: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background var(--st-duration-fast) var(--st-ease), box-shadow var(--st-duration-fast) var(--st-ease);
+  border: 1px solid transparent;
+}
+
+.recordingsPage .recordingsEmpMenuRow:hover:not(.recordingsEmpMenuRow--disabled),
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuRow:hover:not(.recordingsEmpMenuRow--disabled) {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.recordingsPage .recordingsEmpMenuRow--selected,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuRow--selected {
+  background: rgba(251, 191, 36, 0.08);
+  border-color: rgba(251, 191, 36, 0.18);
+}
+
+.recordingsPage .recordingsEmpMenuRow--selected:hover:not(.recordingsEmpMenuRow--disabled),
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuRow--selected:hover:not(.recordingsEmpMenuRow--disabled) {
+  background: rgba(251, 191, 36, 0.11);
+}
+
+.recordingsPage .recordingsEmpMenuRow:focus-within:not(.recordingsEmpMenuRow--disabled),
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuRow:focus-within:not(.recordingsEmpMenuRow--disabled) {
+  outline: none;
+  box-shadow: none;
+}
+
+.recordingsPage .recordingsEmpMenuRow--disabled,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuRow--disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  transition: none;
+}
+
+.recordingsPage .recordingsEmpMenuRow--disabled:hover,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuRow--disabled:hover {
+  background: transparent;
+  border-color: transparent;
+}
+
+.recordingsPage .recordingsEmpMenuRow--disabled .uiCheckbox-box,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuRow--disabled .uiCheckbox-box {
+  transition: none;
+}
+
+.recordingsPage .recordingsEmpMenuRow--disabled .uiCheckbox-input,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuRow--disabled .uiCheckbox-input {
+  pointer-events: none;
+}
+
+.recordingsPage .recordingsEmpMenuRow--disabled .uiCheckbox-input:hover + .uiCheckbox-box,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuRow--disabled .uiCheckbox-input:hover + .uiCheckbox-box,
+.recordingsPage .recordingsEmpMenuRow--disabled .uiCheckbox-input:focus-visible + .uiCheckbox-box,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuRow--disabled .uiCheckbox-input:focus-visible + .uiCheckbox-box {
+  border-color: var(--st-border);
+  box-shadow: none;
+}
+
+.recordingsPage .recordingsEmpMenuCheck,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuCheck {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+}
+
+.recordingsPage .recordingsEmpMenuAvatar,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuAvatar {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+  max-width: 32px;
+  max-height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  justify-self: center;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.25), rgba(125, 211, 252, 0.12));
+  border: 1px solid var(--st-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  contain: strict;
+  box-sizing: border-box;
+}
+
+.recordingsPage .recordingsEmpMenuAvatarImg,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuAvatarImg {
+  box-sizing: border-box;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 32px !important;
+  max-height: 32px !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  flex: 0 0 auto;
+}
+
+.recordingsPage .recordingsEmpMenuAvatarFallback,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuAvatarFallback {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--st-accent);
+  letter-spacing: 0.02em;
+}
+
+.recordingsPage .recordingsEmpMenuMeta,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuMeta {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 3px;
+}
+
+.recordingsPage .recordingsEmpMenuName,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--st-text);
+  line-height: 1.25;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recordingsPage .recordingsEmpMenuSubrow,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuSubrow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.recordingsPage .recordingsEmpMenuCallId,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuCallId {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--st-accent);
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  flex-shrink: 0;
+}
+
+.recordingsPage .recordingsEmpMenuCallId--muted,
+.recordingsEmpMenuPortalRoot .recordingsEmpMenuCallId--muted {
+  color: var(--st-text-muted);
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.recordingsPage .recordingsDashWarn {
+  font-size: 12px;
+  color: #fcd34d;
+  padding: 10px 14px;
+  border-radius: var(--st-radius-sm);
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  background: rgba(251, 191, 36, 0.08);
+}
+
+.recordingsPage .recordingsDashWarn--enter {
+  animation: recordingsDashFade 0.35s var(--st-ease) both;
+}
+
+.recordingsPage .recordingsDashKpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 900px) {
+  .recordingsPage .recordingsDashKpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.recordingsPage .recordingsDashKpi {
+  padding: 16px 18px;
+  border-radius: calc(var(--st-radius) + 2px);
+  border: 1px solid var(--st-border);
+  background: var(--st-bg-elevated);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color var(--st-duration) var(--st-ease), box-shadow var(--st-duration) var(--st-ease),
+    transform var(--st-duration-fast) var(--st-ease);
+}
+
+.recordingsPage .recordingsDashKpi::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.06), transparent 55%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--st-duration) var(--st-ease);
+}
+
+.recordingsPage .recordingsDashKpi:hover {
+  border-color: rgba(251, 191, 36, 0.22);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
+}
+
+.recordingsPage .recordingsDashKpi:hover::after {
+  opacity: 1;
+}
+
+.recordingsPage .recordingsDashKpi--enter {
+  animation: recordingsDashEnter 0.45s var(--st-ease) both;
+  animation-delay: calc(var(--rec-kpi-i, 0) * 0.06s);
+}
+
+.recordingsPage .recordingsDashKpiIcon {
+  color: var(--st-accent);
+  margin-bottom: 2px;
+}
+
+.recordingsPage .recordingsDashKpiVal {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--st-text);
+}
+
+.recordingsPage .recordingsDashKpiVal--sm {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.recordingsPage .recordingsDashKpiVal--wrap {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+  white-space: normal;
+  letter-spacing: 0;
+}
+
+.recordingsPage .recordingsDashKpiLabel {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--st-text-muted);
+}
+
+.recordingsPage .recordingsDashCharts {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.95fr) minmax(0, 1.35fr);
+  grid-auto-rows: minmax(260px, auto);
+  gap: 14px;
+  align-items: stretch;
+}
+
+@media (max-width: 1180px) {
+  .recordingsPage .recordingsDashCharts {
+    grid-template-columns: 1fr;
+  }
+}
+
+.recordingsPage .recordingsDashChartCard {
+  border-radius: calc(var(--st-radius) + 2px);
+  border: 1px solid var(--st-border);
+  background: var(--st-bg-elevated);
+  padding: 16px 18px 14px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.12);
+  transition: border-color var(--st-duration) var(--st-ease), box-shadow var(--st-duration) var(--st-ease),
+    transform var(--st-duration-fast) var(--st-ease);
+}
+
+.recordingsPage .recordingsDashChartCard:hover {
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.18);
+}
+
+.recordingsPage .recordingsDashChartCard--enter {
+  animation: recordingsDashEnter 0.5s var(--st-ease) both;
+  animation-delay: calc(0.12s + var(--rec-card-i, 0) * 0.07s);
+}
+
+.recordingsPage .recordingsDashChartCard--wide {
+  grid-column: 1 / -1;
+}
+
+.recordingsPage .recordingsDashChartTitle {
+  margin: 0 0 6px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--st-text);
+  letter-spacing: -0.01em;
+}
+
+.recordingsPage .recordingsDashChartHint {
+  margin: 0 0 8px 0;
+  font-size: 11px;
+  color: var(--st-text-muted);
+  line-height: 1.45;
+}
+
+.recordingsPage .recordingsDashChartBody {
+  position: relative;
+  flex: 1;
+  min-height: 220px;
+  height: 240px;
+}
+
+.recordingsPage .recordingsDashChartBody--donut {
+  min-height: 240px;
+  height: 260px;
+}
+
+.recordingsPage .recordingsDashChartBody--bars {
+  min-height: 240px;
+  height: 260px;
+}
+
+.recordingsPage .recordingsDashChartBody--flow {
+  min-height: 260px;
+  height: 280px;
+}
+
+.recordingsPage .recordingsDashChartBody--talk {
+  min-height: 260px;
+  height: 300px;
+}
+
+.recordingsPage .recordingsDashChartLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.recordingsPage .recordingsDashSpinner {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.08);
+  border-top-color: var(--st-accent);
+  animation: recordingsDashSpin 0.7s linear infinite;
+}
+
+.recordingsPage .recordingsDashChartEmpty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 16px 20px;
+  text-align: center;
+}
+
+.recordingsPage .recordingsDashChartEmpty p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--st-text-muted);
+  max-width: 280px;
+}
+
+@media (max-width: 860px) {
+  .recordingsPage .recordingsFooter {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+  .recordingsFooterLeft,
+  .recordingsFooterMid,
+  .recordingsPage .recordingsFooterRight {
+    justify-content: center;
+  }
+}
